@@ -1,0 +1,69 @@
+#!/bin/bash
+set -euo pipefail
+set -x
+_aclii_debug () {
+  if [ -n "$ACLII_DEBUG" ]; then
+    echo "$@" # >> /tmp/aclii-debug.log
+  fi
+}
+
+args='{"options":{}}'
+
+_aclii_debug "Launch aclii..."
+_aclii_debug "ARGV $@"
+_aclii_debug "$ 0 $0"
+__parse_args () {
+  processed=0
+  _aclii_debug "enter parse_args |$@|"
+  local want
+  local wanting
+  local command="<%= aclii.commandName %>"
+  for word in "$@"
+  do
+    : $((processed++))
+    _aclii_debug "Processing $processed th arg |$word|"
+    _aclii_debug "   command: $command  want |$want|"
+
+    # Run the path to know where I am
+    if [ -n "$want" ]; then
+      #TODO: Do we need to varidate here?
+
+      args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$word"'"')
+      wanting=""
+      want=""
+    elif [ "${word:0:1}" == '-' ]; then
+      # It starts with dash. Check option that if
+      # next arg is option valu or not
+      comopt="$command$word"
+      _aclii_debug "adding flag |$comopt|"
+      echo $args | jq '.'
+      args=$(echo $args | jq '.options["'"$comopt"'"] = true')
+      _aclii_debug "Checking option $word : comopt $comopt"
+      case "$comopt" in
+      <% aclii.root.subCommands.forEach( c => {
+        c.options.forEach( o => { %>
+        "<%= c.path %>--<%= o.name %>" )
+          want="<%= o.want %>"
+          wanting="$comopt"
+          ;;
+      <% })}) %>
+      esac
+    else
+      case "$command.$word" in
+      <% aclii.root.subCommands.forEach( c => { %>
+        "<%= c.path %>" )
+          command="<%= c.path %>"
+
+          ;;
+      <% }) %>
+      esac
+    fi
+
+  done
+  args=$(echo "$args" | jq --arg com "$command" '.command = $com')
+  _aclii_debug "Parse done---------"
+
+}
+__parse_args "$@"
+
+exec ./aclii_main.js $(echo "$args" | base64)
