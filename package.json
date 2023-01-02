@@ -1,0 +1,26 @@
+{
+  "name": "aclii",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Abstract Command Line Interface Interface",
+  "main": "index.js",
+  "bin": {
+    "aclii": "bin/aclii.sh",
+    "_aclii_runner": "bin/cli.js"
+  },
+  "scripts": {
+    "build": "npm exec -c './bin/cli.js build > bin/aclii.sh'",
+    "build-echo": "npm exec -c './bin/cli.js build'",
+    "runit": "echo hoge",
+    "test": "bats -t tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "yaml": "^2.2.1"
+  },
+  "devDependencies": {
+    "bats": "^1.8.2"
+  }
+}

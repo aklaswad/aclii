@@ -1,0 +1,38 @@
+name: aclii
+description: |
+  A toolkit for aclii (Abstract Command Line Interface Interface)
+commands:
+  - name: test
+    description: |
+      test something...
+    options:
+      - name: all
+        short: a
+        description: test all
+      - name: file
+        short: f
+        description: test file
+        required: true
+      - name: dir
+        want: dir
+    commands:
+      - name: it
+        description: |
+          test it. what is it?
+        want: file
+  - name: build
+options:
+  - name: verbose
+    short: v
+    want: string
+  - name: file
+    want: file
+implements:
+  test: test
+manual:
+  aclii: |
+    hogemoge jieja afeiajeiaj
+  aclii.run: |
+    moeifjaeoijeweoijfoaijea
+  aclii.run.forever: |
+    jfeoijofija ofiejaofiaj
