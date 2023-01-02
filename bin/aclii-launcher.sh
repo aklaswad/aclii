@@ -2,7 +2,7 @@
 set -euo pipefail
 
 _aclii_debug () {
-  if [ -n "$ACLII_DEBUG" ]; then
+  if [ -n "${ACLII_DEBUG+HAS_VALUE}" ]; then
     echo "$@" >> /tmp/aclii-debug.log
   fi
 }
