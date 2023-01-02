@@ -92,4 +92,7 @@ __parse_args () {
 }
 __parse_args "$@"
 
-exec ./aclii_main.js $(echo "$args" | base64)
+#XXX: 
+binname=$(dirname $0)/$(basename $0)"-main"
+echo "binname $binname"
+exec "$binname" $(echo "$args" | base64)

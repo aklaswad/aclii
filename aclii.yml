@@ -2,6 +2,18 @@ name: aclii
 description: |
   A toolkit for aclii (Abstract Command Line Interface Interface)
 commands:
+  - name: render
+    description: |
+      Render bash scripts generated from yaml config file. See sub commands for details.
+      commands:
+        - name: completion
+          description: |
+            Render and print bash auto-completion script to STDOUT.
+          options:
+            - name: file
+              want: file
+              default: ./aclii.yml
+              description: Specify yaml file
   - name: test
     description: |
       test something...
@@ -27,8 +39,6 @@ options:
     want: string
   - name: file
     want: file
-implements:
-  test: test
 manual:
   aclii: |
     hogemoge jieja afeiajeiaj

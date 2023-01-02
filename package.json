@@ -6,7 +6,7 @@
   "main": "index.js",
   "bin": {
     "aclii": "bin/aclii.sh",
-    "_aclii_runner": "bin/cli.js"
+    "aclii-main": "bin/aclii-main.js"
   },
   "scripts": {
     "build": "npm exec -c './bin/cli.js build > bin/aclii.sh'",
