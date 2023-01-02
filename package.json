@@ -5,8 +5,8 @@
   "description": "Abstract Command Line Interface Interface",
   "main": "index.js",
   "bin": {
-    "aclii": "bin/aclii.sh",
-    "aclii-main": "bin/aclii-main.js"
+    "aclii": "bin/aclii-launcher.sh",
+    "aclii-main": "bin/cli.js"
   },
   "scripts": {
     "build": "script/build.sh",
