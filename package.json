@@ -9,7 +9,7 @@
     "aclii-main": "bin/aclii-main.js"
   },
   "scripts": {
-    "build": "npm exec -c './bin/cli.js build > bin/aclii.sh'",
+    "build": "script/build.sh",
     "build-echo": "npm exec -c './bin/cli.js build'",
     "runit": "echo hoge",
     "test": "bats -t tests"
