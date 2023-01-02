@@ -7,6 +7,11 @@ _aclii_debug () {
   fi
 }
 
+_aclii_exec () {
+  binname=$(dirname $0)/$(basename $0)"-main"
+  exec "$binname" $(echo "$1" | base64)
+}
+
 args='{"options":{}}'
 
 _aclii_debug "Launch aclii..."
@@ -14,12 +19,24 @@ _aclii_debug "ARGV $@"
 _aclii_debug "$ 0 $0"
 
 _help () {
-  case "$1" in
+  local page
+  if [ -n "${1+HAS_VALUE}" ]; then
+    page="$1"
+  else
+    page="<%= aclii.commandName %>"
+  fi
+  case "$page" in
   <% aclii.allCommands.forEach( c => { %>
     "<%= c.path %>") cat << EOS
-<%= c.path  %>  <%= c.description %>
+Name: <%= c.path  %>
+  <%= c.description %>
 
-Options
+Commands:
+<% c.commands.forEach( sc => { %>
+  <%= sc.name %> | <%= sc.description %>
+<% }) %>
+
+Options:
 <% c.options.forEach( o => { %>
   --<%= o.name %> | <%= o.description %>
 <% }) %>
@@ -82,16 +99,35 @@ __parse_args () {
           cmd="<%= c.path %>"
           ;;
       <% }) %>
+        * ) echo "Unknown Command: $word"
+            echo
+            _help $cmd
       esac
     fi
 
   done
+
   args=$(echo "$args" | jq --arg com "$cmd" '.command = $com')
   _aclii_debug "Parse done---------"
 
+  # Now we got the command which to be executed.
+  # Handle it as it wants
+  case "$cmd" in
+  <% aclii.allCommands.forEach( c => { %>
+    "<%= c.path %>" )
+    <% if (c.helpstop) { %>
+      _help "$cmd"
+    <% } else { %>
+      _aclii_exec "$args"
+    <% } %>
+      ;;
+  <% }) %>
+    * )
+      echo "Unknown command";
+      _help;
+  esac
 }
+
 __parse_args "$@"
 
-#XXX: 
-binname=$(dirname $0)/$(basename $0)"-main"
-exec "$binname" $(echo "$args" | base64)
+

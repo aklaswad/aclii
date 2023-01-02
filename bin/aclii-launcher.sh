@@ -7,6 +7,11 @@ _aclii_debug () {
   fi
 }
 
+_aclii_exec () {
+  binname=$(dirname $0)/$(basename $0)"-main"
+  exec "$binname" $(echo "$1" | base64)
+}
+
 args='{"options":{}}'
 
 _aclii_debug "Launch aclii..."
@@ -14,13 +19,31 @@ _aclii_debug "ARGV $@"
 _aclii_debug "$ 0 $0"
 
 _help () {
-  case "$1" in
+  local page
+  if [ -n "${1+HAS_VALUE}" ]; then
+    page="$1"
+  else
+    page="aclii"
+  fi
+  case "$page" in
   
     "aclii") cat << EOS
-aclii  A toolkit for aclii (Abstract Command Line Interface Interface)
+Name: aclii
+  A toolkit for aclii (Abstract Command Line Interface Interface)
 
 
-Options
+Commands:
+
+  render | Render bash scripts generated from yaml config file. See sub commands for details.
+
+
+  test | test something...
+
+
+  build | 
+
+
+Options:
 
   --verbose | 
 
@@ -30,19 +53,33 @@ EOS
     ;;
   
     "aclii.render") cat << EOS
-aclii.render  Render bash scripts generated from yaml config file. See sub commands for details.
+Name: aclii.render
+  Render bash scripts generated from yaml config file. See sub commands for details.
 
 
-Options
+Commands:
+
+  completion | Render and print bash auto-completion script to STDOUT.
+
+
+  launcher | Render and print bash script to launch other program to STDOUT.
+
+
+
+Options:
 
 EOS
     ;;
   
     "aclii.render.completion") cat << EOS
-aclii.render.completion  Render and print bash auto-completion script to STDOUT.
+Name: aclii.render.completion
+  Render and print bash auto-completion script to STDOUT.
 
 
-Options
+Commands:
+
+
+Options:
 
   --file | Specify yaml file
 
@@ -50,10 +87,14 @@ EOS
     ;;
   
     "aclii.render.launcher") cat << EOS
-aclii.render.launcher  Render and print bash script to launch other program to STDOUT.
+Name: aclii.render.launcher
+  Render and print bash script to launch other program to STDOUT.
 
 
-Options
+Commands:
+
+
+Options:
 
   --file | Specify yaml file
 
@@ -61,10 +102,17 @@ EOS
     ;;
   
     "aclii.test") cat << EOS
-aclii.test  test something...
+Name: aclii.test
+  test something...
 
 
-Options
+Commands:
+
+  it | test it. what is it?
+
+
+
+Options:
 
   --all | test all
 
@@ -76,18 +124,26 @@ EOS
     ;;
   
     "aclii.test.it") cat << EOS
-aclii.test.it  test it. what is it?
+Name: aclii.test.it
+  test it. what is it?
 
 
-Options
+Commands:
+
+
+Options:
 
 EOS
     ;;
   
     "aclii.build") cat << EOS
-aclii.build  
+Name: aclii.build
+  
 
-Options
+Commands:
+
+
+Options:
 
 EOS
     ;;
@@ -191,17 +247,70 @@ __parse_args () {
           cmd="aclii.build"
           ;;
       
+        * ) echo "Unknown Command: $word"
+            echo
+            _help $cmd
       esac
     fi
 
   done
+
   args=$(echo "$args" | jq --arg com "$cmd" '.command = $com')
   _aclii_debug "Parse done---------"
 
+  # Now we got the command which to be executed.
+  # Handle it as it wants
+  case "$cmd" in
+  
+    "aclii" )
+    
+      _help "$cmd"
+    
+      ;;
+  
+    "aclii.render" )
+    
+      _aclii_exec "$args"
+    
+      ;;
+  
+    "aclii.render.completion" )
+    
+      _aclii_exec "$args"
+    
+      ;;
+  
+    "aclii.render.launcher" )
+    
+      _aclii_exec "$args"
+    
+      ;;
+  
+    "aclii.test" )
+    
+      _aclii_exec "$args"
+    
+      ;;
+  
+    "aclii.test.it" )
+    
+      _aclii_exec "$args"
+    
+      ;;
+  
+    "aclii.build" )
+    
+      _aclii_exec "$args"
+    
+      ;;
+  
+    * )
+      echo "Unknown command";
+      _help;
+  esac
 }
+
 __parse_args "$@"
 
-#XXX: 
-binname=$(dirname $0)/$(basename $0)"-main"
-exec "$binname" $(echo "$args" | base64)
+
 

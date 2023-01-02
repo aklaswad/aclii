@@ -1,6 +1,7 @@
 name: aclii
 description: |
   A toolkit for aclii (Abstract Command Line Interface Interface)
+helpstop: true
 commands:
   - name: render
     description: |
