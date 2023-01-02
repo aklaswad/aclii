@@ -1,9 +1,9 @@
 #!/bin/bash
 set -euo pipefail
-set -x
+
 _aclii_debug () {
   if [ -n "$ACLII_DEBUG" ]; then
-    echo "$@" # >> /tmp/aclii-debug.log
+    echo "$@" >> /tmp/aclii-debug.log
   fi
 }
 
@@ -12,6 +12,24 @@ args='{"options":{}}'
 _aclii_debug "Launch aclii..."
 _aclii_debug "ARGV $@"
 _aclii_debug "$ 0 $0"
+
+_help () {
+  case "$1" in
+  <% aclii.allCommands.forEach( c => { %>
+    "<%= c.path %>") cat << EOS
+<%= c.path  %>  <%= c.description %>
+
+Options
+<% c.options.forEach( o => { %>
+  --<%= o.name %> | <%= o.description %>
+<% }) %>
+EOS
+    ;;
+  <% }) %>
+  esac
+  exit 0
+}
+
 __parse_args () {
   processed=0
   _aclii_debug "enter parse_args |$@|"
@@ -32,28 +50,36 @@ __parse_args () {
       wanting=""
       want=""
     elif [ "${word:0:1}" == '-' ]; then
-      # It starts with dash. Check option that if
+      # It starts with dash.
+
+      # This launcher will handle help command
+      if [ `echo "$word" | grep "-help$"` ]; then
+        _help $command
+      fi
+      # Check option that if
       # next arg is option valu or not
+
       comopt="$command$word"
       _aclii_debug "adding flag |$comopt|"
-      echo $args | jq '.'
-      args=$(echo $args | jq '.options["'"$comopt"'"] = true')
       _aclii_debug "Checking option $word : comopt $comopt"
       case "$comopt" in
       <% aclii.root.subCommands.forEach( c => {
         c.options.forEach( o => { %>
         "<%= c.path %>--<%= o.name %>" )
+          args=$(echo $args | jq '.options["'"$comopt"'"] = true')
           want="<%= o.want %>"
           wanting="$comopt"
           ;;
       <% })}) %>
+        * ) echo "Unknown Option $word"
+          exit
+          ;;
       esac
     else
       case "$command.$word" in
       <% aclii.root.subCommands.forEach( c => { %>
         "<%= c.path %>" )
           command="<%= c.path %>"
-
           ;;
       <% }) %>
       esac
