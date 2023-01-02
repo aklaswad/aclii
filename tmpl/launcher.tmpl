@@ -94,5 +94,4 @@ __parse_args "$@"
 
 #XXX: 
 binname=$(dirname $0)/$(basename $0)"-main"
-echo "binname $binname"
 exec "$binname" $(echo "$args" | base64)

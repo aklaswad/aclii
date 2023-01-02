@@ -1,4 +1,3 @@
-binname /Users/akira/dev/aclii/build/node_modules/.bin/aclii-main
 #!/bin/bash
 set -euo pipefail
 
@@ -204,6 +203,5 @@ __parse_args "$@"
 
 #XXX: 
 binname=$(dirname $0)/$(basename $0)"-main"
-echo "binname $binname"
 exec "$binname" $(echo "$args" | base64)
 
