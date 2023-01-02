@@ -15,13 +15,13 @@ _<%= aclii.commandName %> () {
   local skip=0
   local want=""
   local terminated=""
-  local command="<%= aclii.commandName %>"
+  local cmd="<%= aclii.commandName %>"
   COMPREPLY=()
   for word in "${COMP_WORDS[@]}"
   do
     : $((processed++))
     _aclii_debug "Entering new word $word"
-    _aclii_debug " processed: $processed command: |$command| want: |$want|"
+    _aclii_debug " processed: $processed cmd: |$cmd| want: |$want|"
     if [ "$processed" == "$len" ]; then
       # At final item. What we want?
 
@@ -35,7 +35,7 @@ _<%= aclii.commandName %> () {
         esac
       elif [ "${word:0:1}" == '-' ]; then
         # It starts with dash. Maybe we should show option list
-        case "$command" in
+        case "$cmd" in
         <% aclii.allCommands.forEach( c => { %>
           "<%= c.path %>" )
             _aclii_debug "path: <%= c.path %> cur: $cur |"
@@ -44,7 +44,7 @@ _<%= aclii.commandName %> () {
         esac
       else
         # Or, searching next command
-        case "$command" in
+        case "$cmd" in
         <% aclii.allCommands.forEach( c => { %>
           "<%= c.path %>" )
             COMPREPLY=( $(compgen -W "<%= c.commands.map( c => c.name ).join(" ") %>" -- "${cur}" )) ;;
@@ -59,7 +59,7 @@ _<%= aclii.commandName %> () {
       elif [ "${word:0:1}" == '-' ]; then
         # It starts with dash. Check option that if
         # next arg is option valu or not
-        comopt="$command$word"
+        comopt="$cmd$word"
         _aclii_debug "Checking option $word : comopt $comopt"
         case "$comopt" in
         <% aclii.allCommands.forEach( c => {
@@ -71,10 +71,10 @@ _<%= aclii.commandName %> () {
         esac
       else
         # Or, searching next command
-        case "$command.$word" in
+        case "$cmd.$word" in
         <% aclii.allCommands.forEach( c => { %>
           "<%= c.path %>" )
-            command="<%= c.path %>"
+            cmd="<%= c.path %>"
             ;;
         <% }) %>
         esac

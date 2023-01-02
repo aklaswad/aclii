@@ -35,12 +35,12 @@ __parse_args () {
   _aclii_debug "enter parse_args |$@|"
   local want
   local wanting
-  local command="<%= aclii.commandName %>"
+  local cmd="<%= aclii.commandName %>"
   for word in "$@"
   do
     : $((processed++))
     _aclii_debug "Processing $processed th arg |$word|"
-    _aclii_debug "   command: $command  want |$want|"
+    _aclii_debug "   cmd: $cmd  want |$want|"
 
     # Run the path to know where I am
     if [ -n "$want" ]; then
@@ -54,12 +54,12 @@ __parse_args () {
 
       # This launcher will handle help command
       if [ `echo "$word" | grep "-help$"` ]; then
-        _help $command
+        _help $cmd
       fi
       # Check option that if
       # next arg is option valu or not
 
-      comopt="$command$word"
+      comopt="$cmd$word"
       _aclii_debug "adding flag |$comopt|"
       _aclii_debug "Checking option $word : comopt $comopt"
       case "$comopt" in
@@ -76,17 +76,17 @@ __parse_args () {
           ;;
       esac
     else
-      case "$command.$word" in
+      case "$cmd.$word" in
       <% aclii.root.subCommands.forEach( c => { %>
         "<%= c.path %>" )
-          command="<%= c.path %>"
+          cmd="<%= c.path %>"
           ;;
       <% }) %>
       esac
     fi
 
   done
-  args=$(echo "$args" | jq --arg com "$command" '.command = $com')
+  args=$(echo "$args" | jq --arg com "$cmd" '.command = $com')
   _aclii_debug "Parse done---------"
 
 }
