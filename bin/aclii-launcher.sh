@@ -1,3 +1,4 @@
+binname /Users/akira/dev/aclii/build/node_modules/.bin/aclii-main
 #!/bin/bash
 set -euo pipefail
 
@@ -101,12 +102,12 @@ __parse_args () {
   _aclii_debug "enter parse_args |$@|"
   local want
   local wanting
-  local command="aclii"
+  local cmd="aclii"
   for word in "$@"
   do
     : $((processed++))
     _aclii_debug "Processing $processed th arg |$word|"
-    _aclii_debug "   command: $command  want |$want|"
+    _aclii_debug "   cmd: $cmd  want |$want|"
 
     # Run the path to know where I am
     if [ -n "$want" ]; then
@@ -120,12 +121,12 @@ __parse_args () {
 
       # This launcher will handle help command
       if [ `echo "$word" | grep "-help$"` ]; then
-        _help $command
+        _help $cmd
       fi
       # Check option that if
       # next arg is option valu or not
 
-      comopt="$command$word"
+      comopt="$cmd$word"
       _aclii_debug "adding flag |$comopt|"
       _aclii_debug "Checking option $word : comopt $comopt"
       case "$comopt" in
@@ -165,37 +166,37 @@ __parse_args () {
           ;;
       esac
     else
-      case "$command.$word" in
+      case "$cmd.$word" in
       
         "aclii.render" )
-          command="aclii.render"
+          cmd="aclii.render"
           ;;
       
         "aclii.render.completion" )
-          command="aclii.render.completion"
+          cmd="aclii.render.completion"
           ;;
       
         "aclii.render.launcher" )
-          command="aclii.render.launcher"
+          cmd="aclii.render.launcher"
           ;;
       
         "aclii.test" )
-          command="aclii.test"
+          cmd="aclii.test"
           ;;
       
         "aclii.test.it" )
-          command="aclii.test.it"
+          cmd="aclii.test.it"
           ;;
       
         "aclii.build" )
-          command="aclii.build"
+          cmd="aclii.build"
           ;;
       
       esac
     fi
 
   done
-  args=$(echo "$args" | jq --arg com "$command" '.command = $com')
+  args=$(echo "$args" | jq --arg com "$cmd" '.command = $com')
   _aclii_debug "Parse done---------"
 
 }
