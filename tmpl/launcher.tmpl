@@ -30,7 +30,7 @@ _help () {
     "<%= c.path %>") cat << EOS
 Name: <%= c.path  %>
   <%= c.description %>
-
+<%= aclii.manualForCommand(c.path) %>
 Commands:
 ##//  c.commands.forEach( sc => {
   <%= sc.name %> | <%= sc.description %>

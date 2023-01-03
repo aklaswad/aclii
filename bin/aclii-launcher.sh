@@ -30,6 +30,7 @@ _help () {
 Name: aclii
   A toolkit for aclii (Abstract Command Line Interface Interface)
 
+aclii, a command line interface interface
 
 Commands:
   render | Render bash scripts generated from yaml config file. See sub commands for details.
@@ -44,6 +45,8 @@ EOS
 Name: aclii.render
   Render bash scripts generated from yaml config file. See sub commands for details.
 
+Render generated contents to STDOUT.
+You can choose one of sub command from the list.
 
 Commands:
   completion | Render and print bash auto-completion script to STDOUT.

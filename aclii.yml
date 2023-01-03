@@ -24,3 +24,6 @@ options:
 manual:
   aclii: |
     aclii, a command line interface interface
+  aclii.render: |
+    Render generated contents to STDOUT.
+    You can choose one of sub command from the list.
