@@ -26,23 +26,23 @@ _help () {
     page="<%= aclii.commandName %>"
   fi
   case "$page" in
-  <% aclii.allCommands.forEach( c => { %>
+##// aclii.allCommands.forEach( c => {
     "<%= c.path %>") cat << EOS
 Name: <%= c.path  %>
   <%= c.description %>
 
 Commands:
-<% c.commands.forEach( sc => { %>
+##//  c.commands.forEach( sc => {
   <%= sc.name %> | <%= sc.description %>
-<% }) %>
+##//  })
 
 Options:
-<% c.options.forEach( o => { %>
+##//  c.options.forEach( o => {
   --<%= o.name %> | <%= o.description %>
-<% }) %>
+##//  })
 EOS
     ;;
-  <% }) %>
+##// })
   esac
   exit 0
 }
@@ -80,25 +80,25 @@ __parse_args () {
       _aclii_debug "adding flag |$comopt|"
       _aclii_debug "Checking option $word : comopt $comopt"
       case "$comopt" in
-      <% aclii.root.subCommands.forEach( c => {
-        c.options.forEach( o => { %>
+##// aclii.root.subCommands.forEach( c => {
+##//   c.options.forEach( o => {
         "<%= c.path %>--<%= o.name %>" )
           args=$(echo $args | jq '.options["<%= o.name %>"] = true')
           want="<%= o.want %>"
           wanting="<%= o.name %>"
           ;;
-      <% })}) %>
+##//  })})
         * ) echo "Unknown Option $word"
           exit
           ;;
       esac
     else
       case "$cmd.$word" in
-      <% aclii.root.subCommands.forEach( c => { %>
+##//  aclii.root.subCommands.forEach( c => {
         "<%= c.path %>" )
           cmd="<%= c.path %>"
           ;;
-      <% }) %>
+##//  })
         * ) echo "Unknown Command: $word"
             echo
             _help $cmd
@@ -113,15 +113,15 @@ __parse_args () {
   # Now we got the command which to be executed.
   # Handle it as it wants
   case "$cmd" in
-  <% aclii.allCommands.forEach( c => { %>
+##// aclii.allCommands.forEach( c => {
     "<%= c.path %>" )
-    <% if (c.helpstop) { %>
+##//   if (c.helpstop) {
       _help "$cmd"
-    <% } else { %>
+##//   } else {
       _aclii_exec "$args"
-    <% } %>
+##//   }
       ;;
-  <% }) %>
+##// })
     * )
       echo "Unknown command";
       _help;

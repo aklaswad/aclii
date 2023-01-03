@@ -36,19 +36,19 @@ _<%= aclii.commandName %> () {
       elif [ "${word:0:1}" == '-' ]; then
         # It starts with dash. Maybe we should show option list
         case "$cmd" in
-        <% aclii.allCommands.forEach( c => { %>
+##//  aclii.allCommands.forEach( c => {
           "<%= c.path %>" )
             _aclii_debug "path: <%= c.path %> cur: $cur |"
             COMPREPLY=( $(compgen -W "<%= c.options.map( o => '--' + o.name ).join(" ") %>" -- "${cur}" )) ;;
-        <% }) %>
+##//  })
         esac
       else
         # Or, searching next command
         case "$cmd" in
-        <% aclii.allCommands.forEach( c => { %>
+##//  aclii.allCommands.forEach( c => {
           "<%= c.path %>" )
             COMPREPLY=( $(compgen -W "<%= c.commands.map( c => c.name ).join(" ") %>" -- "${cur}" )) ;;
-        <% }) %>
+##//  })
         esac
       fi
     else
@@ -62,21 +62,21 @@ _<%= aclii.commandName %> () {
         comopt="$cmd$word"
         _aclii_debug "Checking option $word : comopt $comopt"
         case "$comopt" in
-        <% aclii.allCommands.forEach( c => {
-          c.options.forEach( o => { %>
+##// aclii.allCommands.forEach( c => {
+##//   c.options.forEach( o => {
           "<%= c.path %>--<%= o.name %>" )
             want="<%= o.want %>"
             ;;
-        <% })}) %>
+##//  })})
         esac
       else
         # Or, searching next command
         case "$cmd.$word" in
-        <% aclii.allCommands.forEach( c => { %>
+##//  aclii.allCommands.forEach( c => {
           "<%= c.path %>" )
             cmd="<%= c.path %>"
             ;;
-        <% }) %>
+##//  })
         esac
       fi
 
