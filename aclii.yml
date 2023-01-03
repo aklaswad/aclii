@@ -3,6 +3,22 @@ description: |
   A toolkit for aclii (Abstract Command Line Interface Interface)
 helpstop: true
 commands:
+  - name: playground
+    helpstop: true
+    description: |
+      Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+    commands:
+
+      - name: hungry
+        description: |
+          Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
+        want: all
+
+      - name: stuffed
+        description: |
+          Raise error if non optional values ( started by dash(es) ) are related.
+        termminate: true
+
   - name: render
     helpstop: true
     description: |

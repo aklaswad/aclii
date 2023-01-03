@@ -18,5 +18,24 @@ const Commands = {
 
 const json = Buffer.from(process.argv[2], 'base64').toString();
 const opts = JSON.parse(json)
-console.error(opts)
-Commands[opts.command](opts)
+
+if ( process.env.ACLII_DEBUG ) {
+  console.error("DEBUG REPORT FROM ACLII CLI")
+  console.error(JSON.stringify({ "ARG-JSON": opts }, null, 2))
+}
+
+if (/^aclii\.playground\./.test(opts.command)) {
+  console.log("Thank you for playing!")
+  console.log("----------------------")
+  console.log(JSON.stringify(opts,null,2))
+}
+else {
+  const command = Commands[opts.command]
+  if (command) {
+    command(opts)
+  }
+  else {
+    console.error("Unknown command: " + command)
+    process.exit(1)
+  }
+}
