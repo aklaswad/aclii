@@ -37,17 +37,12 @@ Commands:
   render | Render bash scripts generated from yaml config file. See sub commands for details.
 
 
-  test | test something...
-
-
-  build | 
-
 
 Options:
 
-  --verbose | 
+  --file | Specify yaml file
 
-  --file | 
+  --verbose | 
 
 EOS
     ;;
@@ -68,6 +63,10 @@ Commands:
 
 Options:
 
+  --file | Specify yaml file
+
+  --verbose | 
+
 EOS
     ;;
   
@@ -82,6 +81,8 @@ Commands:
 Options:
 
   --file | Specify yaml file
+
+  --verbose | 
 
 EOS
     ;;
@@ -98,52 +99,7 @@ Options:
 
   --file | Specify yaml file
 
-EOS
-    ;;
-  
-    "aclii.test") cat << EOS
-Name: aclii.test
-  test something...
-
-
-Commands:
-
-  it | test it. what is it?
-
-
-
-Options:
-
-  --all | test all
-
-  --file | test file
-
-  --dir | 
-
-EOS
-    ;;
-  
-    "aclii.test.it") cat << EOS
-Name: aclii.test.it
-  test it. what is it?
-
-
-Commands:
-
-
-Options:
-
-EOS
-    ;;
-  
-    "aclii.build") cat << EOS
-Name: aclii.build
-  
-
-Commands:
-
-
-Options:
+  --verbose | 
 
 EOS
     ;;
@@ -186,10 +142,28 @@ __parse_args () {
       _aclii_debug "Checking option $word : comopt $comopt"
       case "$comopt" in
       
+        "aclii.render--file" )
+          args=$(echo $args | jq '.options["file"] = true')
+          want="file"
+          wanting="file"
+          ;;
+      
+        "aclii.render--verbose" )
+          args=$(echo $args | jq '.options["verbose"] = true')
+          want="string"
+          wanting="verbose"
+          ;;
+      
         "aclii.render.completion--file" )
           args=$(echo $args | jq '.options["file"] = true')
           want="file"
           wanting="file"
+          ;;
+      
+        "aclii.render.completion--verbose" )
+          args=$(echo $args | jq '.options["verbose"] = true')
+          want="string"
+          wanting="verbose"
           ;;
       
         "aclii.render.launcher--file" )
@@ -198,22 +172,10 @@ __parse_args () {
           wanting="file"
           ;;
       
-        "aclii.test--all" )
-          args=$(echo $args | jq '.options["all"] = true')
-          want=""
-          wanting="all"
-          ;;
-      
-        "aclii.test--file" )
-          args=$(echo $args | jq '.options["file"] = true')
-          want=""
-          wanting="file"
-          ;;
-      
-        "aclii.test--dir" )
-          args=$(echo $args | jq '.options["dir"] = true')
-          want="dir"
-          wanting="dir"
+        "aclii.render.launcher--verbose" )
+          args=$(echo $args | jq '.options["verbose"] = true')
+          want="string"
+          wanting="verbose"
           ;;
       
         * ) echo "Unknown Option $word"
@@ -233,18 +195,6 @@ __parse_args () {
       
         "aclii.render.launcher" )
           cmd="aclii.render.launcher"
-          ;;
-      
-        "aclii.test" )
-          cmd="aclii.test"
-          ;;
-      
-        "aclii.test.it" )
-          cmd="aclii.test.it"
-          ;;
-      
-        "aclii.build" )
-          cmd="aclii.build"
           ;;
       
         * ) echo "Unknown Command: $word"
@@ -281,24 +231,6 @@ __parse_args () {
       ;;
   
     "aclii.render.launcher" )
-    
-      _aclii_exec "$args"
-    
-      ;;
-  
-    "aclii.test" )
-    
-      _aclii_exec "$args"
-    
-      ;;
-  
-    "aclii.test.it" )
-    
-      _aclii_exec "$args"
-    
-      ;;
-  
-    "aclii.build" )
     
       _aclii_exec "$args"
     

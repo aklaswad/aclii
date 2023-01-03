@@ -11,48 +11,17 @@ commands:
       - name: completion
         description: |
           Render and print bash auto-completion script to STDOUT.
-        options:
-          - name: file
-            want: file
-            default: ./aclii.yml
-            description: Specify yaml file
       - name: launcher
         description: |
           Render and print bash script to launch other program to STDOUT.
-        options:
-          - name: file
-            want: file
-            default: ./aclii.yml
-            description: Specify yaml file
-  - name: test
-    description: |
-      test something...
-    options:
-      - name: all
-        short: a
-        description: test all
-      - name: file
-        short: f
-        description: test file
-        required: true
-      - name: dir
-        want: dir
-    commands:
-      - name: it
-        description: |
-          test it. what is it?
-        want: file
-  - name: build
 options:
+  - name: file
+    want: file
+    default: ./aclii.yml
+    description: Specify yaml file
   - name: verbose
     short: v
     want: string
-  - name: file
-    want: file
 manual:
   aclii: |
-    hogemoge jieja afeiajeiaj
-  aclii.run: |
-    moeifjaeoijeweoijfoaijea
-  aclii.run.forever: |
-    jfeoijofija ofiejaofiaj
+    aclii, a command line interface interface
