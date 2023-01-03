@@ -10,7 +10,7 @@ import url from 'url'
 const here = path.dirname(
   url.fileURLToPath(import.meta.url)
 )
-const dataPath = path.resolve(here, 'data.yml')
+const dataPath = path.resolve(here, 'MicroTemplate.test.data.yml')
 const dataText = fs.readFileSync(dataPath, 'utf-8')
 const data = YAML.parse(dataText)
 
@@ -24,7 +24,11 @@ function compressSpaces (text) {
 
 data.forEach( (testItem) => {
   test(testItem.name, (t) => {
-    const result = render(testItem.tmpl, testItem.data)
+    const result = render(
+      testItem.tmpl,
+      testItem.data,
+      //{ debug: true }
+    )
     assert.strictEqual(
       compressSpaces(result),
       compressSpaces(testItem.expect)

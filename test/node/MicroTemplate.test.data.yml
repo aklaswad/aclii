@@ -37,7 +37,25 @@
 - name: Render loop in oneline
   data:
     nums: [ 1, 2, 3 ]
-  tmpl: |
-    <% data.nums.forEach( n => { %><%= n %><% }) %>
-  expect: 123
+  tmpl: <% data.nums.forEach( n => { %><%= n %><% }) %>
+  expect: "123"
 
+- name: Loop using Line based templating
+  data:
+    letters:
+      - b
+      - c
+      - d
+  tmpl: |
+    a
+    ##// // hoge
+    ##//data.letters.forEach( l => {
+      :<%= l %>
+    ##//})
+    e
+  expect: |
+    a
+    :b
+    :c
+    :d
+    e
