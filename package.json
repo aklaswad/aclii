@@ -10,9 +10,7 @@
   },
   "scripts": {
     "build": "script/build.sh",
-    "build-echo": "npm exec -c './bin/cli.js build'",
-    "runit": "echo hoge",
-    "test": "bats -t tests"
+    "test": "node --test"
   },
   "keywords": [],
   "author": "",

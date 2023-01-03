@@ -1,0 +1,43 @@
+- name: Render Value
+  data:
+    name: test
+  tmpl: |
+    <%= data.name %>
+  expect: |
+    test
+
+- name: Render letter in the middle of word
+  data:
+    interface: cli
+  tmpl: |
+    a<%= data.interface %>i
+  expect: |
+    aclii
+
+- name: Render word in the middle of sentence
+  data:
+    emotion: love
+  tmpl: |
+    I <%= data.emotion %> tests
+  expect: |
+    I love tests
+
+- name: Render Loop
+  data:
+    nums: [ 1, 2, 3 ]
+  tmpl: |
+    <% data.nums.forEach( n => { %>
+      <%= n %>
+    <% }) %>
+  expect: |
+    1
+    2
+    3
+
+- name: Render loop in oneline
+  data:
+    nums: [ 1, 2, 3 ]
+  tmpl: |
+    <% data.nums.forEach( n => { %><%= n %><% }) %>
+  expect: 123
+
