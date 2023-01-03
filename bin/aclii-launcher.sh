@@ -117,6 +117,16 @@ __parse_args () {
       _aclii_debug "adding flag |$comopt|"
       _aclii_debug "Checking option $word : comopt $comopt"
       case "$comopt" in
+        "aclii--file" )
+          args=$(echo $args | jq '.options["file"] = true')
+          want="file"
+          wanting="file"
+          ;;
+        "aclii--verbose" )
+          args=$(echo $args | jq '.options["verbose"] = true')
+          want=""
+          wanting="verbose"
+          ;;
         "aclii.render--file" )
           args=$(echo $args | jq '.options["file"] = true')
           want="file"
@@ -124,7 +134,7 @@ __parse_args () {
           ;;
         "aclii.render--verbose" )
           args=$(echo $args | jq '.options["verbose"] = true')
-          want="string"
+          want=""
           wanting="verbose"
           ;;
         "aclii.render.completion--file" )
@@ -134,7 +144,7 @@ __parse_args () {
           ;;
         "aclii.render.completion--verbose" )
           args=$(echo $args | jq '.options["verbose"] = true')
-          want="string"
+          want=""
           wanting="verbose"
           ;;
         "aclii.render.launcher--file" )
@@ -144,7 +154,7 @@ __parse_args () {
           ;;
         "aclii.render.launcher--verbose" )
           args=$(echo $args | jq '.options["verbose"] = true')
-          want="string"
+          want=""
           wanting="verbose"
           ;;
         * ) echo "Unknown Option $word"

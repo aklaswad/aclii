@@ -65,18 +65,20 @@ _<%= aclii.commandName %> () {
 ##// aclii.allCommands.forEach( c => {
 ##//   c.options.forEach( o => {
           "<%= c.path %>--<%= o.name %>" )
+##//     if ( o.want ) {
             want="<%= o.want %>"
+##//     }
             ;;
-##//  })})
+##// })})
         esac
       else
         # Or, searching next command
         case "$cmd.$word" in
-##//  aclii.allCommands.forEach( c => {
+##// aclii.allCommands.forEach( c => {
           "<%= c.path %>" )
             cmd="<%= c.path %>"
             ;;
-##//  })
+##// })
         esac
       fi
 

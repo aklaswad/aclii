@@ -18,10 +18,9 @@ options:
   - name: file
     want: file
     default: ./aclii.yml
-    description: Specify yaml file
+    description: Specify aclii config file
   - name: verbose
     short: v
-    want: string
 manual:
   aclii: |
     aclii, a command line interface interface
