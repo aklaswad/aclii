@@ -1,4 +1,7 @@
 #!/bin/bash
+
+# This is auto generated script by aclii 0.0.1
+
 set -euo pipefail
 
 _aclii_debug () {
