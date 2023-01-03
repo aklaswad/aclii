@@ -59,3 +59,17 @@
     :c
     :d
     e
+
+- name: Throw rendering error, for example member access for undefined
+  error: Failed to render template
+  data:
+    foo: { bar: 42 }
+  tmpl: <%= data.foo.bar.fizz.buzz %>
+
+- name: Throw compile error for bad javascript
+  error: Failed to compile template
+  data:
+    nums: [ 1, 2, 3 ]
+  tmpl: <% data.nums.forEach( n => { %><%= n %><% ) %>
+
+

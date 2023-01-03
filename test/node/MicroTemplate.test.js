@@ -23,15 +23,27 @@ function compressSpaces (text) {
 }
 
 data.forEach( (testItem) => {
-  test(testItem.name, (t) => {
-    const result = render(
-      testItem.tmpl,
-      testItem.data,
-      //{ debug: true }
-    )
-    assert.strictEqual(
-      compressSpaces(result),
-      compressSpaces(testItem.expect)
-    )
-  })
+  if ( testItem.error ) {
+    test(testItem.name, (t) => {
+      assert.throws( () => {
+        render(
+          testItem.tmpl,
+          testItem.data,
+        )
+      }, new RegExp(testItem.error))
+    })
+  }
+  else {
+    test(testItem.name, (t) => {
+      const result = render(
+        testItem.tmpl,
+        testItem.data,
+        //{ debug: true }
+      )
+      assert.strictEqual(
+        compressSpaces(result),
+        compressSpaces(testItem.expect)
+      )
+    })
+  }
 })
