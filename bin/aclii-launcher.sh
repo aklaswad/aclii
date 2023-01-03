@@ -17,112 +17,104 @@ args='{"options":{}}'
 _aclii_debug "Launch aclii..."
 _aclii_debug "ARGV $@"
 _aclii_debug "$ 0 $0"
-
-
 _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
   cat << 'EOH'
-Name: aclii
-  A toolkit for aclii (Abstract Command Line Interface Interface)
-
-aclii, a command line interface interface
-
-Commands:
-  playground | Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
-
-  render | Render bash scripts generated from yaml config file. See sub commands for details.
-
-
-Options:
-  --file | Specify aclii config file
-  --verbose | 
+  Name: aclii
+    A toolkit for aclii (Abstract Command Line Interface Interface)
+  
+  aclii, a command line interface interface
+  
+  Commands:
+    playground | Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+    render | Render bash scripts generated from yaml config file. See sub commands for details.
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
 EOH
 }
 _help_node620dd4ac0e81767466a282a8b830d9a7 () {
   cat << 'EOH'
-Name: aclii.playground
-  Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
-
-
-Commands:
-  hungry | Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
-
-  stuffed | Raise error if non optional values ( started by dash(es) ) are related.
-
-
-Options:
-  --file | Specify aclii config file
-  --verbose | 
+  Name: aclii.playground
+    Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+  
+  
+  Commands:
+    hungry | Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
+    stuffed | Raise error if non optional values ( started by dash(es) ) are related.
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
 EOH
 }
 _help_nodec9e9547ec88bba1cbfa64a3699a294ed () {
   cat << 'EOH'
-Name: aclii.playground.hungry
-  Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
-
-
-Commands:
-
-Options:
-  --file | Specify aclii config file
-  --verbose | 
+  Name: aclii.playground.hungry
+    Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
+  
+  
+  Commands:
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
 EOH
 }
 _help_node1f25010818a63d2f7bcb15a33d6fd818 () {
   cat << 'EOH'
-Name: aclii.playground.stuffed
-  Raise error if non optional values ( started by dash(es) ) are related.
-
-
-Commands:
-
-Options:
-  --file | Specify aclii config file
-  --verbose | 
+  Name: aclii.playground.stuffed
+    Raise error if non optional values ( started by dash(es) ) are related.
+  
+  
+  Commands:
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
 EOH
 }
 _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
   cat << 'EOH'
-Name: aclii.render
-  Render bash scripts generated from yaml config file. See sub commands for details.
-
-Render generated contents to STDOUT.
-You can choose one of sub command from the list.
-
-Commands:
-  completion | Render and print bash auto-completion script to STDOUT.
-
-  launcher | Render and print bash script to launch other program to STDOUT.
-
-
-Options:
-  --file | Specify aclii config file
-  --verbose | 
+  Name: aclii.render
+    Render bash scripts generated from yaml config file. See sub commands for details.
+  
+  Render generated contents to STDOUT.
+  You can choose one of sub command from the list.
+  
+  Commands:
+    completion | Render and print bash auto-completion script to STDOUT.
+    launcher | Render and print bash script to launch other program to STDOUT.
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
 EOH
 }
 _help_node2e76e740f0ac071ad964481e5d054491 () {
   cat << 'EOH'
-Name: aclii.render.completion
-  Render and print bash auto-completion script to STDOUT.
-
-
-Commands:
-
-Options:
-  --file | Specify aclii config file
-  --verbose | 
+  Name: aclii.render.completion
+    Render and print bash auto-completion script to STDOUT.
+  
+  
+  Commands:
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
 EOH
 }
 _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
   cat << 'EOH'
-Name: aclii.render.launcher
-  Render and print bash script to launch other program to STDOUT.
-
-
-Commands:
-
-Options:
-  --file | Specify aclii config file
-  --verbose | 
+  Name: aclii.render.launcher
+    Render and print bash script to launch other program to STDOUT.
+  
+  
+  Commands:
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
 EOH
 }
 

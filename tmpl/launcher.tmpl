@@ -22,6 +22,7 @@ _aclii_debug "$ 0 $0"
 ##// aclii.allCommands.forEach( c => {
 _help_<%= c.hashedPath %> () {
   cat << 'EOH'
+##// setIndent(2)
 Name: <%= c.path  %>
   <%= c.description %>
 <%= aclii.manualForCommand(c.path) %>
@@ -34,6 +35,7 @@ Options:
 ##//  c.options.forEach( o => {
   --<%= o.name %> | <%= o.description %>
 ##//  })
+##// setIndent(0)
 EOH
 }
 ##//})
