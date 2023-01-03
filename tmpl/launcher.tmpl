@@ -83,9 +83,9 @@ __parse_args () {
       <% aclii.root.subCommands.forEach( c => {
         c.options.forEach( o => { %>
         "<%= c.path %>--<%= o.name %>" )
-          args=$(echo $args | jq '.options["'"$comopt"'"] = true')
+          args=$(echo $args | jq '.options["<%= o.name %>"] = true')
           want="<%= o.want %>"
-          wanting="$comopt"
+          wanting="<%= o.name %>"
           ;;
       <% })}) %>
         * ) echo "Unknown Option $word"

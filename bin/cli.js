@@ -6,12 +6,12 @@ import url from 'url'
 
 const Commands = {
   "aclii.render.completion": (opts) => {
-    const aclii =  Aclii.fromFile(opts.options['aclii.render.launcher--file'])
+    const aclii =  Aclii.fromFile(opts.options.file)
     console.log( aclii.render('bash_completion.tmpl'))
   },
 
   "aclii.render.launcher": (opts) => {
-    const aclii =  Aclii.fromFile(opts.options['aclii.render.launcher--file'])
+    const aclii =  Aclii.fromFile(opts.options.file)
     console.log( aclii.render('launcher.tmpl'))
   }
 }

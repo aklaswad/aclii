@@ -4,6 +4,7 @@ description: |
 helpstop: true
 commands:
   - name: render
+    helpstop: true
     description: |
       Render bash scripts generated from yaml config file. See sub commands for details.
     commands:

@@ -187,33 +187,33 @@ __parse_args () {
       case "$comopt" in
       
         "aclii.render.completion--file" )
-          args=$(echo $args | jq '.options["'"$comopt"'"] = true')
+          args=$(echo $args | jq '.options["file"] = true')
           want="file"
-          wanting="$comopt"
+          wanting="file"
           ;;
       
         "aclii.render.launcher--file" )
-          args=$(echo $args | jq '.options["'"$comopt"'"] = true')
+          args=$(echo $args | jq '.options["file"] = true')
           want="file"
-          wanting="$comopt"
+          wanting="file"
           ;;
       
         "aclii.test--all" )
-          args=$(echo $args | jq '.options["'"$comopt"'"] = true')
+          args=$(echo $args | jq '.options["all"] = true')
           want=""
-          wanting="$comopt"
+          wanting="all"
           ;;
       
         "aclii.test--file" )
-          args=$(echo $args | jq '.options["'"$comopt"'"] = true')
+          args=$(echo $args | jq '.options["file"] = true')
           want=""
-          wanting="$comopt"
+          wanting="file"
           ;;
       
         "aclii.test--dir" )
-          args=$(echo $args | jq '.options["'"$comopt"'"] = true')
+          args=$(echo $args | jq '.options["dir"] = true')
           want="dir"
-          wanting="$comopt"
+          wanting="dir"
           ;;
       
         * ) echo "Unknown Option $word"
@@ -270,7 +270,7 @@ __parse_args () {
   
     "aclii.render" )
     
-      _aclii_exec "$args"
+      _help "$cmd"
     
       ;;
   
