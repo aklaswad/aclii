@@ -12,7 +12,7 @@ commands:
       - name: hungry
         description: |
           Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
-        want: all
+        argv: string
 
       - name: stuffed
         description: |

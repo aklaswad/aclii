@@ -28,7 +28,8 @@ Name: <%= c.path  %>
 <%= aclii.manualForCommand(c.path) %>
 Commands:
 ##//  c.commands.forEach( sc => {
-  <%= sc.name %> | <%= sc.description %>
+  <%= sc.name %><% if (sc.argv ) { %> <<%= sc.argv %>>...<% } %>
+    | <%= sc.description %>
 ##//  })
 
 Options:
@@ -60,6 +61,7 @@ __parse_args () {
   _aclii_debug "enter parse_args |$@|"
   local want
   local wanting
+  local argv
   local cmd="<%= aclii.commandName %>"
   for word in "$@"
   do
@@ -68,7 +70,13 @@ __parse_args () {
     _aclii_debug "   cmd: $cmd  want |$want|"
 
     # Run the path to know where I am
-    if [ -n "$want" ]; then
+    if [ -n "$argv" ]; then
+      #TODO: Do we need to varidate here?
+
+      args=$(echo $args | jq '.argv += ["'"$word"'"]')
+      wanting=""
+      want=""
+    elif [ -n "$want" ]; then
       #TODO: Do we need to varidate here?
 
       args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$word"'"')
@@ -105,6 +113,9 @@ __parse_args () {
 ##//  aclii.root.subCommands.forEach( c => {
         "<%= c.path %>" )
           cmd="<%= c.path %>"
+##//    if (c.argv) {
+          argv="<%= c.argv %>"
+##//    }
           ;;
 ##//  })
         * ) echo "Unknown Command: $word"
@@ -112,7 +123,6 @@ __parse_args () {
             _help $cmd
       esac
     fi
-
   done
 
   args=$(echo "$args" | jq --arg com "$cmd" '.command = $com')

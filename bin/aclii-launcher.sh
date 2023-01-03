@@ -25,8 +25,10 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
   aclii, a command line interface interface
   
   Commands:
-    playground | Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
-    render | Render bash scripts generated from yaml config file. See sub commands for details.
+    playground
+      | Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+    render
+      | Render bash scripts generated from yaml config file. See sub commands for details.
   
   Options:
     --file | Specify aclii config file
@@ -40,8 +42,10 @@ _help_node620dd4ac0e81767466a282a8b830d9a7 () {
   
   
   Commands:
-    hungry | Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
-    stuffed | Raise error if non optional values ( started by dash(es) ) are related.
+    hungry <string>...
+      | Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
+    stuffed
+      | Raise error if non optional values ( started by dash(es) ) are related.
   
   Options:
     --file | Specify aclii config file
@@ -83,8 +87,10 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
   You can choose one of sub command from the list.
   
   Commands:
-    completion | Render and print bash auto-completion script to STDOUT.
-    launcher | Render and print bash script to launch other program to STDOUT.
+    completion
+      | Render and print bash auto-completion script to STDOUT.
+    launcher
+      | Render and print bash script to launch other program to STDOUT.
   
   Options:
     --file | Specify aclii config file
@@ -142,6 +148,7 @@ __parse_args () {
   _aclii_debug "enter parse_args |$@|"
   local want
   local wanting
+  local argv
   local cmd="aclii"
   for word in "$@"
   do
@@ -150,7 +157,13 @@ __parse_args () {
     _aclii_debug "   cmd: $cmd  want |$want|"
 
     # Run the path to know where I am
-    if [ -n "$want" ]; then
+    if [ -n "$argv" ]; then
+      #TODO: Do we need to varidate here?
+
+      args=$(echo $args | jq '.argv += ["'"$word"'"]')
+      wanting=""
+      want=""
+    elif [ -n "$want" ]; then
       #TODO: Do we need to varidate here?
 
       args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$word"'"')
@@ -251,6 +264,7 @@ __parse_args () {
           ;;
         "aclii.playground.hungry" )
           cmd="aclii.playground.hungry"
+          argv="string"
           ;;
         "aclii.playground.stuffed" )
           cmd="aclii.playground.stuffed"
@@ -269,7 +283,6 @@ __parse_args () {
             _help $cmd
       esac
     fi
-
   done
 
   args=$(echo "$args" | jq --arg com "$cmd" '.command = $com')
