@@ -18,16 +18,10 @@ _aclii_debug "Launch aclii..."
 _aclii_debug "ARGV $@"
 _aclii_debug "$ 0 $0"
 
-_help () {
-  local page
-  if [ -n "${1+HAS_VALUE}" ]; then
-    page="$1"
-  else
-    page="<%= aclii.commandName %>"
-  fi
-  case "$page" in
+
 ##// aclii.allCommands.forEach( c => {
-    "<%= c.path %>") cat << EOS
+_help_<%= c.hashedPath %> () {
+  cat << 'EOH'
 Name: <%= c.path  %>
   <%= c.description %>
 <%= aclii.manualForCommand(c.path) %>
@@ -40,8 +34,20 @@ Options:
 ##//  c.options.forEach( o => {
   --<%= o.name %> | <%= o.description %>
 ##//  })
-EOS
-    ;;
+EOH
+}
+##//})
+
+_help () {
+  local page
+  if [ -n "${1+HAS_VALUE}" ]; then
+    page="$1"
+  else
+    page="<%= aclii.commandName %>"
+  fi
+  case "$page" in
+##// aclii.allCommands.forEach( c => {
+    "<%= c.path %>") _help_<%= c.hashedPath %> ;;
 ##// })
   esac
   exit 0

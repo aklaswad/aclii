@@ -18,22 +18,16 @@ _aclii_debug "Launch aclii..."
 _aclii_debug "ARGV $@"
 _aclii_debug "$ 0 $0"
 
-_help () {
-  local page
-  if [ -n "${1+HAS_VALUE}" ]; then
-    page="$1"
-  else
-    page="aclii"
-  fi
-  case "$page" in
-    "aclii") cat << EOS
+
+_help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
+  cat << 'EOH'
 Name: aclii
   A toolkit for aclii (Abstract Command Line Interface Interface)
 
 aclii, a command line interface interface
 
 Commands:
-  playground | Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON.
+  playground | Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
 
   render | Render bash scripts generated from yaml config file. See sub commands for details.
 
@@ -41,11 +35,12 @@ Commands:
 Options:
   --file | Specify aclii config file
   --verbose | 
-EOS
-    ;;
-    "aclii.playground") cat << EOS
+EOH
+}
+_help_node620dd4ac0e81767466a282a8b830d9a7 () {
+  cat << 'EOH'
 Name: aclii.playground
-  Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON.
+  Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
 
 
 Commands:
@@ -57,9 +52,10 @@ Commands:
 Options:
   --file | Specify aclii config file
   --verbose | 
-EOS
-    ;;
-    "aclii.playground.hungry") cat << EOS
+EOH
+}
+_help_nodec9e9547ec88bba1cbfa64a3699a294ed () {
+  cat << 'EOH'
 Name: aclii.playground.hungry
   Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
 
@@ -69,9 +65,10 @@ Commands:
 Options:
   --file | Specify aclii config file
   --verbose | 
-EOS
-    ;;
-    "aclii.playground.stuffed") cat << EOS
+EOH
+}
+_help_node1f25010818a63d2f7bcb15a33d6fd818 () {
+  cat << 'EOH'
 Name: aclii.playground.stuffed
   Raise error if non optional values ( started by dash(es) ) are related.
 
@@ -81,9 +78,10 @@ Commands:
 Options:
   --file | Specify aclii config file
   --verbose | 
-EOS
-    ;;
-    "aclii.render") cat << EOS
+EOH
+}
+_help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
+  cat << 'EOH'
 Name: aclii.render
   Render bash scripts generated from yaml config file. See sub commands for details.
 
@@ -99,9 +97,10 @@ Commands:
 Options:
   --file | Specify aclii config file
   --verbose | 
-EOS
-    ;;
-    "aclii.render.completion") cat << EOS
+EOH
+}
+_help_node2e76e740f0ac071ad964481e5d054491 () {
+  cat << 'EOH'
 Name: aclii.render.completion
   Render and print bash auto-completion script to STDOUT.
 
@@ -111,9 +110,10 @@ Commands:
 Options:
   --file | Specify aclii config file
   --verbose | 
-EOS
-    ;;
-    "aclii.render.launcher") cat << EOS
+EOH
+}
+_help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
+  cat << 'EOH'
 Name: aclii.render.launcher
   Render and print bash script to launch other program to STDOUT.
 
@@ -123,8 +123,24 @@ Commands:
 Options:
   --file | Specify aclii config file
   --verbose | 
-EOS
-    ;;
+EOH
+}
+
+_help () {
+  local page
+  if [ -n "${1+HAS_VALUE}" ]; then
+    page="$1"
+  else
+    page="aclii"
+  fi
+  case "$page" in
+    "aclii") _help_nodea57b9426b2e192dba7ba8c15edd1cc79 ;;
+    "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
+    "aclii.playground.hungry") _help_nodec9e9547ec88bba1cbfa64a3699a294ed ;;
+    "aclii.playground.stuffed") _help_node1f25010818a63d2f7bcb15a33d6fd818 ;;
+    "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
+    "aclii.render.completion") _help_node2e76e740f0ac071ad964481e5d054491 ;;
+    "aclii.render.launcher") _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c ;;
   esac
   exit 0
 }
