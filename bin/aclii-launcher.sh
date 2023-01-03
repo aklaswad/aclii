@@ -163,6 +163,8 @@ __parse_args () {
       args=$(echo $args | jq '.argv += ["'"$word"'"]')
       wanting=""
       want=""
+    elif [ "$word" == "--" ]; then
+      argv="any"
     elif [ -n "$want" ]; then
       #TODO: Do we need to varidate here?
 
