@@ -353,7 +353,7 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           ;;
         * )
           if [ -n "${ACLII_EXEC+EXEC}" ]; then
-            echo "aclii: Unknown Command $cmd"
+            echo "aclii: Unknown Command $arg"
             _help $cmd
           fi
       esac
