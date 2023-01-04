@@ -1,6 +1,5 @@
 import MT from '../../lib/MicroTemplate.js'
 
-const mt = new MT()
 
 import test from 'node:test'
 import assert from 'node:assert'
@@ -16,6 +15,10 @@ const here = path.dirname(
 const dataPath = path.resolve(here, 'MicroTemplate.test.data.yml')
 const dataText = fs.readFileSync(dataPath, 'utf-8')
 const data = YAML.parse(dataText)
+
+const mt = new MT({
+  searchPath: [ path.resolve( here, 'tmpl' )]
+})
 
 function compressSpaces (text) {
   return text

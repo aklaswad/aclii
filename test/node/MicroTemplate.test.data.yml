@@ -72,4 +72,29 @@
     nums: [ 1, 2, 3 ]
   tmpl: <% data.nums.forEach( n => { %><%= n %><% ) %>
 
+- name: Include hello
+  data:
+    name: world
+  tmpl: |
+    Hello. Repeat after me?
+    ##//INCLUDE hello.tmpl
+    thanks
+  expect: |
+    Hello. Repeat after me?
+    hello world
+    thanks
+
+- name: Nested Include
+  data:
+    name: world
+  tmpl: |
+    Um
+    ##//INCLUDE hello_wrapper.tmpl
+    thanks
+  expect: |
+    Um
+    say
+    hello world
+    to you
+    thanks
 
