@@ -16,6 +16,10 @@ const Commands = {
   }
 }
 
+if ( process.env.ACLII_FORCE_BUILD ) {
+  Commands['aclii.render.completion']({ options:{file: './aclii.yml'}})
+  process.exit(0)
+}
 const json = Buffer.from(process.argv[2], 'base64').toString();
 const opts = JSON.parse(json)
 

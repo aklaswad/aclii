@@ -1,169 +1,32 @@
-#!/bin/bash
-
 # This is auto generated script by aclii 0.0.1
 
-set -euo pipefail
-
 _aclii_debug () {
-  if [ -n "${ACLII_DEBUG+HAS_VALUE}" ]; then
+  if [ -n "$ACLII_DEBUG" ]; then
     echo "$@" >> /tmp/aclii-debug.log
   fi
 }
 
-_aclii_exec () {
-  binname=$(dirname $0)/$(basename $0)"-main"
-  exec "$binname" $(echo "$1" | base64)
-}
+_aclii () {
 
-
-_aclii_debug "Launch aclii..."
-_aclii_debug "ARGV $@"
-_aclii_debug "$ 0 $0"
-
-declare -a argv=("$@")
-_help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
-  cat << 'EOH'
-  Name: aclii
-    A toolkit for aclii (Abstract Command Line Interface Interface)
-  
-  aclii, a command line interface interface
-  
-  Commands:
-    playground
-      | Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
-    render
-      | Render bash scripts generated from yaml config file. See sub commands for details.
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_node620dd4ac0e81767466a282a8b830d9a7 () {
-  cat << 'EOH'
-  Name: aclii.playground
-    Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
-  
-  
-  Commands:
-    hungry <string>...
-      | Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
-    stuffed
-      | Raise error if non optional values ( started by dash(es) ) are related.
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_nodec9e9547ec88bba1cbfa64a3699a294ed () {
-  cat << 'EOH'
-  Name: aclii.playground.hungry
-    Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
-  
-  
-  Commands:
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_node1f25010818a63d2f7bcb15a33d6fd818 () {
-  cat << 'EOH'
-  Name: aclii.playground.stuffed
-    Raise error if non optional values ( started by dash(es) ) are related.
-  
-  
-  Commands:
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
-  cat << 'EOH'
-  Name: aclii.render
-    Render bash scripts generated from yaml config file. See sub commands for details.
-  
-  Render generated contents to STDOUT.
-  You can choose one of sub command from the list.
-  
-  Commands:
-    completion
-      | Render and print bash auto-completion script to STDOUT.
-    launcher
-      | Render and print bash script to launch other program to STDOUT.
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_node2e76e740f0ac071ad964481e5d054491 () {
-  cat << 'EOH'
-  Name: aclii.render.completion
-    Render and print bash auto-completion script to STDOUT.
-  
-  
-  Commands:
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
-  cat << 'EOH'
-  Name: aclii.render.launcher
-    Render and print bash script to launch other program to STDOUT.
-  
-  
-  Commands:
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-
-_help () {
-  local page
-  if [ -n "${1+HAS_VALUE}" ]; then
-    page="$1"
-  else
-    page="aclii"
-  fi
-  case "$page" in
-    "aclii") _help_nodea57b9426b2e192dba7ba8c15edd1cc79 ;;
-    "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
-    "aclii.playground.hungry") _help_nodec9e9547ec88bba1cbfa64a3699a294ed ;;
-    "aclii.playground.stuffed") _help_node1f25010818a63d2f7bcb15a33d6fd818 ;;
-    "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
-    "aclii.render.completion") _help_node2e76e740f0ac071ad964481e5d054491 ;;
-    "aclii.render.launcher") _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c ;;
-  esac
-  exit 0
-}
-
-__parse_args () {
+  # parser needs @argv
+  argv=(${COMP_WORDS[@]:0:$((${#COMP_WORDS[@]}-1))})
 
 
 
-  _aclii_debug "enter parse_args |$@|"
-  _aclii_debug "num args $#"
-  local -a values=("")
+_aclii_debug "enter parse_args |$@|"
+_aclii_debug "num args $#"
+local -a values=("")
   values[1]='./aclii.yml'
 
-  local wantType=""
-  local wantingObjectId=""
-  local argvMode=""
-  local cmd="aclii"
-  local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
-  local processed=0 # Just for debug
-  local arg
+local wantType=""
+local wantingObjectId=""
+local argvMode=""
+local cmd="aclii"
+local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
+local processed=0 # Just for debug
+local arg
 
+if [ -z "${argv[@]+NOARGS}" ];
   for arg in "${argv[@]}"
   do
     : $((processed++))
@@ -308,9 +171,11 @@ __parse_args () {
           wantingObjectId="2"
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
-        * ) echo "Unknown Option $arg"
-          exit
-          ;;
+        * )
+          if [ -n "${ACLII_EXEC+EXEC}" ]; then
+            echo "aclii: Unknown Option $arg"
+            _help $cmd
+          fi
       esac
   # elif
   #   TODO: Short option handling here
@@ -342,9 +207,11 @@ __parse_args () {
           cmd="aclii.render.launcher"
           #TODO: Support limited number of args
           ;;
-        * ) echo "Unknown Command: $arg"
-            echo
+        * )
+          if [ -n "${ACLII_EXEC+EXEC}" ]; then
+            echo "aclii: Unknown Command $cmd"
             _help $cmd
+          fi
       esac
     fi
   done
@@ -352,90 +219,73 @@ __parse_args () {
   _aclii_debug "Parse done---------"
 
   #echo ${values[@]}
-
-
-  #local want=""
-  #local wanting=""
-  #local args
-  #local argvMode
-  #local cmd="aclii"
-
-  _aclii_debug  "got cmd: $cmd"
-  _aclii_debug  "    values: ${#values[@]} items ${values[@]}"
-  _aclii_debug  "    trails: ${#trailingArgs[@]} items ${trailingArgs[@]}"
-  # Now we got the command which to be executed.
-  # Handle it as it wants
-  local json='{"command":"'"$cmd"'","args":[],"options":{}}'
-  local trail
-  for trail in "${trailingArgs[@]:1}" # skip dummy element
-  do
-    echo "trail $trail"
-    json=$(echo $json | jq '.args+=["'"$trail"'"]')
-  done
-  case "$cmd" in
-    "aclii" )
-      _help "$cmd"
-      ;;
-    "aclii.playground" )
-      _help "$cmd"
-      ;;
-    "aclii.playground.hungry" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      if [ -z ${values[2]+HASVALUE} ]; then
-        echo 'Option "verbose" is required'
-        exit 1
-      fi
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
-      ;;
-    "aclii.playground.stuffed" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      if [ -z ${values[2]+HASVALUE} ]; then
-        echo 'Option "verbose" is required'
-        exit 1
-      fi
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
-      ;;
-    "aclii.render" )
-      _help "$cmd"
-      ;;
-    "aclii.render.completion" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      if [ -z ${values[2]+HASVALUE} ]; then
-        echo 'Option "verbose" is required'
-        exit 1
-      fi
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
-      ;;
-    "aclii.render.launcher" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      if [ -z ${values[2]+HASVALUE} ]; then
-        echo 'Option "verbose" is required'
-        exit 1
-      fi
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
-      ;;
-    * )
-      echo "Unknown command";
-      _help;
-  esac
-}
-
-if [ -z "${argv[@]+NOARGS}" ];
-  then _help
+else
+  _aclii_debug "No args. Parse has skipped."
 fi
-__parse_args
 
 
+  local oldifs="$IFS"
+  cur="${COMP_WORDS[COMP_CWORD]}"
+  _aclii_debug "enter compwords |${COMP_WORDS[@]}| cur |$cur|"
+
+  COMPREPLY=()
+
+
+  if [ -n "$wantType" ]; then
+      # OK, we already know what we want;
+      _aclii_debug "want $want |"
+    case "$wantType" in
+      "file" ) _filedir ;;
+      "dir" ) _filedir -d ;;
+      * ) COMPREPLY=() ;;
+    esac
+  elif [ "${cur:0:1}" == '-' ]; then
+    # It starts with dash. Maybe we should show option list
+    case "$cmd" in
+      "aclii" )
+        _aclii_debug "path: aclii cur: $cur |"
+        COMPREPLY=( $(compgen -W "--file --verbose" -- "${cur}" )) ;;
+      "aclii.playground" )
+        _aclii_debug "path: aclii.playground cur: $cur |"
+        COMPREPLY=( $(compgen -W "--file --verbose" -- "${cur}" )) ;;
+      "aclii.playground.hungry" )
+        _aclii_debug "path: aclii.playground.hungry cur: $cur |"
+        COMPREPLY=( $(compgen -W "--file --verbose" -- "${cur}" )) ;;
+      "aclii.playground.stuffed" )
+        _aclii_debug "path: aclii.playground.stuffed cur: $cur |"
+        COMPREPLY=( $(compgen -W "--file --verbose" -- "${cur}" )) ;;
+      "aclii.render" )
+        _aclii_debug "path: aclii.render cur: $cur |"
+        COMPREPLY=( $(compgen -W "--file --verbose" -- "${cur}" )) ;;
+      "aclii.render.completion" )
+        _aclii_debug "path: aclii.render.completion cur: $cur |"
+        COMPREPLY=( $(compgen -W "--file --verbose" -- "${cur}" )) ;;
+      "aclii.render.launcher" )
+        _aclii_debug "path: aclii.render.launcher cur: $cur |"
+        COMPREPLY=( $(compgen -W "--file --verbose" -- "${cur}" )) ;;
+    esac
+  else
+    # Or, searching next command
+    case "$cmd" in
+      "aclii" )
+      COMPREPLY=( $(compgen -W "playground render" -- "${cur}" )) ;;
+      "aclii.playground" )
+      COMPREPLY=( $(compgen -W "hungry stuffed" -- "${cur}" )) ;;
+      "aclii.playground.hungry" )
+      COMPREPLY=( $(compgen -W "" -- "${cur}" )) ;;
+      "aclii.playground.stuffed" )
+      COMPREPLY=( $(compgen -W "" -- "${cur}" )) ;;
+      "aclii.render" )
+      COMPREPLY=( $(compgen -W "completion launcher" -- "${cur}" )) ;;
+      "aclii.render.completion" )
+      COMPREPLY=( $(compgen -W "" -- "${cur}" )) ;;
+      "aclii.render.launcher" )
+      COMPREPLY=( $(compgen -W "" -- "${cur}" )) ;;
+    esac
+  fi
+  _aclii_debug "---------"
+
+  IFS="$oldifs"
+}
+complete -o default -F _aclii aclii
 
