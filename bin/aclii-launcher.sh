@@ -169,7 +169,7 @@ local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
 local processed=0 # Just for debug
 local arg
 
-if [ -n "${argv[@]+NOARGS}" ]; then
+if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
   for arg in "${argv[@]}"
   do
     : $((processed++))
