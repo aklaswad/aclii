@@ -6,9 +6,7 @@ local -a values=("")
 
 ##// aclii.allCommands.forEach( c => {
 ##//   c.ownOptions.forEach( o => {
-##//     if ( o.defaultValue ) {
-  values[<%= o.id %>]='<%= o.defaultValue %>'
-##//     }
+  values[<%= o.id %>]='<%= o.defaultValue || '' %>'
 ##//   })
 ##// })
 

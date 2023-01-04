@@ -160,6 +160,7 @@ _aclii_debug "enter parse_args |$@|"
 _aclii_debug "num args $#"
 local -a values=("")
   values[1]='./aclii.yml'
+  values[2]=''
 
 local wantType=""
 local wantingObjectId=""
