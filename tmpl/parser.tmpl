@@ -1,0 +1,103 @@
+
+  _aclii_debug "enter parse_args |$@|"
+  _aclii_debug "num args $#"
+  local -a values=("")
+
+##// aclii.allCommands.forEach( c => {
+##//   c.ownOptions.forEach( o => {
+##//     if ( o.defaultValue ) {
+  values[<%= o.id %>]='<%= o.defaultValue %>'
+##//     }
+##//   })
+##// })
+
+  local wantType=""
+  local wantingObjectId=""
+  local argvMode=""
+  local cmd="<%= aclii.commandName %>"
+  local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
+  local processed=0 # Just for debug
+  local arg
+
+  for arg in "${argv[@]}"
+  do
+    : $((processed++))
+    _aclii_debug "Processing $processed arg |$arg|"
+    _aclii_debug "   cmd: $cmd  wantType |$wantType|"
+
+    # Now we're already eating remained argv. Just eat it
+    if [ -n "$argvMode" ]; then
+      #TODO: Do we need to varidate here?
+      trailingArgs+=("$arg")
+     # args=$(echo $args | jq '.argv += ["'"$arg"'"]')
+
+    elif [ -n "$wantType" ]; then
+      #TODO: Do we need to varidate here?
+
+      #args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$arg"'"')
+      _aclii_debug "Save value $arg for id $wantingObjectId"
+      values[$wantingObjectId]="$arg"
+      wantingObjectId=""
+      wantType=""
+
+    # Traditional args terminator
+    elif [ "$arg" == "--" ]; then
+      argvMode="any"
+    elif [ "${arg:0:2}" == '--' ]; then
+      # It starts with dash. So this might be an option
+
+      #XXX: How to handle help?
+      # This launcher will handle help command
+      #if [ `echo "$arg" | grep "-help$"` ]; then
+      #  _help $cmd
+      #fi
+      # Check option that if
+      # next arg is option valu or not
+
+      comopt="$cmd"'@'"$arg"
+      _aclii_debug "adding flag |$comopt|"
+      _aclii_debug "Checking option $arg : comopt $comopt"
+      case "$comopt" in
+##// aclii.allCommands.forEach( c => {
+# Option for <%= c.path %>
+##//   c.options.forEach( o => {
+        '<%= c.path %>@--<%= o.name %>' )
+          #args=$(echo $args | jq '.options["<%= o.name %>"] = true')
+          values[<%= o.id %>]="1"
+          wantType="<%= o.want %>"
+          wantingObjectId="<%= o.id %>"
+          _aclii_debug "want $wantType for id $wantingObjectId"
+          ;;
+##//  })})
+        * )
+          if [ -n "${ACLII_EXEC+EXEC}" ]; then
+            echo "aclii: Unknown Option $arg"
+            _help $cmd
+          fi
+      esac
+  # elif
+  #   TODO: Short option handling here
+    else
+      case "$cmd.$arg" in
+##//  aclii.root.subCommands.forEach( c => {
+        "<%= c.path %>" )
+          cmd="<%= c.path %>"
+          #TODO: Support limited number of args
+##//    if (c.argv) {
+          argvMode="<%= c.argv %>"
+          wantType="<%= c.argv %>"
+##//    }
+          ;;
+##//  })
+        * )
+          if [ -n "${ACLII_EXEC+EXEC}" ]; then
+            echo "aclii: Unknown Command $cmd"
+            _help $cmd
+          fi
+      esac
+    fi
+  done
+
+  _aclii_debug "Parse done---------"
+
+  #echo ${values[@]}

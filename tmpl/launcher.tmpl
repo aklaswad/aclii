@@ -15,12 +15,10 @@ _aclii_exec () {
   exec "$binname" $(echo "$1" | base64)
 }
 
-args='{"options":{}}'
 
 _aclii_debug "Launch aclii..."
 _aclii_debug "ARGV $@"
 _aclii_debug "$ 0 $0"
-
 
 ##// aclii.allCommands.forEach( c => {
 _help_<%= c.hashedPath %> () {
@@ -59,87 +57,52 @@ _help () {
   exit 0
 }
 
+# Flag to enable immediate help / validate error
+ACLII_EXEC=1
+
+# parser needs @argv
+argv=("$@")
+
 __parse_args () {
-  local processed=0
-  _aclii_debug "enter parse_args |$@|"
-  local want
-  local wanting
-  local argv
-  local cmd="<%= aclii.commandName %>"
-  for word in "$@"
-  do
-    : $((processed++))
-    _aclii_debug "Processing $processed th arg |$word|"
-    _aclii_debug "   cmd: $cmd  want |$want|"
 
-    # Run the path to know where I am
-    if [ -n "$argv" ]; then
-      #TODO: Do we need to varidate here?
 
-      args=$(echo $args | jq '.argv += ["'"$word"'"]')
-    elif [ "$word" == "--" ]; then
-      argv="any"
-    elif [ -n "$want" ]; then
-      #TODO: Do we need to varidate here?
+##//INCLUDE parser.tmpl
 
-      args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$word"'"')
-      wanting=""
-      want=""
-    elif [ "${word:0:1}" == '-' ]; then
-      # It starts with dash.
+  #local want=""
+  #local wanting=""
+  #local args
+  #local argvMode
+  #local cmd="<%= aclii.commandName %>"
 
-      # This launcher will handle help command
-      if [ `echo "$word" | grep "-help$"` ]; then
-        _help $cmd
-      fi
-      # Check option that if
-      # next arg is option valu or not
-
-      comopt="$cmd$word"
-      _aclii_debug "adding flag |$comopt|"
-      _aclii_debug "Checking option $word : comopt $comopt"
-      case "$comopt" in
-##// aclii.allCommands.forEach( c => {
-##//   c.options.forEach( o => {
-        "<%= c.path %>--<%= o.name %>" )
-          args=$(echo $args | jq '.options["<%= o.name %>"] = true')
-          want="<%= o.want %>"
-          wanting="<%= o.name %>"
-          ;;
-##//  })})
-        * ) echo "Unknown Option $word"
-          exit
-          ;;
-      esac
-    else
-      case "$cmd.$word" in
-##//  aclii.root.subCommands.forEach( c => {
-        "<%= c.path %>" )
-          cmd="<%= c.path %>"
-##//    if (c.argv) {
-          argv="<%= c.argv %>"
-##//    }
-          ;;
-##//  })
-        * ) echo "Unknown Command: $word"
-            echo
-            _help $cmd
-      esac
-    fi
-  done
-
-  args=$(echo "$args" | jq --arg com "$cmd" '.command = $com')
-  _aclii_debug "Parse done---------"
-
+  _aclii_debug  "got cmd: $cmd"
+  _aclii_debug  "    values: ${#values[@]} items ${values[@]}"
+  _aclii_debug  "    trails: ${#trailingArgs[@]} items ${trailingArgs[@]}"
   # Now we got the command which to be executed.
   # Handle it as it wants
+  local json='{"command":"'"$cmd"'","args":[],"options":{}}'
+  local trail
+  for trail in "${trailingArgs[@]:1}" # skip dummy element
+  do
+    json=$(echo $json | jq '.args+=["'"$trail"'"]')
+  done
   case "$cmd" in
 ##// aclii.allCommands.forEach( c => {
     "<%= c.path %>" )
 ##//   if (c.helpstop) {
       _help "$cmd"
 ##//   } else {
-      _aclii_exec "$args"
+# Build Args
+##// c.options.forEach( o => {
+##//   if ( o.required ) {
+      if [ -z ${values[<%= o.id %>]+HASVALUE} ]; then
+        echo 'Option "<%= o.name %>" is required'
+        exit 1
+      fi
+##//   }
+      json=$(echo $json | jq '.options["<%= o.name %>"] = "'"${values[<%= o.id %>]}"'"')
+##// })
+      _aclii_debug "got json $json"
+      _aclii_exec "$json"
 ##//   }
       ;;
 ##// })
@@ -148,7 +111,6 @@ __parse_args () {
       _help;
   esac
 }
-
-__parse_args "$@"
+__parse_args
 
 

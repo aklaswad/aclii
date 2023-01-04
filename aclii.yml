@@ -35,7 +35,9 @@ options:
     want: file
     default: ./aclii.yml
     description: Specify aclii config file
+    inherit: true
   - name: verbose
+    inherit: true
     short: v
 manual:
   aclii: |

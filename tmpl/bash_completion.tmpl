@@ -7,86 +7,45 @@ _aclii_debug () {
 }
 
 _<%= aclii.commandName %> () {
+
+  # parser needs @argv
+  argv=(${COMP_WORDS[@]:0:$((${#COMP_WORDS[@]}-1))})
+
+##//INCLUDE parser.tmpl
+
   local oldifs="$IFS"
   cur="${COMP_WORDS[COMP_CWORD]}"
   _aclii_debug "enter compwords |${COMP_WORDS[@]}| cur |$cur|"
 
-  local word
-  local len=${#COMP_WORDS[@]}
-  local processed=0
-  local skip=0
-  local want=""
-  local terminated=""
-  local cmd="<%= aclii.commandName %>"
   COMPREPLY=()
-  for word in "${COMP_WORDS[@]}"
-  do
-    : $((processed++))
-    _aclii_debug "Entering new word $word"
-    _aclii_debug " processed: $processed cmd: |$cmd| want: |$want|"
-    if [ "$processed" == "$len" ]; then
-      # At final item. What we want?
 
-      if [ -n "$want" ]; then
-        # OK, we already know what we want;
-        _aclii_debug "want $want |"
-        case "$want" in
-          "file" ) _filedir ;;
-          "dir" ) _filedir -d ;;
-          * ) COMPREPLY=() ;;
-        esac
-      elif [ "${word:0:1}" == '-' ]; then
-        # It starts with dash. Maybe we should show option list
-        case "$cmd" in
+
+  if [ -n "$wantType" ]; then
+      # OK, we already know what we want;
+      _aclii_debug "want $want |"
+    case "$wantType" in
+      "file" ) _filedir ;;
+      "dir" ) _filedir -d ;;
+      * ) COMPREPLY=() ;;
+    esac
+  elif [ "${cur:0:1}" == '-' ]; then
+    # It starts with dash. Maybe we should show option list
+    case "$cmd" in
 ##//  aclii.allCommands.forEach( c => {
-          "<%= c.path %>" )
-            _aclii_debug "path: <%= c.path %> cur: $cur |"
-            COMPREPLY=( $(compgen -W "<%= c.options.map( o => '--' + o.name ).join(" ") %>" -- "${cur}" )) ;;
+      "<%= c.path %>" )
+        _aclii_debug "path: <%= c.path %> cur: $cur |"
+        COMPREPLY=( $(compgen -W "<%= c.options.map( o => '--' + o.name ).join(" ") %>" -- "${cur}" )) ;;
 ##//  })
-        esac
-      else
-        # Or, searching next command
-        case "$cmd" in
+    esac
+  else
+    # Or, searching next command
+    case "$cmd" in
 ##//  aclii.allCommands.forEach( c => {
-          "<%= c.path %>" )
-            COMPREPLY=( $(compgen -W "<%= c.commands.map( c => c.name ).join(" ") %>" -- "${cur}" )) ;;
+      "<%= c.path %>" )
+      COMPREPLY=( $(compgen -W "<%= c.commands.map( c => c.name ).join(" ") %>" -- "${cur}" )) ;;
 ##//  })
-        esac
-      fi
-    else
-      # Run the path to know where I am
-      if [ -n "$want" ]; then
-        #TODO: Do we need to varidate here?
-        want=""
-      elif [ "${word:0:1}" == '-' ]; then
-        # It starts with dash. Check option that if
-        # next arg is option valu or not
-        comopt="$cmd$word"
-        _aclii_debug "Checking option $word : comopt $comopt"
-        case "$comopt" in
-##// aclii.allCommands.forEach( c => {
-##//   c.options.forEach( o => {
-          "<%= c.path %>--<%= o.name %>" )
-##//     if ( o.want ) {
-            want="<%= o.want %>"
-##//     }
-            ;;
-##// })})
-        esac
-      else
-        # Or, searching next command
-        case "$cmd.$word" in
-##// aclii.allCommands.forEach( c => {
-          "<%= c.path %>" )
-            cmd="<%= c.path %>"
-            ;;
-##// })
-        esac
-      fi
-
-    fi
-  done
-
+    esac
+  fi
   _aclii_debug "---------"
 
   IFS="$oldifs"
