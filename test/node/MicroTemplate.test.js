@@ -1,4 +1,7 @@
-import render from '../../lib/MicroTemplate.js'
+import MT from '../../lib/MicroTemplate.js'
+
+const mt = new MT()
+
 import test from 'node:test'
 import assert from 'node:assert'
 import fs from 'fs'
@@ -26,7 +29,7 @@ data.forEach( (testItem) => {
   if ( testItem.error ) {
     test(testItem.name, (t) => {
       assert.throws( () => {
-        render(
+        mt.render(
           testItem.tmpl,
           testItem.data,
         )
@@ -35,7 +38,7 @@ data.forEach( (testItem) => {
   }
   else {
     test(testItem.name, (t) => {
-      const result = render(
+      const result = mt.render(
         testItem.tmpl,
         testItem.data,
         { debug: testItem.debug }
@@ -62,7 +65,7 @@ tora
 tora
 `
   assert.strictEqual(
-    render(tmpl, { name: 'tora' }, {debug: false}).replace(/\s+$/mg,''),
+    mt.render(tmpl, { name: 'tora' }, {debug: false}).replace(/\s+$/mg,''),
     expect.replace(/\s+$/mg,'')
   )
 })
