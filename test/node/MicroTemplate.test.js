@@ -46,10 +46,18 @@ data.forEach( (testItem) => {
         testItem.data,
         { debug: testItem.debug }
       )
-      assert.strictEqual(
-        compressSpaces(result),
-        compressSpaces(testItem.expect)
-      )
+      if ( testItem.fail ) {
+        assert.notEqual(
+          compressSpaces(result),
+          compressSpaces(testItem.expect)
+        )
+      }
+      else {
+        assert.strictEqual(
+          compressSpaces(result),
+          compressSpaces(testItem.expect)
+        )
+      }
     })
   }
 })

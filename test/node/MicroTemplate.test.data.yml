@@ -132,3 +132,46 @@
     to you
     thanks
 
+- name: Do not allow invalid template loading ( from root path )
+  description: |
+    include file starts with non word will be ignored. this just be printed into compiled JS and raise a runtime error
+  error: Failed to render template
+  data:
+    name: world
+  tmpl: |
+    Hello. Repeat after me?
+    ##//INCLUDE /etc/shadow
+    thanks
+  expect: |
+    Hello. Repeat after me?
+    hello world
+    thanks
+
+- name: Do not allow invalid template loading ( go up )
+  error: Invalid include
+  description: in include file name, ".." is not allowed
+  data:
+    name: world
+  tmpl: |
+    Hello. Repeat after me?
+    ##//INCLUDE a/../../../etc/shadow
+    thanks
+  expect: |
+    Hello. Repeat after me?
+    hello world
+    thanks
+
+- name: Do not allow invalid template loading ( suffix )
+  error: Invalid include
+  description: template file must have ".tmpl" suffix
+  data:
+    name: world
+  tmpl: |
+    Hello. Repeat after me?
+    ##//INCLUDE a/etc/shadow
+    thanks
+  expect: |
+    Hello. Repeat after me?
+    hello world
+    thanks
+
