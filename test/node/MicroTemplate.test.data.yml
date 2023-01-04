@@ -60,6 +60,26 @@
     :d
     e
 
+- name: Loop using Line based templating alternative syntax
+  data:
+    letters:
+      - b
+      - c
+      - d
+  tmpl: |
+    a
+    //## // hoge
+    //## data.letters.forEach( l => {
+      :<%= l %>
+    //##})
+    e
+  expect: |
+    a
+    :b
+    :c
+    :d
+    e
+
 - name: Throw rendering error, for example member access for undefined
   error: Failed to render template
   data:
@@ -90,6 +110,20 @@
   tmpl: |
     Um
     ##//INCLUDE hello_wrapper.tmpl
+    thanks
+  expect: |
+    Um
+    say
+    hello world
+    to you
+    thanks
+
+- name: Nested Include alternative syntax
+  data:
+    name: world
+  tmpl: |
+    Um
+    //## INCLUDE hello_wrapper.tmpl
     thanks
   expect: |
     Um
