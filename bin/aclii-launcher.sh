@@ -147,7 +147,7 @@ _help () {
 }
 
 __parse_args () {
-  processed=0
+  local processed=0
   _aclii_debug "enter parse_args |$@|"
   local want
   local wanting
@@ -164,8 +164,6 @@ __parse_args () {
       #TODO: Do we need to varidate here?
 
       args=$(echo $args | jq '.argv += ["'"$word"'"]')
-      wanting=""
-      want=""
     elif [ "$word" == "--" ]; then
       argv="any"
     elif [ -n "$want" ]; then
