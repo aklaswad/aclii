@@ -10,6 +10,7 @@
   },
   "scripts": {
     "build": "script/build.sh",
+    "build-force": "ACLII_FORCE_BUILD=1 node bin/cli.js > bin/aclii-launcher.sh",
     "test": "node --test"
   },
   "keywords": [],
