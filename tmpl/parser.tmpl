@@ -1,7 +1,8 @@
 
-  _aclii_debug "enter parse_args |$@|"
-  _aclii_debug "num args $#"
-  local -a values=("")
+
+_aclii_debug "enter parse_args |$@|"
+_aclii_debug "num args $#"
+local -a values=("")
 
 ##// aclii.allCommands.forEach( c => {
 ##//   c.ownOptions.forEach( o => {
@@ -11,14 +12,15 @@
 ##//   })
 ##// })
 
-  local wantType=""
-  local wantingObjectId=""
-  local argvMode=""
-  local cmd="<%= aclii.commandName %>"
-  local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
-  local processed=0 # Just for debug
-  local arg
+local wantType=""
+local wantingObjectId=""
+local argvMode=""
+local cmd="<%= aclii.commandName %>"
+local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
+local processed=0 # Just for debug
+local arg
 
+if [ -z "${argv[@]+NOARGS}" ];
   for arg in "${argv[@]}"
   do
     : $((processed++))
@@ -101,3 +103,6 @@
   _aclii_debug "Parse done---------"
 
   #echo ${values[@]}
+else
+  _aclii_debug "No args. Parse has skipped."
+fi

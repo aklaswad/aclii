@@ -20,7 +20,7 @@ _aclii_debug "Launch aclii..."
 _aclii_debug "ARGV $@"
 _aclii_debug "$ 0 $0"
 
-argv=("$@")
+declare -a argv=("$@")
 _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
   cat << 'EOH'
   Name: aclii
@@ -431,6 +431,10 @@ __parse_args () {
       _help;
   esac
 }
+
+if [ -z "${argv[@]+NOARGS}" ];
+  then _help
+fi
 __parse_args
 
 
