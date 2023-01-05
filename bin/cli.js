@@ -5,6 +5,16 @@ import path from 'path'
 import url from 'url'
 
 const Commands = {
+  "aclii.render.parser-tester": (opt) => {
+    const aclii = Aclii.fromFile(opts.options.file)
+    console.log( aclii.render('test/parser-test.tmpl'))
+  },
+
+  "aclii.render.parser": (opt) => {
+    const aclii = Aclii.fromFile(opts.options.file)
+    console.log( aclii.render('parser.tmpl'))
+  },
+
   "aclii.render.completion": (opts) => {
     const aclii =  Aclii.fromFile(opts.options.file)
     console.log( aclii.render('bash_completion.tmpl'))
@@ -20,8 +30,30 @@ if ( process.env.ACLII_FORCE_BUILD ) {
   Commands['aclii.render.launcher']({ options:{file: './aclii.yml'}})
   process.exit(0)
 }
-const json = Buffer.from(process.argv[2], 'base64').toString();
-const opts = JSON.parse(json)
+
+if ( ! process.argv[2] ) {
+  console.error("Argument is required")
+  process.exit(1)
+}
+
+let json
+try {
+  json = Buffer.from(process.argv[2], 'base64').toString();
+}
+catch (e) {
+  // given args are not base64.
+  console.error("1st argument must be BASE64 digest of JSON")
+  process.exit(1)
+}
+
+let opts
+try {
+  opts = JSON.parse(json)
+}
+catch (e) {
+  console.error("Given digested JSON was invalid.")
+  process.exit(1)
+}
 
 if ( process.env.ACLII_DEBUG ) {
   console.error("DEBUG REPORT FROM ACLII CLI")

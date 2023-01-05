@@ -40,6 +40,9 @@ commands:
       - name: launcher
         description: |
           Render and print bash script to launch other program to STDOUT.
+      - name: parser
+        description: |
+          Render and print rendered bare commandline parser, for testing.
 options:
   - name: file
     want: file

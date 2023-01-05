@@ -11,7 +11,9 @@
   "scripts": {
     "build": "script/build.sh",
     "build-force": "ACLII_FORCE_BUILD=1 node bin/cli.js > bin/aclii-launcher.sh",
-    "test": "node --test"
+    "test": "npm run test:node && npm run test:bats && echo && echo 'All tests passed!'",
+    "test:node": "node --test",
+    "test:bats": "bats test/bats"
   },
   "keywords": [],
   "author": "",

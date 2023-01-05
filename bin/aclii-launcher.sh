@@ -108,6 +108,8 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
       | Render and print bash auto-completion script to STDOUT.
     launcher
       | Render and print bash script to launch other program to STDOUT.
+    parser
+      | Render and print rendered bare commandline parser, for testing.
   
   Options:
     --file | Specify aclii config file
@@ -140,6 +142,19 @@ _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
     --verbose | 
 EOH
 }
+_help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
+  cat << 'EOH'
+  Name: aclii.render.parser
+    Render and print rendered bare commandline parser, for testing.
+  
+  
+  Commands:
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
+EOH
+}
 
 _help () {
   local page
@@ -157,6 +172,7 @@ _help () {
     "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
     "aclii.render.completion") _help_node2e76e740f0ac071ad964481e5d054491 ;;
     "aclii.render.launcher") _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c ;;
+    "aclii.render.parser") _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 ;;
   esac
   exit 0
 }
@@ -346,6 +362,21 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           wantingObjectId="2"
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
+# Option for aclii.render.parser
+        'aclii.render.parser@--file' )
+          #args=$(echo $args | jq '.options["file"] = true')
+          values[1]="1"
+          wantType="file"
+          wantingObjectId="1"
+          _aclii_debug "want $wantType for id $wantingObjectId"
+          ;;
+        'aclii.render.parser@--verbose' )
+          #args=$(echo $args | jq '.options["verbose"] = true')
+          values[2]="1"
+          wantType=""
+          wantingObjectId="2"
+          _aclii_debug "want $wantType for id $wantingObjectId"
+          ;;
         * )
           if [ -n "${ACLII_EXEC+EXEC}" ]; then
             echo "aclii: Unknown Option $arg"
@@ -384,6 +415,10 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           ;;
         "aclii.render.launcher" )
           cmd="aclii.render.launcher"
+          #TODO: Support limited number of args
+          ;;
+        "aclii.render.parser" )
+          cmd="aclii.render.parser"
           #TODO: Support limited number of args
           ;;
         * )
@@ -472,6 +507,13 @@ __END_OF_ACLII_SCRIPT__
       _aclii_exec "$json"
       ;;
     "aclii.render.launcher" )
+# Build Args
+      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
+      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
+      _aclii_debug "got json $json"
+      _aclii_exec "$json"
+      ;;
+    "aclii.render.parser" )
 # Build Args
       json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
       json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
