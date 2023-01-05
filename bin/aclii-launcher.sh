@@ -191,10 +191,15 @@ __parse_args () {
 _aclii_debug "enter parse_args |$@|"
 _aclii_debug "num args $#"
 local -a values=("")
+local -a values_for=("")
   values[1]='./aclii.yml'
+  values_for[1]='file'
   values[2]=''
+  values_for[2]='verbose'
 
+local error=""
 local wantType=""
+local wantCount=0
 local wantingObjectId=""
 local argvMode=""
 local cmd="aclii"
@@ -221,8 +226,11 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
       #args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$arg"'"')
       _aclii_debug "Save value $arg for id $wantingObjectId"
       values[$wantingObjectId]="$arg"
-      wantingObjectId=""
-      wantType=""
+      : $((wantCount--))
+      if [ "$wantCount" == "0" ]; then
+        wantingObjectId=""
+        wantType=""
+      fi
 
     # Traditional args terminator
     elif [ "$arg" == "--" ]; then
@@ -245,142 +253,144 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
 # Option for aclii
         'aclii@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 # Option for aclii.playground
         'aclii.playground@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii.playground@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 # Option for aclii.playground.hungry
         'aclii.playground.hungry@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii.playground.hungry@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 # Option for aclii.playground.stuffed
         'aclii.playground.stuffed@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii.playground.stuffed@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 # Option for aclii.playground.run-ls-script
         'aclii.playground.run-ls-script@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii.playground.run-ls-script@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 # Option for aclii.render
         'aclii.render@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii.render@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 # Option for aclii.render.completion
         'aclii.render.completion@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii.render.completion@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 # Option for aclii.render.launcher
         'aclii.render.launcher@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii.render.launcher@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 # Option for aclii.render.parser
         'aclii.render.parser@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
-          values[1]="1"
           wantType="file"
           wantingObjectId="1"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         'aclii.render.parser@--verbose' )
           #args=$(echo $args | jq '.options["verbose"] = true')
-          values[2]="1"
           wantType=""
           wantingObjectId="2"
+          wantCount=1
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
         * )
           if [ -n "${ACLII_EXEC+EXEC}" ]; then
             echo "aclii: Unknown Option $arg"
             _help $cmd
+          else
+            error="Unknown Option $arg"
           fi
       esac
   # elif
@@ -425,12 +435,18 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           if [ -n "${ACLII_EXEC+EXEC}" ]; then
             echo "aclii: Unknown Command $arg"
             _help $cmd
+          else
+            error="Unknown Command $arg"
           fi
       esac
     fi
   done
 
   _aclii_debug "Parse done---------"
+
+  if [ "$wantCount" != "0" ]; then
+    error="Value for ${values_for[$wantingObjectId]} is missing"
+  fi
 
   #echo ${values[@]}
 else

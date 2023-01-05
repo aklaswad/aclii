@@ -1,4 +1,7 @@
-
+##// /*
+##//   `argv` array variable and `_aclii_debug` function must be
+##//  defined before loading this snipet.
+##// */
 
 _aclii_debug "enter parse_args |$@|"
 _aclii_debug "num args $#"
@@ -20,6 +23,7 @@ local argvMode=""
 local cmd="<%= aclii.commandName %>"
 local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
 local processed=0 # Just for debug
+local comopt
 local arg
 
 if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
