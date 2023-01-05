@@ -2,6 +2,8 @@
 set -ueo pipefail
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-PARSER=$(npm exec "$SCRIPTPATH/../../bin/cli.js" $(echo '{"command":"aclii.render.parser-tester","options":{"file":"'"$SCRIPTPATH"'/test.yml"}}' | base64))
+JSON=$(printf '{"command":"aclii.render.parser-tester","options":{"file":"%s/test.yml"}}' "$SCRIPTPATH")
+BASE64=$(echo "$JSON" | base64)
+PARSER=$(npm exec "$SCRIPTPATH/../../bin/cli.js" "$BASE64")
 echo "$PARSER"
 

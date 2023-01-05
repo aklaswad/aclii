@@ -48,7 +48,7 @@ catch (e) {
 
 let opts
 try {
-  opts = JSON.parse(json)
+  opts = JSON.parse(json.trim())
 }
 catch (e) {
   console.error("Given digested JSON was invalid.")
