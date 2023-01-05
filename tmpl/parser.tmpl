@@ -37,12 +37,10 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
     if [ -n "$argvMode" ]; then
       #TODO: Do we need to varidate here?
       trailingArgs+=("$arg")
-     # args=$(echo $args | jq '.argv += ["'"$arg"'"]')
 
     elif [ -n "$wantType" ]; then
       #TODO: Do we need to varidate here?
 
-      #args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$arg"'"')
       _aclii_debug "Save value $arg for id $wantingObjectId"
       values[$wantingObjectId]="$arg"
       : $((wantCount--))
@@ -73,7 +71,6 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
 # Option for <%= c.path %>
 ##//   c.options.forEach( o => {
         '<%= c.path %>@--<%= o.name %>' )
-          #args=$(echo $args | jq '.options["<%= o.name %>"] = true')
           wantType="<%= o.want %>"
           wantingObjectId="<%= o.id %>"
           wantCount=<%= o.wants || 1 %>
