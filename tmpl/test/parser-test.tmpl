@@ -1,0 +1,40 @@
+_aclii_debug () {
+  if [ -n "${ACLII_DEBUG+HAS_VALUE}" ]; then
+    echo "$@" >> /tmp/aclii-debug.log
+  fi
+}
+
+parse_test () {
+  argv=("$@")
+
+unset O_values
+unset O_wantType
+unset O_wantingObjectId
+unset O_argvMode
+unset O_cmd
+unset O_trailingArgs
+unset O_processed
+unset O_arg
+
+##// INCLUDE parser.tmpl
+
+# Path artifacts to global vars
+O_values=(${values[@]})
+O_wantType="$wantType"
+O_wantingObjectId="$wantingObjectId"
+O_argvMode="$argvMode"
+O_cmd="$cmd"
+O_trailingArgs=(${trailingArgs[@]})
+O_processed="$processed"
+O_arg="$arg"
+
+# Extract values
+# During test, no env-crashing name are given as param names I believe ;-)
+
+##// aclii.allCommands.forEach( c => {
+##//   c.ownOptions.forEach( o => {
+<%= o.name %>=${values[<%= o.id %>]}
+##//   })
+##// })
+
+}
