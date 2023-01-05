@@ -9,8 +9,15 @@ source <($DIR/build.sh)
   [ "$O_cmd" == "test.foo" ] && [ "$fee" == "" ]
 }
 
-@test "Get boolean flag" {
+@test "Error raised since --fee wants value" {
   arguments=("test" "--fee")
   parse_test "${arguments[@]}"
-  [ "$O_cmd" == "test" ] && [ "$fee" == "1" ]
+  [ -n "$O_error" ]
 }
+
+@test "Can get value for fee option" {
+  arguments=("test" "--fee" "foe")
+  parse_test "${arguments[@]}"
+  [ "$fee" == "foe" ]
+}
+

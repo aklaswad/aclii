@@ -9,24 +9,29 @@ parse_test () {
 
 unset O_values
 unset O_wantType
+unset O_wantCount
 unset O_wantingObjectId
 unset O_argvMode
 unset O_cmd
 unset O_trailingArgs
 unset O_processed
 unset O_arg
+unset O_error
 
 ##// INCLUDE parser.tmpl
 
 # Path artifacts to global vars
 O_values=(${values[@]})
 O_wantType="$wantType"
+O_wantCount="$wantCount"
 O_wantingObjectId="$wantingObjectId"
 O_argvMode="$argvMode"
 O_cmd="$cmd"
 O_trailingArgs=(${trailingArgs[@]})
 O_processed="$processed"
 O_arg="$arg"
+O_error="$error"
+
 
 # Extract values
 # During test, no env-crashing name are given as param names I believe ;-)

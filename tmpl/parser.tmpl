@@ -3,14 +3,18 @@
 _aclii_debug "enter parse_args |$@|"
 _aclii_debug "num args $#"
 local -a values=("")
+local -a values_for=("")
 
 ##// aclii.allCommands.forEach( c => {
 ##//   c.ownOptions.forEach( o => {
   values[<%= o.id %>]='<%= o.defaultValue || '' %>'
+  values_for[<%= o.id %>]='<%= o.name %>'
 ##//   })
 ##// })
 
+local error=""
 local wantType=""
+local wantCount=0
 local wantingObjectId=""
 local argvMode=""
 local cmd="<%= aclii.commandName %>"
@@ -37,8 +41,11 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
       #args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$arg"'"')
       _aclii_debug "Save value $arg for id $wantingObjectId"
       values[$wantingObjectId]="$arg"
-      wantingObjectId=""
-      wantType=""
+      : $((wantCount--))
+      if [ "$wantCount" == "0" ]; then
+        wantingObjectId=""
+        wantType=""
+      fi
 
     # Traditional args terminator
     elif [ "$arg" == "--" ]; then
@@ -63,9 +70,9 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
 ##//   c.options.forEach( o => {
         '<%= c.path %>@--<%= o.name %>' )
           #args=$(echo $args | jq '.options["<%= o.name %>"] = true')
-          values[<%= o.id %>]="1"
           wantType="<%= o.want %>"
           wantingObjectId="<%= o.id %>"
+          wantCount=<%= o.wants || 1 %>
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
 ##//  })})
@@ -73,6 +80,8 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           if [ -n "${ACLII_EXEC+EXEC}" ]; then
             echo "aclii: Unknown Option $arg"
             _help $cmd
+          else
+            error="Unknown Option $arg"
           fi
       esac
   # elif
@@ -93,12 +102,18 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           if [ -n "${ACLII_EXEC+EXEC}" ]; then
             echo "aclii: Unknown Command $arg"
             _help $cmd
+          else
+            error="Unknown Command $arg"
           fi
       esac
     fi
   done
 
   _aclii_debug "Parse done---------"
+
+  if [ "$wantCount" != "0" ]; then
+    error="Value for ${values_for[$wantingObjectId]} is missing"
+  fi
 
   #echo ${values[@]}
 else
