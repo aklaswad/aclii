@@ -90,6 +90,22 @@ __parse_args () {
     "<%= c.path %>" )
 ##//   if (c.helpstop) {
       _help "$cmd"
+##// // TODO: Prepare input for each env. Maybe it could be plaggable?
+##//   } else if ( c.script ) {
+      tmp=$(mktemp)
+      echo '#!/usr/bin/env <%= c.env || "bash" %>' > $tmp
+      cat << '__END_OF_ACLII_SCRIPT__' >> $tmp
+<%= c.script %>
+__END_OF_ACLII_SCRIPT__
+      chmod +x $tmp
+      result=0
+      $tmp || result=$?
+      rm $tmp
+      if [ ! "$result" == "0" ]; then
+        echo "(aclii:: script exited with $result)"
+      else
+        echo "(aclii:: script done.)"
+      fi
 ##//   } else {
 # Build Args
 ##// c.options.forEach( o => {

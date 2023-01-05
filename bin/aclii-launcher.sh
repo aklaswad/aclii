@@ -48,6 +48,8 @@ _help_node620dd4ac0e81767466a282a8b830d9a7 () {
       | Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
     stuffed
       | Raise error if non optional values ( started by dash(es) ) are related.
+    run-ls-script
+      | Inline script demo. You can implement any script in aclii file and execute it instead of main program.
   
   Options:
     --file | Specify aclii config file
@@ -71,6 +73,19 @@ _help_node1f25010818a63d2f7bcb15a33d6fd818 () {
   cat << 'EOH'
   Name: aclii.playground.stuffed
     Raise error if non optional values ( started by dash(es) ) are related.
+  
+  
+  Commands:
+  
+  Options:
+    --file | Specify aclii config file
+    --verbose | 
+EOH
+}
+_help_nodee80eb6db780cc1bef550699e63d9e4e7 () {
+  cat << 'EOH'
+  Name: aclii.playground.run-ls-script
+    Inline script demo. You can implement any script in aclii file and execute it instead of main program.
   
   
   Commands:
@@ -138,6 +153,7 @@ _help () {
     "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
     "aclii.playground.hungry") _help_nodec9e9547ec88bba1cbfa64a3699a294ed ;;
     "aclii.playground.stuffed") _help_node1f25010818a63d2f7bcb15a33d6fd818 ;;
+    "aclii.playground.run-ls-script") _help_nodee80eb6db780cc1bef550699e63d9e4e7 ;;
     "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
     "aclii.render.completion") _help_node2e76e740f0ac071ad964481e5d054491 ;;
     "aclii.render.launcher") _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c ;;
@@ -270,6 +286,21 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           wantingObjectId="2"
           _aclii_debug "want $wantType for id $wantingObjectId"
           ;;
+# Option for aclii.playground.run-ls-script
+        'aclii.playground.run-ls-script@--file' )
+          #args=$(echo $args | jq '.options["file"] = true')
+          values[1]="1"
+          wantType="file"
+          wantingObjectId="1"
+          _aclii_debug "want $wantType for id $wantingObjectId"
+          ;;
+        'aclii.playground.run-ls-script@--verbose' )
+          #args=$(echo $args | jq '.options["verbose"] = true')
+          values[2]="1"
+          wantType=""
+          wantingObjectId="2"
+          _aclii_debug "want $wantType for id $wantingObjectId"
+          ;;
 # Option for aclii.render
         'aclii.render@--file' )
           #args=$(echo $args | jq '.options["file"] = true')
@@ -339,6 +370,10 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           cmd="aclii.playground.stuffed"
           #TODO: Support limited number of args
           ;;
+        "aclii.playground.run-ls-script" )
+          cmd="aclii.playground.run-ls-script"
+          #TODO: Support limited number of args
+          ;;
         "aclii.render" )
           cmd="aclii.render"
           #TODO: Support limited number of args
@@ -405,6 +440,26 @@ fi
       json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
       _aclii_debug "got json $json"
       _aclii_exec "$json"
+      ;;
+    "aclii.playground.run-ls-script" )
+      tmp=$(mktemp)
+      echo '#!/usr/bin/env bash' > $tmp
+      cat << '__END_OF_ACLII_SCRIPT__' >> $tmp
+echo "Hello from aclii inline script!"
+echo "I'll show you the list of files!"
+ls
+echo "That's all. Thanks!"
+
+__END_OF_ACLII_SCRIPT__
+      chmod +x $tmp
+      result=0
+      $tmp || result=$?
+      rm $tmp
+      if [ ! "$result" == "0" ]; then
+        echo "(aclii:: script exited with $result)"
+      else
+        echo "(aclii:: script done.)"
+      fi
       ;;
     "aclii.render" )
       _help "$cmd"

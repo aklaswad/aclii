@@ -19,6 +19,16 @@ commands:
           Raise error if non optional values ( started by dash(es) ) are related.
         termminate: true
 
+      - name: run-ls-script
+        description: |
+          Inline script demo. You can implement any script in aclii file and execute it instead of main program.
+        env: bash
+        script: |
+          echo "Hello from aclii inline script!"
+          echo "I'll show you the list of files!"
+          ls
+          echo "That's all. Thanks!"
+
   - name: render
     helpstop: true
     description: |
