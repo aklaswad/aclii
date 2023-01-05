@@ -45,6 +45,7 @@ catch (e) {
   console.error("1st argument must be BASE64 digest of JSON")
   process.exit(1)
 }
+console.log(json)
 
 let opts
 try {
