@@ -112,7 +112,7 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
       argvTypes[$nth]="subcommand"
       case "$cmd.$arg" in
 ##// //TODO: make template engine to enable recursive loop
-##//  aclii.root.subCommands.forEach( c => {
+##//  aclii.allCommands.forEach( c => {
         "<%= c.path %>" )
           cmd="<%= c.path %>"
           commandPath+=("<%= c.name %>")
@@ -131,7 +131,8 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
   done
 
   _aclii_debug "Parse done---------"
-
+  _aclii_debug "    cmd: $cmd"
+  _aclii_debug "  error: $error"
 
   #echo ${values[@]}
 else

@@ -8,8 +8,10 @@ _aclii_debug () {
 
 _<%= aclii.commandName %> () {
 
-  # parser needs @argv
-  argv=(${COMP_WORDS[@]:0:$((${#COMP_WORDS[@]}-1))})
+  # parser needs @argv.
+  # Parse from [1] to [len-1] for detect current subcommand
+  # ( [0] always aclii so skip it )
+  argv=(${COMP_WORDS[@]:1:$((${#COMP_WORDS[@]}-1))})
 
 ##//INCLUDE parser.tmpl
 
