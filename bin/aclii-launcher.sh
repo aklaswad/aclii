@@ -430,19 +430,22 @@ __END_OF_ACLII_SCRIPT__
 
 # Build Args
   local i=0
-  for value in "${foundValues[@]}"
-  do
-    local inputId="${foundValuesFor[$i]}"
-    local key="${inputKeys[$inputId]}"
+  if [ -n "${foundValues[@]+HAS}" ] && [ -n "${foundValues+HAS}" ]; then
+    for value in "${foundValues[@]}"
+    do
+      local inputId="${foundValuesFor[$i]}"
+      local key="${inputKeys[$inputId]}"
 
-    if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
-      json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
-    else
-      json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
-    fi
-    : $((i++))
-  done
-
+      if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
+        json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+      else
+        json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+      fi
+      : $((i++))
+    done
+  fi
+  _aclii_debug "got json $json"
+  _aclii_exec "$json"
 }
 __parse_args
 

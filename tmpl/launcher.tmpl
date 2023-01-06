@@ -123,7 +123,8 @@ __END_OF_ACLII_SCRIPT__
     fi
     : $((i++))
   done
-
+  _aclii_debug "got json $json"
+  _aclii_exec "$json"
 }
 __parse_args
 
