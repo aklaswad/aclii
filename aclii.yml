@@ -1,4 +1,5 @@
 name: aclii
+bin: _aclii_main
 types:
   foodgenre:
     Chinese: Yummy!

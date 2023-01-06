@@ -6,7 +6,7 @@
   "main": "index.js",
   "bin": {
     "aclii": "bin/aclii-launcher.sh",
-    "aclii-main": "bin/cli.js"
+    "_aclii_main": "bin/cli.js"
   },
   "scripts": {
     "build": "script/build.sh",

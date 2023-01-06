@@ -11,7 +11,11 @@ _aclii_debug () {
 }
 
 _aclii_exec () {
-  binname=$(dirname $0)/$(basename $0)"-main"
+  if [ ${2:0:1} == "/" ] || [ ${2:0:1} == "~" ]; then
+    binmame=$2
+  else
+    binname="$(dirname $0)/$2"
+  fi
   local def=$(echo "$1" | base64)
   local b64
   if  [ base64 -w >/dev/null 2>&1 ]; then
@@ -102,6 +106,7 @@ __END_OF_ACLII_SCRIPT__
       fi
       exit $result
 ##//   } else {
+      local bin="<%= c.bin %>"
 ##//     c.inputsWithDefaults.forEach( o => {
       key="<%= o.name %>"
       def="<%= o.defaultValue %>"
@@ -114,7 +119,6 @@ __END_OF_ACLII_SCRIPT__
       echo "Unknown command";
       _help;
   esac
-
 
 # Build Args
   local i=0
@@ -133,7 +137,7 @@ __END_OF_ACLII_SCRIPT__
     done
   fi
   _aclii_debug "got json $json"
-  _aclii_exec "$json"
+  _aclii_exec "$json" $bin
 }
 __parse_args
 

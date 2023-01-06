@@ -11,7 +11,11 @@ _aclii_debug () {
 }
 
 _aclii_exec () {
-  binname=$(dirname $0)/$(basename $0)"-main"
+  if [ ${2:0:1} == "/" ] || [ ${2:0:1} == "~" ]; then
+    binmame=$2
+  else
+    binname="$(dirname $0)/$2"
+  fi
   local def=$(echo "$1" | base64)
   local b64
   if  [ base64 -w >/dev/null 2>&1 ]; then
@@ -383,11 +387,13 @@ fi
       _help "$cmd"
       ;;
     "aclii.playground.hungry" )
+      local bin="_aclii_main"
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.playground.stuffed" )
+      local bin="_aclii_main"
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -414,16 +420,19 @@ __END_OF_ACLII_SCRIPT__
       exit $result
       ;;
     "aclii.render.completion" )
+      local bin="_aclii_main"
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.render.launcher" )
+      local bin="_aclii_main"
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.render.parser" )
+      local bin="_aclii_main"
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -438,7 +447,6 @@ __END_OF_ACLII_SCRIPT__
       echo "Unknown command";
       _help;
   esac
-
 
 # Build Args
   local i=0
@@ -457,7 +465,7 @@ __END_OF_ACLII_SCRIPT__
     done
   fi
   _aclii_debug "got json $json"
-  _aclii_exec "$json"
+  _aclii_exec "$json" $bin
 }
 __parse_args
 
