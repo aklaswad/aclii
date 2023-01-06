@@ -43,7 +43,7 @@ local cmd="<%= aclii.commandName %>"
 local -a trailingArgs
 local nth=0
 local arg
-local optionAcceptable
+local optionAcceptable=""
 
 if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
   for arg in "${argv[@]}"
@@ -76,7 +76,7 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
 
     # Traditional options terminator
     elif [ "$arg" == "--" ]; then
-      optionAcceptable=""
+      optionAcceptable="true"
       argvTypes[$nth]="argterminator"
     elif [ "${arg:0:2}" == '--' ] && [ -z "$optionAcceptable" ]; then
       # It starts with double dash. So this might be an option
