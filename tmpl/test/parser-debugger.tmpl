@@ -1,0 +1,58 @@
+#!/bin/bash
+
+set -ueo pipefail
+_aclii_debug () {
+  if [ -n "${ACLII_DEBUG+HAS_VALUE}" ]; then
+    echo "$@" >> /tmp/aclii-debug.log
+  fi
+}
+
+function debug {
+argv=("$@")
+
+
+##// INCLUDE parser.tmpl
+
+echo "PARSE FINISHED"
+echo "ERROR: $error"
+echo
+echo "input chain, input types, valuesFor"
+echo '[]' | jq -c '$ARGS.positional' --args "${inputChain[@]}"
+echo '[]' | jq -c '$ARGS.positional' --args "${inputTypes[@]}"
+echo '[]' | jq -c '$ARGS.positional' --args "${inputKeys[@]}"
+echo 
+echo "command path"
+echo '[]' | jq -c '$ARGS.positional' --args "${commandPath[@]}"
+echo
+echo "argvCopy, argvMap, argvTypes"
+echo '[]' | jq -c '$ARGS.positional' --args "${argvCopy[@]}"
+echo '[]' | jq -c '$ARGS.positional' --args "${argvMap[@]}"
+echo '[]' | jq -c '$ARGS.positional' --args "${argvTypes[@]}"
+
+echo "foundValues, foundValuesFor"
+echo '[]' | jq -c '$ARGS.positional' --args "${foundValues[@]}"
+echo '[]' | jq -c '$ARGS.positional' --args "${foundValuesFor[@]}"
+
+
+local json='{"command":"'"$cmd"'","args":[],"options":{}}'
+local i=0
+for value in "${foundValues[@]}"
+do
+  local inputId="${foundValuesFor[$i]}"
+  local key="${inputKeys[$inputId]}"
+  echo ">>> $value $inputId $key"
+
+  if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
+  
+    json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+  else
+    json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+  fi
+  : $((i++))
+done
+
+
+  echo $json | jq .
+}
+
+debug "$@"
