@@ -15,13 +15,21 @@
     "test:node": "node --test",
     "test:bats": "bats test/bats"
   },
-  "keywords": [],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aklaswad/aclii"
+  },
+  "bugs": "https://github.com/aklaswad/aclii/issues",
+  "keywords": ["cli","tool","scatfoldings"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "yaml": "^2.2.1"
   },
   "devDependencies": {
     "bats": "^1.8.2"
+  },
+  "engines": {
+    "node": ">=14"
   }
 }
