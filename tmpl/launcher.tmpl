@@ -12,7 +12,14 @@ _aclii_debug () {
 
 _aclii_exec () {
   binname=$(dirname $0)/$(basename $0)"-main"
-  exec "$binname" $(echo "$1" | base64)
+  local def=$(echo "$1" | base64)
+  local b64
+  if  [ base64 -w >/dev/null 2>&1 ]; then
+    b64=$(echo $1 | base64 -w0)
+  else
+    b64=$(echo $1 | base64)
+  fi
+  exec "$binname" "$b64"
 }
 
 
