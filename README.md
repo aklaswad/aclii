@@ -21,3 +21,16 @@ If you're working for monorepo which maintained by multiple teams. For example b
 
 I know you have aliases which you wrote into `~/.*shrc` but never invoked, and completely forgot how to use them. How many dead aliases do you have?
 aclii launcher can manage those items in single yaml file, with documentation and auto-completion, by just putting personal launcher, since you can write oneliners and scripts in aclii.yml and aclii can run them, like GH actions.
+
+# Limitations / ToDos
+
+- Documentation
+- Installer
+- Only bash is suppported / Need to support other environment
+- Bootstrap / Scatfold to create new aclii project
+
+## Future Features
+
+- Dash off script bootstrap / implant aclii config into script file
+- Branch grafting for multiple aclii configs
+- Plaggable language support for inline scripting / scatfolding
