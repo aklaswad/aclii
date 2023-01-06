@@ -42,6 +42,8 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
       | Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
     render
       | Render bash scripts generated from yaml config file. See sub commands for details.
+    aclii-completion
+      | render completion script for aclii
   
   Options:
     --file | filename of aclii config file (aclii.yml)
@@ -166,6 +168,18 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
     --verbose | undefined
 EOH
 }
+_help_node1335413e45f7b6441d6db69628a7df80 () {
+  cat << 'EOH'
+  Name: aclii.aclii-completion
+    render completion script for aclii
+  
+  Commands:
+  
+  Options:
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
+EOH
+}
 
 _help () {
   local page
@@ -184,6 +198,7 @@ _help () {
     "aclii.render.parser") _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 ;;
     "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
     "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
+    "aclii.aclii-completion") _help_node1335413e45f7b6441d6db69628a7df80 ;;
   esac
   exit 0
 }
@@ -360,6 +375,10 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
           cmd="aclii.render"
           commandPath+=("render")
           ;;
+        "aclii.aclii-completion" )
+          cmd="aclii.aclii-completion"
+          commandPath+=("aclii-completion")
+          ;;
         * )
           error="Unknown Command $arg"
           break
@@ -442,6 +461,12 @@ __END_OF_ACLII_SCRIPT__
       ;;
     "aclii.render" )
       _help "$cmd"
+      ;;
+    "aclii.aclii-completion" )
+      local bin="_aclii_main"
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     * )
       echo "Unknown command";

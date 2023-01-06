@@ -5,6 +5,11 @@ import path from 'path'
 import url from 'url'
 
 const Commands = {
+  "aclii.aclii-completion": (opt) => {
+    // Find
+    const aclii = Aclii.fromFile(Aclii.ConfigPath())
+    console.log( aclii.render('bash_completion.tmpl') )
+  },
   "aclii.render.parser-debugger": (opt) => {
     const aclii = Aclii.fromFile(opts.options.file)
     console.log( aclii.render('test/parser-debugger.tmpl'))
