@@ -1,6 +1,6 @@
 {
   "name": "aclii",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "type": "module",
   "description": "Abstract Command Line Interface Interface",
   "main": "index.js",
