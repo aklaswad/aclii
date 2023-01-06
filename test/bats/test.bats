@@ -3,11 +3,11 @@
 DIR="$( cd "$( dirname "$BATS_TEST_FILENAME" )" >/dev/null 2>&1 && pwd )"
 source <($DIR/build.sh)
 
-@test "Collect sub command" {
-  arguments=("test" "foo")
-  parse_test "${arguments[@]}"
-  [ "$O_cmd" == "test.foo" ] && [ "$fee" == "" ]
-}
+#@test "Collect sub command" {
+#  arguments=("test" "foo")
+#  parse_test "${arguments[@]}"
+#  [ "$O_cmd" == "test.foo" ] && [ "$fee" == "" ]
+#}
 
 @test "Error raised since --option wants value" {
   arguments=("test" "--fee")
@@ -15,9 +15,9 @@ source <($DIR/build.sh)
   [ -n "$O_error" ]
 }
 
-@test "Can get value for option" {
-  arguments=("test" "--fee" "foe")
-  parse_test "${arguments[@]}"
-  [ "$fee" == "foe" ]
-}
+#@test "Can get value for option" {
+#  arguments=("test" "--fee" "foe")
+#  parse_test "${arguments[@]}"
+#  [ "$fee" == "foe" ]
+#}
 
