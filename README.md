@@ -6,6 +6,46 @@
 1. aclii will generate launcher shell script and completion script from it
 1. You can get your own powerful command, for your product, and/or every tools you use.
 
+# Install
+
+```
+$ apt update && apt install -y jq
+$ npm i -g aclii
+```
+
+_(sorry install script is not yet, so...)_
+
+```
+$ source <(aclii aclii-completion)
+```
+
+Ok , now aclii has been set up!
+
+# How to use
+
+Go some new directory and put this config as `aclii.yml`
+
+```
+name: mytool
+description: my tool for cli
+helpstop: true
+commands:
+  - name: list-home
+    description: show my home directory
+    script: cd ~ && ls -la
+    env: bash
+```
+
+now aclii can compile this to launcher by `aclii render completion`, and `aclii render completion` for bash_completion.
+Install them and try it!
+
+```
+$ aclii render launcher > /usr/local/bin/mytool && chmod +x /usr/local/bin/mytool
+$ source <(aclii render completion)
+$ mytool<TAB>
+```
+
+
 # Use cases
 
 ## For quick tool writing
