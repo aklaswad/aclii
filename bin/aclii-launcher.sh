@@ -12,7 +12,14 @@ _aclii_debug () {
 
 _aclii_exec () {
   binname=$(dirname $0)/$(basename $0)"-main"
-  exec "$binname" $(echo "$1" | base64)
+  local def=$(echo "$1" | base64)
+  local b64
+  if  [ base64 -w >/dev/null 2>&1 ]; then
+    b64=$(echo $1 | base64 -w0)
+  else
+    b64=$(echo $1 | base64)
+  fi
+  exec "$binname" "$b64"
 }
 
 
@@ -311,6 +318,10 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
     else
       argvTypes[$nth]="subcommand"
       case "$cmd.$arg" in
+        "aclii" )
+          cmd="aclii"
+          commandPath+=("aclii")
+          ;;
         "aclii.playground.hungry" )
           cmd="aclii.playground.hungry"
           commandPath+=("hungry")
@@ -354,7 +365,8 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
   done
 
   _aclii_debug "Parse done---------"
-
+  _aclii_debug "    cmd: $cmd"
+  _aclii_debug "  error: $error"
 
   #echo ${values[@]}
 else
@@ -430,20 +442,18 @@ __END_OF_ACLII_SCRIPT__
 
 # Build Args
   local i=0
-  if [ -n "${foundValues[@]+HAS}" ] && [ -n "${foundValues+HAS}" ]; then
-    for value in "${foundValues[@]}"
-    do
-      local inputId="${foundValuesFor[$i]}"
-      local key="${inputKeys[$inputId]}"
+  for value in "${foundValues[@]}"
+  do
+    local inputId="${foundValuesFor[$i]}"
+    local key="${inputKeys[$inputId]}"
 
-      if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
-        json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
-      else
-        json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
-      fi
-      : $((i++))
-    done
-  fi
+    if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
+      json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+    else
+      json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+    fi
+    : $((i++))
+  done
   _aclii_debug "got json $json"
   _aclii_exec "$json"
 }
