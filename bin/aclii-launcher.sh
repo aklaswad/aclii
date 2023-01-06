@@ -24,7 +24,7 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
   Name: aclii
     A toolkit for aclii (Abstract Command Line Interface Interface)
   
-  aclii, a command line interface interface
+  aclii, The toolkit for abstract command line interface interface
   
   Commands:
     playground
@@ -33,27 +33,8 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
       | Render bash scripts generated from yaml config file. See sub commands for details.
   
   Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_node620dd4ac0e81767466a282a8b830d9a7 () {
-  cat << 'EOH'
-  Name: aclii.playground
-    Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
-  
-  
-  Commands:
-    hungry <string>...
-      | Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
-    stuffed
-      | Raise error if non optional values ( started by dash(es) ) are related.
-    run-ls-script
-      | Inline script demo. You can implement any script in aclii file and execute it instead of main program.
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
 EOH
 }
 _help_nodec9e9547ec88bba1cbfa64a3699a294ed () {
@@ -65,8 +46,8 @@ _help_nodec9e9547ec88bba1cbfa64a3699a294ed () {
   Commands:
   
   Options:
-    --file | Specify aclii config file
-    --verbose | 
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
 EOH
 }
 _help_node1f25010818a63d2f7bcb15a33d6fd818 () {
@@ -78,8 +59,8 @@ _help_node1f25010818a63d2f7bcb15a33d6fd818 () {
   Commands:
   
   Options:
-    --file | Specify aclii config file
-    --verbose | 
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
 EOH
 }
 _help_nodee80eb6db780cc1bef550699e63d9e4e7 () {
@@ -91,8 +72,66 @@ _help_nodee80eb6db780cc1bef550699e63d9e4e7 () {
   Commands:
   
   Options:
-    --file | Specify aclii config file
-    --verbose | 
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
+EOH
+}
+_help_node2e76e740f0ac071ad964481e5d054491 () {
+  cat << 'EOH'
+  Name: aclii.render.completion
+    Render and print bash auto-completion script to STDOUT.
+  
+  
+  Commands:
+  
+  Options:
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
+EOH
+}
+_help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
+  cat << 'EOH'
+  Name: aclii.render.launcher
+    Render and print bash script to launch other program to STDOUT.
+  
+  
+  Commands:
+  
+  Options:
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
+EOH
+}
+_help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
+  cat << 'EOH'
+  Name: aclii.render.parser
+    Render and print rendered bare commandline parser, for testing.
+  
+  
+  Commands:
+  
+  Options:
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
+EOH
+}
+_help_node620dd4ac0e81767466a282a8b830d9a7 () {
+  cat << 'EOH'
+  Name: aclii.playground
+    Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+  
+  
+  Commands:
+    hungry
+      | Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
+    stuffed
+      | Raise error if non optional values ( started by dash(es) ) are related.
+    run-ls-script
+      | Inline script demo. You can implement any script in aclii file and execute it instead of main program.
+  
+  Options:
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
 EOH
 }
 _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
@@ -112,47 +151,8 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
       | Render and print rendered bare commandline parser, for testing.
   
   Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_node2e76e740f0ac071ad964481e5d054491 () {
-  cat << 'EOH'
-  Name: aclii.render.completion
-    Render and print bash auto-completion script to STDOUT.
-  
-  
-  Commands:
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
-  cat << 'EOH'
-  Name: aclii.render.launcher
-    Render and print bash script to launch other program to STDOUT.
-  
-  
-  Commands:
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
-EOH
-}
-_help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
-  cat << 'EOH'
-  Name: aclii.render.parser
-    Render and print rendered bare commandline parser, for testing.
-  
-  
-  Commands:
-  
-  Options:
-    --file | Specify aclii config file
-    --verbose | 
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | undefined
 EOH
 }
 
@@ -165,14 +165,14 @@ _help () {
   fi
   case "$page" in
     "aclii") _help_nodea57b9426b2e192dba7ba8c15edd1cc79 ;;
-    "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
     "aclii.playground.hungry") _help_nodec9e9547ec88bba1cbfa64a3699a294ed ;;
     "aclii.playground.stuffed") _help_node1f25010818a63d2f7bcb15a33d6fd818 ;;
     "aclii.playground.run-ls-script") _help_nodee80eb6db780cc1bef550699e63d9e4e7 ;;
-    "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
     "aclii.render.completion") _help_node2e76e740f0ac071ad964481e5d054491 ;;
     "aclii.render.launcher") _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c ;;
     "aclii.render.parser") _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 ;;
+    "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
+    "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
   esac
   exit 0
 }
@@ -185,268 +185,176 @@ argv=("$@")
 
 __parse_args () {
 
-
-
-
-_aclii_debug "enter parse_args |$@|"
+_aclii_debug "enter parseargs |$@|"
 _aclii_debug "num args $#"
-local -a values=("")
-local -a values_for=("")
-  values[1]='./aclii.yml'
-  values_for[1]='file'
-  values[2]=''
-  values_for[2]='verbose'
 
+local -a def_optionSets
+local -a node2options
+local -a argvMap
+local -a argvTypes # for debug. maybe removed soon.
+local -a argvCopy  # for debug. maybe removed soon.
+
+local -a commandPath=("aclii")
+
+local -a inputChain
+local -a inputTypes
+inputChain=("" "" "3" "")
+inputTypes=("file" "switch" "foodgenre" "string")
+inputKeys=("file" "verbose" "genre" "food")
+inputDefaults=("./aclii.yml" "" "" "")
+inputIsMany=("" "" "" "1")
+inputIsMulti=("" "" "" "")
+
+local -a foundValues
+local -a foundValuesFor
+local currentOptionSet="0"
 local error=""
 local wantType=""
-local wantCount=0
-local wantingObjectId=""
-local argvMode=""
+local wantingInputId=""
 local cmd="aclii"
-local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
-local processed=0 # Just for debug
+local -a trailingArgs
+local nth=0
 local arg
+local optionAcceptable
 
 if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
   for arg in "${argv[@]}"
   do
-    : $((processed++))
-    _aclii_debug "Processing $processed arg |$arg|"
+    argvMap[$nth]=""
+    argvCopy[$nth]=$(echo $arg | sed s/-//g )
+    _aclii_debug "Processing $nth arg |$arg|"
     _aclii_debug "   cmd: $cmd  wantType |$wantType|"
 
-    # Now we're already eating remained argv. Just eat it
-    if [ -n "$argvMode" ]; then
-      #TODO: Do we need to varidate here?
-      trailingArgs+=("$arg")
-     # args=$(echo $args | jq '.argv += ["'"$arg"'"]')
 
-    elif [ -n "$wantType" ]; then
-      #TODO: Do we need to varidate here?
+    ## If reading (in)finite args
+    if [ -n "$wantType" ]; then
+      argvTypes[$nth]="input:$wantType"
+      #TODO: Do we need to varldate here?
 
-      #args=$(echo $args | jq '.options["'"$wanting"'"] = "'"$arg"'"')
-      _aclii_debug "Save value $arg for id $wantingObjectId"
-      values[$wantingObjectId]="$arg"
-      : $((wantCount--))
-      if [ "$wantCount" == "0" ]; then
-        wantingObjectId=""
+      _aclii_debug "Save value $arg for id $wantingInputId"
+      argvMap[$nth]="$wantingInputId"
+      foundValues+=("$arg")
+      foundValuesFor+=("$wantingInputId")
+      if [ -n "${inputIsMany[$wantingInputId]}" ]; then
+        :
+      elif [ -n "${inputChain[$wantingInputId]}" ]; then
+        local nextId="${inputChain[$wantingInputId]}"
+        wantingInputId="$nextId"
+        wantType="${inputTypes[$nextId]}"
+      else
+        wantingInputId=""
         wantType=""
       fi
 
-    # Traditional args terminator
+    # Traditional options terminator
     elif [ "$arg" == "--" ]; then
-      argvMode="any"
-    elif [ "${arg:0:2}" == '--' ]; then
-      # It starts with dash. So this might be an option
+      optionAcceptable=""
+      argvTypes[$nth]="argterminator"
+    elif [ "${arg:0:2}" == '--' ] && [ -z "$optionAcceptable" ]; then
+      # It starts with double dash. So this might be an option
 
-      #XXX: How to handle help?
-      # This launcher will handle help command
-      #if [ `echo "$arg" | grep "-help$"` ]; then
-      #  _help $cmd
-      #fi
-      # Check option that if
-      # next arg is option valu or not
-
-      comopt="$cmd"'@'"$arg"
-      _aclii_debug "adding flag |$comopt|"
-      _aclii_debug "Checking option $arg : comopt $comopt"
-      case "$comopt" in
-# Option for aclii
-        'aclii@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-# Option for aclii.playground
-        'aclii.playground@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii.playground@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-# Option for aclii.playground.hungry
-        'aclii.playground.hungry@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii.playground.hungry@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-# Option for aclii.playground.stuffed
-        'aclii.playground.stuffed@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii.playground.stuffed@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-# Option for aclii.playground.run-ls-script
-        'aclii.playground.run-ls-script@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii.playground.run-ls-script@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-# Option for aclii.render
-        'aclii.render@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii.render@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-# Option for aclii.render.completion
-        'aclii.render.completion@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii.render.completion@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-# Option for aclii.render.launcher
-        'aclii.render.launcher@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii.render.launcher@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-# Option for aclii.render.parser
-        'aclii.render.parser@--file' )
-          #args=$(echo $args | jq '.options["file"] = true')
-          wantType="file"
-          wantingObjectId="1"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        'aclii.render.parser@--verbose' )
-          #args=$(echo $args | jq '.options["verbose"] = true')
-          wantType=""
-          wantingObjectId="2"
-          wantCount=1
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-        * )
-          if [ -n "${ACLII_EXEC+EXEC}" ]; then
-            echo "aclii: Unknown Option $arg"
-            _help $cmd
-          else
-            error="Unknown Option $arg"
-          fi
+      argvTypes[$nth]="option"
+      case "$currentOptionSet" in
+        '0' )
+          case "${arg:2}" in
+            'file')
+              wantType="file"
+              wantingInputId="0"
+              _aclii_debug "want $wantType for id $wantingInputId"
+              ;;
+            'verbose')
+              argvMap[$nth]="1"
+              foundValues+=("1")
+              foundValuesFor+=("1")
+              _aclii_debug "want $wantType for id $wantingInputId"
+              ;;
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
+        '1' )
+          case "${arg:2}" in
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
+        '2' )
+          case "${arg:2}" in
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
+        '3' )
+          case "${arg:2}" in
+            'file')
+              wantType="file"
+              wantingInputId="0"
+              _aclii_debug "want $wantType for id $wantingInputId"
+              ;;
+            'verbose')
+              argvMap[$nth]="1"
+              foundValues+=("1")
+              foundValuesFor+=("1")
+              _aclii_debug "want $wantType for id $wantingInputId"
+              ;;
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
       esac
   # elif
   #   TODO: Short option handling here
     else
+      argvTypes[$nth]="subcommand"
       case "$cmd.$arg" in
-        "aclii.playground" )
-          cmd="aclii.playground"
-          #TODO: Support limited number of args
-          ;;
         "aclii.playground.hungry" )
           cmd="aclii.playground.hungry"
-          #TODO: Support limited number of args
-          argvMode="string"
-          wantType="string"
+          commandPath+=("hungry")
+          wantType="foodgenre"
+          wantingInputId="2"
           ;;
         "aclii.playground.stuffed" )
           cmd="aclii.playground.stuffed"
-          #TODO: Support limited number of args
+          commandPath+=("stuffed")
           ;;
         "aclii.playground.run-ls-script" )
           cmd="aclii.playground.run-ls-script"
-          #TODO: Support limited number of args
-          ;;
-        "aclii.render" )
-          cmd="aclii.render"
-          #TODO: Support limited number of args
+          commandPath+=("run-ls-script")
           ;;
         "aclii.render.completion" )
           cmd="aclii.render.completion"
-          #TODO: Support limited number of args
+          commandPath+=("completion")
           ;;
         "aclii.render.launcher" )
           cmd="aclii.render.launcher"
-          #TODO: Support limited number of args
+          commandPath+=("launcher")
           ;;
         "aclii.render.parser" )
           cmd="aclii.render.parser"
-          #TODO: Support limited number of args
+          commandPath+=("parser")
+          ;;
+        "aclii.playground" )
+          cmd="aclii.playground"
+          commandPath+=("playground")
+          ;;
+        "aclii.render" )
+          cmd="aclii.render"
+          commandPath+=("render")
           ;;
         * )
-          if [ -n "${ACLII_EXEC+EXEC}" ]; then
-            echo "aclii: Unknown Command $arg"
-            _help $cmd
-          else
-            error="Unknown Command $arg"
-          fi
+          error="Unknown Command $arg"
+          break
       esac
     fi
+    : $((nth++))
   done
 
   _aclii_debug "Parse done---------"
 
-  if [ "$wantCount" != "0" ]; then
-    error="Value for ${values_for[$wantingObjectId]} is missing"
-  fi
 
   #echo ${values[@]}
 else
@@ -454,43 +362,23 @@ else
 fi
 
 
-  #local want=""
-  #local wanting=""
-  #local args
-  #local argvMode
-  #local cmd="aclii"
-
   _aclii_debug  "got cmd: $cmd"
-  _aclii_debug  "    values: ${#values[@]} items ${values[@]}"
-  _aclii_debug  "    trails: ${#trailingArgs[@]} items ${trailingArgs[@]}"
+  local json='{"command":"'"$cmd"'","args":[],"options":{}}'
   # Now we got the command which to be executed.
   # Handle it as it wants
-  local json='{"command":"'"$cmd"'","args":[],"options":{}}'
-  local trail
-  for trail in "${trailingArgs[@]:1}" # skip dummy element
-  do
-    json=$(echo $json | jq '.args+=["'"$trail"'"]')
-  done
   case "$cmd" in
     "aclii" )
       _help "$cmd"
       ;;
-    "aclii.playground" )
-      _help "$cmd"
-      ;;
     "aclii.playground.hungry" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.playground.stuffed" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.playground.run-ls-script" )
       tmp=$(mktemp)
@@ -511,37 +399,51 @@ __END_OF_ACLII_SCRIPT__
       else
         echo "(aclii:: script done.)"
       fi
+      exit $result
+      ;;
+    "aclii.render.completion" )
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.render.launcher" )
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.render.parser" )
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.playground" )
+      _help "$cmd"
       ;;
     "aclii.render" )
       _help "$cmd"
-      ;;
-    "aclii.render.completion" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
-      ;;
-    "aclii.render.launcher" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
-      ;;
-    "aclii.render.parser" )
-# Build Args
-      json=$(echo $json | jq '.options["file"] = "'"${values[1]}"'"')
-      json=$(echo $json | jq '.options["verbose"] = "'"${values[2]}"'"')
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
       ;;
     * )
       echo "Unknown command";
       _help;
   esac
-}
 
+
+# Build Args
+  local i=0
+  for value in "${foundValues[@]}"
+  do
+    local inputId="${foundValuesFor[$i]}"
+    local key="${inputKeys[$inputId]}"
+
+    if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
+      json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+    else
+      json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+    fi
+    : $((i++))
+  done
+
+}
 __parse_args
 
 

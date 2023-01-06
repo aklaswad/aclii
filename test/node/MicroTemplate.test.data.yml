@@ -14,6 +14,15 @@
   expect: |
     aclii
 
+- name: Render zero number
+  data:
+    age: 0
+  tmpl: |
+    age <%= data.age %>
+  expect: |
+    age 0
+
+
 - name: Render word in the middle of sentence
   data:
     emotion: love

@@ -3,118 +3,135 @@
 ##//  defined before loading this snipet.
 ##// */
 
-_aclii_debug "enter parse_args |$@|"
+_aclii_debug "enter parseargs |$@|"
 _aclii_debug "num args $#"
-local -a values=("")
-local -a values_for=("")
 
-##// aclii.allCommands.forEach( c => {
-##//   c.ownOptions.forEach( o => {
-  values[<%= o.id %>]='<%= o.defaultValue || '' %>'
-  values_for[<%= o.id %>]='<%= o.name %>'
-##//   })
-##// })
+##// //subcommand = options? (finite-args)? subcommand?
+##// //           | options? (finite-args)? (ininite-args)
 
+local -a def_optionSets
+local -a node2options
+
+##// // store position of argv to input id. 0 for non-user-input.
+##// // for example, we have --file option and it's id = 7,
+##// // then if input is "cmd_foo subcmd --file names.txt subcmd"
+##// // argv map should be [ 0,   0,     0,     7,        0]
+local -a argvMap
+local -a argvTypes # for debug. maybe removed soon.
+local -a argvCopy  # for debug. maybe removed soon.
+
+local -a commandPath=("<%= aclii.commandName %>")
+
+##// // Set up input definitions.
+
+local -a inputChain
+local -a inputTypes
+inputChain=(<%= aclii.inputs.map(i => `"${i.next || ''}"`).join(' ')%>)
+inputTypes=(<%= aclii.inputs.map(i => `"${i.type || ''}"`).join(' ')%>)
+inputKeys=(<%= aclii.inputs.map(i => `"${i.name || ''}"`).join(' ')%>)
+inputDefaults=(<%= aclii.inputs.map(i => `"${i.defaultValue || ''}"`).join(' ')%>)
+inputIsMany=(<%= aclii.inputs.map(i => `"${i.many ? 1 : ''}"`).join(' ')%>)
+inputIsMulti=(<%= aclii.inputs.map(i => `"${i.multi || ''}"`).join(' ')%>)
+
+local -a foundValues
+local -a foundValuesFor
+local currentOptionSet="<%= aclii.root.optionSetId %>"
 local error=""
 local wantType=""
-local wantCount=0
-local wantingObjectId=""
-local argvMode=""
+local wantingInputId=""
 local cmd="<%= aclii.commandName %>"
-local -a trailingArgs=("DUMMY FOR SUPPRESS -u")
-local processed=0 # Just for debug
-local comopt
+local -a trailingArgs
+local nth=0
 local arg
+local optionAcceptable
 
 if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
   for arg in "${argv[@]}"
   do
-    : $((processed++))
-    _aclii_debug "Processing $processed arg |$arg|"
+    argvMap[$nth]=""
+    argvCopy[$nth]=$(echo $arg | sed s/-//g )
+    _aclii_debug "Processing $nth arg |$arg|"
     _aclii_debug "   cmd: $cmd  wantType |$wantType|"
 
-    # Now we're already eating remained argv. Just eat it
-    if [ -n "$argvMode" ]; then
-      #TODO: Do we need to varidate here?
-      trailingArgs+=("$arg")
 
-    elif [ -n "$wantType" ]; then
-      #TODO: Do we need to varidate here?
+    ## If reading (in)finite args
+    if [ -n "$wantType" ]; then
+      argvTypes[$nth]="input:$wantType"
+      #TODO: Do we need to varldate here?
 
-      _aclii_debug "Save value $arg for id $wantingObjectId"
-      values[$wantingObjectId]="$arg"
-      : $((wantCount--))
-      if [ "$wantCount" == "0" ]; then
-        wantingObjectId=""
+      _aclii_debug "Save value $arg for id $wantingInputId"
+      argvMap[$nth]="$wantingInputId"
+      foundValues+=("$arg")
+      foundValuesFor+=("$wantingInputId")
+      if [ -n "${inputIsMany[$wantingInputId]}" ]; then
+        :
+      elif [ -n "${inputChain[$wantingInputId]}" ]; then
+        local nextId="${inputChain[$wantingInputId]}"
+        wantingInputId="$nextId"
+        wantType="${inputTypes[$nextId]}"
+      else
+        wantingInputId=""
         wantType=""
       fi
 
-    # Traditional args terminator
+    # Traditional options terminator
     elif [ "$arg" == "--" ]; then
-      argvMode="any"
-    elif [ "${arg:0:2}" == '--' ]; then
-      # It starts with dash. So this might be an option
+      optionAcceptable=""
+      argvTypes[$nth]="argterminator"
+    elif [ "${arg:0:2}" == '--' ] && [ -z "$optionAcceptable" ]; then
+      # It starts with double dash. So this might be an option
 
-      #XXX: How to handle help?
-      # This launcher will handle help command
-      #if [ `echo "$arg" | grep "-help$"` ]; then
-      #  _help $cmd
-      #fi
-      # Check option that if
-      # next arg is option valu or not
-
-      comopt="$cmd"'@'"$arg"
-      _aclii_debug "adding flag |$comopt|"
-      _aclii_debug "Checking option $arg : comopt $comopt"
-      case "$comopt" in
-##// aclii.allCommands.forEach( c => {
-# Option for <%= c.path %>
-##//   c.options.forEach( o => {
-        '<%= c.path %>@--<%= o.name %>' )
-          wantType="<%= o.want %>"
-          wantingObjectId="<%= o.id %>"
-          wantCount=<%= o.wants || 1 %>
-          _aclii_debug "want $wantType for id $wantingObjectId"
-          ;;
-##//  })})
-        * )
-          if [ -n "${ACLII_EXEC+EXEC}" ]; then
-            echo "aclii: Unknown Option $arg"
-            _help $cmd
-          else
-            error="Unknown Option $arg"
-          fi
+      argvTypes[$nth]="option"
+      case "$currentOptionSet" in
+##// aclii.optionSets.flatMap( a => a ).forEach( (set, index) => {
+        '<%= index %>' )
+          case "${arg:2}" in
+##//   set.forEach( o => {
+            '<%= o.input.name %>')
+##//     if ( o.input.type === 'switch' ) {
+              argvMap[$nth]="<%= o.input.inputId %>"
+              foundValues+=("1")
+              foundValuesFor+=("<%= o.input.inputId %>")
+##//     } else {
+              wantType="<%= o.input.type %>"
+              wantingInputId="<%= o.input.inputId %>"
+##//     }
+              _aclii_debug "want $wantType for id $wantingInputId"
+              ;;
+##//   })
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
+##// })
       esac
   # elif
   #   TODO: Short option handling here
     else
+      argvTypes[$nth]="subcommand"
       case "$cmd.$arg" in
+##// //TODO: make template engine to enable recursive loop
 ##//  aclii.root.subCommands.forEach( c => {
         "<%= c.path %>" )
           cmd="<%= c.path %>"
-          #TODO: Support limited number of args
-##//    if (c.argv) {
-          argvMode="<%= c.argv %>"
-          wantType="<%= c.argv %>"
+          commandPath+=("<%= c.name %>")
+##//    if ( c.want ) {
+          wantType="<%= c.want.type %>"
+          wantingInputId="<%= c.want.inputId %>"
 ##//    }
           ;;
 ##//  })
         * )
-          if [ -n "${ACLII_EXEC+EXEC}" ]; then
-            echo "aclii: Unknown Command $arg"
-            _help $cmd
-          else
-            error="Unknown Command $arg"
-          fi
+          error="Unknown Command $arg"
+          break
       esac
     fi
+    : $((nth++))
   done
 
   _aclii_debug "Parse done---------"
 
-  if [ "$wantCount" != "0" ]; then
-    error="Value for ${values_for[$wantingObjectId]} is missing"
-  fi
 
   #echo ${values[@]}
 else

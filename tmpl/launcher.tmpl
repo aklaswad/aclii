@@ -68,23 +68,10 @@ __parse_args () {
 
 ##//INCLUDE parser.tmpl
 
-  #local want=""
-  #local wanting=""
-  #local args
-  #local argvMode
-  #local cmd="<%= aclii.commandName %>"
-
   _aclii_debug  "got cmd: $cmd"
-  _aclii_debug  "    values: ${#values[@]} items ${values[@]}"
-  _aclii_debug  "    trails: ${#trailingArgs[@]} items ${trailingArgs[@]}"
+  local json='{"command":"'"$cmd"'","args":[],"options":{}}'
   # Now we got the command which to be executed.
   # Handle it as it wants
-  local json='{"command":"'"$cmd"'","args":[],"options":{}}'
-  local trail
-  for trail in "${trailingArgs[@]:1}" # skip dummy element
-  do
-    json=$(echo $json | jq '.args+=["'"$trail"'"]')
-  done
   case "$cmd" in
 ##// aclii.allCommands.forEach( c => {
     "<%= c.path %>" )
@@ -106,19 +93,13 @@ __END_OF_ACLII_SCRIPT__
       else
         echo "(aclii:: script done.)"
       fi
+      exit $result
 ##//   } else {
-# Build Args
-##// c.options.forEach( o => {
-##//   if ( o.required ) {
-      if [ -z ${values[<%= o.id %>]+HASVALUE} ]; then
-        echo 'Option "<%= o.name %>" is required'
-        exit 1
-      fi
-##//   }
-      json=$(echo $json | jq '.options["<%= o.name %>"] = "'"${values[<%= o.id %>]}"'"')
-##// })
-      _aclii_debug "got json $json"
-      _aclii_exec "$json"
+##//     c.inputsWithDefaults.forEach( o => {
+      key="<%= o.name %>"
+      def="<%= o.defaultValue %>"
+      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+##//     })
 ##//   }
       ;;
 ##// })
@@ -126,8 +107,24 @@ __END_OF_ACLII_SCRIPT__
       echo "Unknown command";
       _help;
   esac
-}
 
+
+# Build Args
+  local i=0
+  for value in "${foundValues[@]}"
+  do
+    local inputId="${foundValuesFor[$i]}"
+    local key="${inputKeys[$inputId]}"
+
+    if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
+      json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+    else
+      json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+    fi
+    : $((i++))
+  done
+
+}
 __parse_args
 
 

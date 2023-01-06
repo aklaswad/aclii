@@ -9,13 +9,13 @@ source <($DIR/build.sh)
   [ "$O_cmd" == "test.foo" ] && [ "$fee" == "" ]
 }
 
-@test "Error raised since --fee wants value" {
+@test "Error raised since --option wants value" {
   arguments=("test" "--fee")
   parse_test "${arguments[@]}"
   [ -n "$O_error" ]
 }
 
-@test "Can get value for fee option" {
+@test "Can get value for option" {
   arguments=("test" "--fee" "foe")
   parse_test "${arguments[@]}"
   [ "$fee" == "foe" ]
