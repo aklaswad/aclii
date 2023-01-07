@@ -8,14 +8,14 @@
 
 # Install
 
-```
+```shell
 $ apt update && apt install -y jq
 $ npm i -g aclii
 ```
 
 _(sorry install script is not yet, so...)_
 
-```
+```shell
 $ source <(aclii aclii-completion)
 ```
 
@@ -25,7 +25,7 @@ Ok , now aclii has been set up!
 
 Go some new directory and put this config as `aclii.yml`
 
-```
+```yaml
 name: mytool
 description: my tool for cli
 helpstop: true
