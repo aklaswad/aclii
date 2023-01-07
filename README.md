@@ -62,6 +62,32 @@ If you're working for monorepo which maintained by multiple teams. For example b
 I know you have aliases which you wrote into `~/.*shrc` but never invoked, and completely forgot how to use them. How many dead aliases do you have?
 aclii launcher can manage those items in single yaml file, with documentation and auto-completion, by just putting personal launcher, since you can write oneliners and scripts in aclii.yml and aclii can run them, like GH actions.
 
+### Example for personal use, with self update
+
+```yaml
+name: ii
+description: Personal tools launcher. To update, edit ~/.aclii/aclii.yml.
+helpstop: true
+commands:
+  - name: maintain
+    description: maintain this tool itself
+    helpstop: true
+    commands:
+      - name: update
+        description: Re-compile ii
+        env: bash
+        script: |
+          cd ~/.aclii
+          aclii render launcher > ~/.bin/ii
+          aclii render completion > ~/.bashrc.d/ii
+  - name: hey
+    description: |
+      notify me with desktop notification and voice
+    script: |
+      osascript -e 'display notification "へい"'
+      say "へい"
+```
+
 # Limitations / Missing features / ToDos
 
 - **Documentation**
