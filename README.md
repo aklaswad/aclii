@@ -128,6 +128,10 @@ commands:
       say "へい"
 ```
 
+# Documentations
+
+ - [yaml spec](docs/spec.md)
+
 # Limitations / Missing features / ToDos
 
 - **Documentation**
