@@ -10,22 +10,24 @@ _aclii_debug () {
   fi
 }
 
-_aclii_exec () {
-  if [ ${2:0:1} == "/" ] || [ ${2:0:1} == "~" ]; then
-    binmame=$2
+_aclii_exec_json () {
+  if [ ${1:0:1} == "/" ] || [ ${1:0:1} == "~" ]; then
+    binmame=$1
   else
-    binname="$(dirname $0)/$2"
+    binname="$(dirname $0)/$1"
   fi
-  local def=$(echo "$1" | base64)
-  local b64
-  if  [ base64 -w >/dev/null 2>&1 ]; then
-    b64=$(echo $1 | base64 -w0)
-  else
-    b64=$(echo $1 | base64)
-  fi
-  exec "$binname" "$b64"
+  exec "$binname" "$2"
 }
 
+_aclii_exec () {
+  if [ ${1:0:1} == "/" ] || [ ${1:0:1} == "~" ]; then
+    binmame=$1
+  else
+    binname="$(dirname $0)/$1"
+  fi
+  exec "$binname" "${2[@]}"
+
+}
 
 _aclii_debug "Launch aclii..."
 _aclii_debug "ARGV $@"
@@ -398,30 +400,152 @@ fi
 
 
   _aclii_debug  "got cmd: $cmd"
-  local json='{"command":"'"$cmd"'","args":[],"options":{}}'
+
   # Now we got the command which to be executed.
   # Handle it as it wants
+
+
+# At first, check if this command wants JSON compiled args.
+  local wantJSON=""
+  local bin=""
+  local binPath=""
+  case "$cmd" in
+# aclii aclii aclii
+# aclii.playground.hungry aclii.playground aclii.playground
+    "aclii.playground.hungry" )
+      wantJSON="1"
+      bin="""_aclii_main"
+      binPath="""aclii.playground"
+      ;;
+# aclii.playground.stuffed aclii.playground aclii.playground
+    "aclii.playground.stuffed" )
+      wantJSON="1"
+      bin="""_aclii_main"
+      binPath="""aclii.playground"
+      ;;
+# aclii.playground.run-ls-script aclii.playground.run-ls-script aclii.playground.run-ls-script
+# aclii.render.completion aclii aclii
+    "aclii.render.completion" )
+      wantJSON="1"
+      bin="""_aclii_main"
+      binPath="""aclii"
+      ;;
+# aclii.render.launcher aclii aclii
+    "aclii.render.launcher" )
+      wantJSON="1"
+      bin="""_aclii_main"
+      binPath="""aclii"
+      ;;
+# aclii.render.parser aclii aclii
+    "aclii.render.parser" )
+      wantJSON="1"
+      bin="""_aclii_main"
+      binPath="""aclii"
+      ;;
+# aclii.playground aclii.playground aclii.playground
+# aclii.render aclii aclii
+# aclii.aclii-completion aclii aclii
+    "aclii.aclii-completion" )
+      wantJSON="1"
+      bin="""_aclii_main"
+      binPath="""aclii"
+      ;;
+  esac
+
+  local json
+  local jsonb64
+# Let's cook JSON
+  if [ -n "$wantJSON" ]; then
+    json=$(printf '{"command":"%s","bin":"%s","binpath":"%s","options":{}}' $cmd $bin $binPath);
+
+  # Insert Default Values
+  case "$cmd" in
+    "aclii")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.playground.hungry")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.playground.stuffed")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.playground.run-ls-script")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.render.completion")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.render.launcher")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.render.parser")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.playground")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.render")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.aclii-completion")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+  esac
+
+  # Then, Insert values fetched from argv
+    local i=0
+    if [ -n "${foundValues[@]+HAS}" ] && [ -n "${foundValues+HAS}" ]; then
+      for value in "${foundValues[@]}"
+      do
+        local inputId="${foundValuesFor[$i]}"
+        local key="${inputKeys[$inputId]}"
+
+        if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
+          json=$(echo $json | jq -c --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+        else
+          json=$(echo $json | jq -c --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+        fi
+        : $((i++))
+      done
+    fi
+
+    if  [ base64 -w >/dev/null 2>&1 ]; then
+      jsonb64=$(echo $json | base64 -w0)
+    else
+      jsonb64=$(echo $json | base64)
+    fi
+    _aclii_debug "got json $( echo $json | jq .)"
+  fi
+
   case "$cmd" in
     "aclii" )
       _help "$cmd"
       ;;
     "aclii.playground.hungry" )
-      local bin="_aclii_main"
-      local binPath="aclii.playground"
-      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
-      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
-      key="file"
-      def="./aclii.yml"
-      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.playground.stuffed" )
-      local bin="_aclii_main"
-      local binPath="aclii.playground"
-      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
-      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
-      key="file"
-      def="./aclii.yml"
-      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.playground.run-ls-script" )
       tmp=$(mktemp)
@@ -435,7 +559,7 @@ echo "That's all. Thanks!"
 __END_OF_ACLII_SCRIPT__
       chmod +x $tmp
       result=0
-      $tmp || result=$?
+      $tmp "${argv[@]}" || result=$?
       rm $tmp
       if [ ! "$result" == "0" ]; then
         echo "(aclii:: script exited with $result)"
@@ -445,31 +569,13 @@ __END_OF_ACLII_SCRIPT__
       exit $result
       ;;
     "aclii.render.completion" )
-      local bin="_aclii_main"
-      local binPath="aclii"
-      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
-      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
-      key="file"
-      def="./aclii.yml"
-      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.render.launcher" )
-      local bin="_aclii_main"
-      local binPath="aclii"
-      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
-      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
-      key="file"
-      def="./aclii.yml"
-      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.render.parser" )
-      local bin="_aclii_main"
-      local binPath="aclii"
-      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
-      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
-      key="file"
-      def="./aclii.yml"
-      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.playground" )
       _help "$cmd"
@@ -478,37 +584,14 @@ __END_OF_ACLII_SCRIPT__
       _help "$cmd"
       ;;
     "aclii.aclii-completion" )
-      local bin="_aclii_main"
-      local binPath="aclii"
-      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
-      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
-      key="file"
-      def="./aclii.yml"
-      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     * )
       echo "Unknown command";
       _help;
   esac
 
-# Build Args
-  local i=0
-  if [ -n "${foundValues[@]+HAS}" ] && [ -n "${foundValues+HAS}" ]; then
-    for value in "${foundValues[@]}"
-    do
-      local inputId="${foundValuesFor[$i]}"
-      local key="${inputKeys[$inputId]}"
-
-      if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
-        json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
-      else
-        json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
-      fi
-      : $((i++))
-    done
-  fi
   _aclii_debug "got json $json"
-  _aclii_exec "$json" $bin
 }
 __parse_args
 

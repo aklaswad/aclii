@@ -10,22 +10,24 @@ _aclii_debug () {
   fi
 }
 
-_aclii_exec () {
-  if [ ${2:0:1} == "/" ] || [ ${2:0:1} == "~" ]; then
-    binmame=$2
+_aclii_exec_json () {
+  if [ ${1:0:1} == "/" ] || [ ${1:0:1} == "~" ]; then
+    binmame=$1
   else
-    binname="$(dirname $0)/$2"
+    binname="$(dirname $0)/$1"
   fi
-  local def=$(echo "$1" | base64)
-  local b64
-  if  [ base64 -w >/dev/null 2>&1 ]; then
-    b64=$(echo $1 | base64 -w0)
-  else
-    b64=$(echo $1 | base64)
-  fi
-  exec "$binname" "$b64"
+  exec "$binname" "$2"
 }
 
+_aclii_exec () {
+  if [ ${1:0:1} == "/" ] || [ ${1:0:1} == "~" ]; then
+    binmame=$1
+  else
+    binname="$(dirname $0)/$1"
+  fi
+  exec "$binname" "${2[@]}"
+
+}
 
 _aclii_debug "Launch aclii..."
 _aclii_debug "ARGV $@"
@@ -80,14 +82,78 @@ __parse_args () {
 ##//INCLUDE parser.tmpl
 
   _aclii_debug  "got cmd: $cmd"
-  local json='{"command":"'"$cmd"'","args":[],"options":{}}'
+
   # Now we got the command which to be executed.
   # Handle it as it wants
+
+
+# At first, check if this command wants JSON compiled args.
+  local wantJSON=""
+  local bin=""
+  local binPath=""
+  case "$cmd" in
+##// aclii.allCommands.forEach( c => {
+# <%= c.path %> <%= c.binPath %> <%= aclii.getCommandByPath(c.binPath).path %>
+##//   if (!c.helpstop && aclii.getCommandByPath(c.binPath).argstyle == 'json' ) {
+    "<%= c.path %>" )
+      wantJSON="1"
+      bin="""<%= c.bin %>"
+      binPath="""<%= c.binPath %>"
+      ;;
+##//   }
+##// })
+  esac
+
+  local json
+  local jsonb64
+# Let's cook JSON
+  if [ -n "$wantJSON" ]; then
+    json=$(printf '{"command":"%s","bin":"%s","binpath":"%s","options":{}}' $cmd $bin $binPath);
+
+  # Insert Default Values
+  case "$cmd" in
+##// aclii.allCommands.forEach( c => {
+    "<%= c.path %>")
+##//   c.inputsWithDefaults.forEach( o => {
+      key="<%= o.name %>"
+      def="<%= o.defaultValue %>"
+      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+##//     })
+      ;;
+##//   })
+  esac
+
+  # Then, Insert values fetched from argv
+    local i=0
+    if [ -n "${foundValues[@]+HAS}" ] && [ -n "${foundValues+HAS}" ]; then
+      for value in "${foundValues[@]}"
+      do
+        local inputId="${foundValuesFor[$i]}"
+        local key="${inputKeys[$inputId]}"
+
+        if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
+          json=$(echo $json | jq -c --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+        else
+          json=$(echo $json | jq -c --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+        fi
+        : $((i++))
+      done
+    fi
+
+    if  [ base64 -w >/dev/null 2>&1 ]; then
+      jsonb64=$(echo $json | base64 -w0)
+    else
+      jsonb64=$(echo $json | base64)
+    fi
+    _aclii_debug "got json $( echo $json | jq .)"
+  fi
+
   case "$cmd" in
 ##// aclii.allCommands.forEach( c => {
     "<%= c.path %>" )
 ##//   if (c.helpstop) {
       _help "$cmd"
+
 ##// // TODO: Prepare input for each env. Maybe it could be plaggable?
 ##//   } else if ( c.script ) {
       tmp=$(mktemp)
@@ -97,7 +163,11 @@ __parse_args () {
 __END_OF_ACLII_SCRIPT__
       chmod +x $tmp
       result=0
-      $tmp || result=$?
+##//     if ( aclii.getCommandByPath(c.binPath).argstyle === 'json' ) {
+      $tmp "${jsonb64}" || result=$?
+##//     } else {
+      $tmp "${argv[@]}" || result=$?
+##//     }
       rm $tmp
       if [ ! "$result" == "0" ]; then
         echo "(aclii:: script exited with $result)"
@@ -106,15 +176,11 @@ __END_OF_ACLII_SCRIPT__
       fi
       exit $result
 ##//   } else {
-      local bin="<%= c.bin %>"
-      local binPath="<%= c.binPath %>"
-      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
-      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
-##//     c.inputsWithDefaults.forEach( o => {
-      key="<%= o.name %>"
-      def="<%= o.defaultValue %>"
-      json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
-##//     })
+##//     if ( aclii.getCommandByPath(c.binPath).argstyle === 'json' ) {
+      _aclii_exec_json "$bin" "$jsonb64"
+##//     } else {
+      _aclii_exec "$bin" "${argv[@]}"
+##//     }
 ##//   }
       ;;
 ##// })
@@ -123,24 +189,7 @@ __END_OF_ACLII_SCRIPT__
       _help;
   esac
 
-# Build Args
-  local i=0
-  if [ -n "${foundValues[@]+HAS}" ] && [ -n "${foundValues+HAS}" ]; then
-    for value in "${foundValues[@]}"
-    do
-      local inputId="${foundValuesFor[$i]}"
-      local key="${inputKeys[$inputId]}"
-
-      if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
-        json=$(echo $json | jq --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
-      else
-        json=$(echo $json | jq --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
-      fi
-      : $((i++))
-    done
-  fi
   _aclii_debug "got json $json"
-  _aclii_exec "$json" $bin
 }
 __parse_args
 

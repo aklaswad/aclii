@@ -75,13 +75,11 @@ if ( process.env.ACLII_DEBUG ) {
   console.error("DEBUG REPORT FROM ACLII CLI")
   console.error(JSON.stringify({ "ARG-JSON": opts }, null, 2))
 }
+const command = Commands[opts.command] || Commands[opts.binpath]
+if (command) {
+  command(opts)
+}
 else {
-  const command = Commands[opts.command] || Commands[opts.binpath]
-  if (command) {
-    command(opts)
-  }
-  else {
-    console.error("Unknown command: " + command)
-    process.exit(1)
-  }
+  console.error("Unknown command: " + command)
+  process.exit(1)
 }
