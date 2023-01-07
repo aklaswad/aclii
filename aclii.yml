@@ -1,5 +1,6 @@
 name: aclii
 bin: _aclii_main
+bin.argtype: json
 types:
   foodgenre:
     Chinese: Yummy!
@@ -13,6 +14,7 @@ helpstop: true
 commands:
   - name: playground
     helpstop: true
+    bin: _aclii_main
     description: |
       Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
     commands:

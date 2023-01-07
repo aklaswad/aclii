@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This is auto generated script by aclii 0.0.3
+# This is auto generated script by aclii 0.0.4
 
 set -euo pipefail
 
@@ -407,12 +407,18 @@ fi
       ;;
     "aclii.playground.hungry" )
       local bin="_aclii_main"
+      local binPath="aclii.playground"
+      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
+      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.playground.stuffed" )
       local bin="_aclii_main"
+      local binPath="aclii.playground"
+      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
+      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -440,18 +446,27 @@ __END_OF_ACLII_SCRIPT__
       ;;
     "aclii.render.completion" )
       local bin="_aclii_main"
+      local binPath="aclii"
+      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
+      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.render.launcher" )
       local bin="_aclii_main"
+      local binPath="aclii"
+      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
+      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.render.parser" )
       local bin="_aclii_main"
+      local binPath="aclii"
+      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
+      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -464,6 +479,9 @@ __END_OF_ACLII_SCRIPT__
       ;;
     "aclii.aclii-completion" )
       local bin="_aclii_main"
+      local binPath="aclii"
+      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
+      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
       key="file"
       def="./aclii.yml"
       json=$(echo $json | jq --arg key "${key}" --arg val "${def}" '.options[$key] = $val')

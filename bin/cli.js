@@ -33,6 +33,12 @@ const Commands = {
   "aclii.render.launcher": (opts) => {
     const aclii =  Aclii.fromFile(opts.options.file)
     console.log( aclii.render('launcher.tmpl'))
+  },
+
+  "aclii.playground": (opts) => {
+    console.log("Thank you for playing!")
+    console.log("----------------------")
+    console.log(JSON.stringify(opts,null,2))
   }
 }
 
@@ -69,14 +75,8 @@ if ( process.env.ACLII_DEBUG ) {
   console.error("DEBUG REPORT FROM ACLII CLI")
   console.error(JSON.stringify({ "ARG-JSON": opts }, null, 2))
 }
-
-if (/^aclii\.playground\./.test(opts.command)) {
-  console.log("Thank you for playing!")
-  console.log("----------------------")
-  console.log(JSON.stringify(opts,null,2))
-}
 else {
-  const command = Commands[opts.command]
+  const command = Commands[opts.command] || Commands[opts.binpath]
   if (command) {
     command(opts)
   }

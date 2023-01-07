@@ -107,6 +107,9 @@ __END_OF_ACLII_SCRIPT__
       exit $result
 ##//   } else {
       local bin="<%= c.bin %>"
+      local binPath="<%= c.binPath %>"
+      json=$(echo $json | jq --arg bin "${bin}" '.bin = $bin')
+      json=$(echo $json | jq --arg binPath "${binPath}" '.binpath = $binPath')
 ##//     c.inputsWithDefaults.forEach( o => {
       key="<%= o.name %>"
       def="<%= o.defaultValue %>"
