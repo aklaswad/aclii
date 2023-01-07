@@ -1,6 +1,6 @@
 {
   "name": "aclii",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "type": "module",
   "description": "Abstract Command Line Interface Interface",
   "main": "index.js",
@@ -20,7 +20,7 @@
     "url": "https://github.com/aklaswad/aclii"
   },
   "bugs": "https://github.com/aklaswad/aclii/issues",
-  "keywords": ["cli","tool","scatfoldings"],
+  "keywords": ["cli","tool","scatfolding"],
   "author": "",
   "license": "MIT",
   "dependencies": {
