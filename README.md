@@ -16,7 +16,7 @@ $ npm i -g aclii
 _(sorry install script is not yet, so...)_
 
 ```shell
-$ source <(aclii aclii-completion)
+$ tmp=$(mktemp) && aclii aclii-completion > $tmp && source $tmp && rm $tmp 
 ```
 
 Ok , now aclii has been set up!
@@ -41,7 +41,7 @@ Install them and try it!
 
 ```
 $ aclii render launcher > /usr/local/bin/mytool && chmod +x /usr/local/bin/mytool
-$ source <(aclii render completion)
+$ tmp=$(mktemp) && aclii render completion > $tmp && source $tmp && rm $tmp
 $ mytool<TAB>
 ```
 
