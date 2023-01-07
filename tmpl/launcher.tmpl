@@ -11,26 +11,26 @@ _aclii_debug () {
 }
 
 _aclii_exec_json () {
-  if [ ${1:0:1} == "/" ] || [ ${1:0:1} == "~" ]; then
-    binmame=$1
+  if [ "${1:0:1}" == "/" ] || [ "${1:0:1}" == "~" ]; then
+    binname=$1
   else
-    binname="$(dirname $0)/$1"
+    binname="$(dirname "$0")"/"$1"
   fi
   exec "$binname" "$2"
 }
 
 _aclii_exec () {
-  if [ ${1:0:1} == "/" ] || [ ${1:0:1} == "~" ]; then
-    binmame=$1
+  if [ "${1:0:1}" == "/" ] || [ "${1:0:1}" == "~" ]; then
+    binname=$1
   else
-    binname="$(dirname $0)/$1"
+    binname="$(dirname "$0")/$1"
   fi
   exec "$binname" "${2[@]}"
 
 }
 
 _aclii_debug "Launch aclii..."
-_aclii_debug "ARGV $@"
+_aclii_debug "ARGV $*"
 _aclii_debug "$ 0 $0"
 
 ##// aclii.allCommands.forEach( c => {
@@ -69,9 +69,6 @@ _help () {
   esac
   exit 0
 }
-
-# Flag to enable immediate help / validate error
-ACLII_EXEC=1
 
 # parser needs @argv
 argv=("$@")
@@ -128,7 +125,7 @@ __parse_args () {
 ##//   c.inputsWithDefaults.forEach( o => {
       key="<%= o.name %>"
       def="<%= o.defaultValue %>"
-      json=$(echo $json | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
 ##//     })
       ;;
 ##//   })
@@ -136,27 +133,27 @@ __parse_args () {
 
   # Then, Insert values fetched from argv
     local i=0
-    if [ -n "${foundValues[@]+HAS}" ] && [ -n "${foundValues+HAS}" ]; then
+    if [ -n "${foundValues+HAS}" ]; then
       for value in "${foundValues[@]}"
       do
-        local inputId="${foundValuesFor[$i]}"
-        local key="${inputKeys[$inputId]}"
+        local inputId="${foundValuesFor[i]}"
+        local key="${inputKeys[inputId]}"
 
-        if [ -n "${inputIsMulti[$inputId]}" ] || [ -n "${inputIsMany[$inputId]}" ]; then
-          json=$(echo $json | jq -c --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+        if [ -n "${inputIsMulti[inputId]}" ] || [ -n "${inputIsMany[inputId]}" ]; then
+          json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
         else
-          json=$(echo $json | jq -c --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+          json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
         fi
         : $((i++))
       done
     fi
 
-    if  [ base64 -w >/dev/null 2>&1 ]; then
-      jsonb64=$(echo $json | base64 -w0)
+    if  [ "$(base64 -w >/dev/null 2>&1)" ]; then
+      jsonb64=$(echo "$json" | base64 -w0)
     else
-      jsonb64=$(echo $json | base64)
+      jsonb64=$(echo "$json" | base64)
     fi
-    _aclii_debug "got json $( echo $json | jq .)"
+    _aclii_debug "got json $( echo "$json" | jq .)"
   fi
 
   case "$binPath" in
@@ -166,18 +163,18 @@ __parse_args () {
 ##// // TODO: Prepare input for each env. Maybe it could be plaggable?
 ##//   if ( c.script ) {
       tmp=$(mktemp)
-      echo '#!/usr/bin/env <%= c.env || "bash" %>' > $tmp
-      cat << '__END_OF_ACLII_SCRIPT__' >> $tmp
+      echo '#!/usr/bin/env <%= c.env || "bash" %>' > "$tmp"
+      cat << '__END_OF_ACLII_SCRIPT__' >> "$tmp"
 <%= c.script %>
 __END_OF_ACLII_SCRIPT__
-      chmod +x $tmp
+      chmod +x "$tmp"
       result=0
 ##//     if ( aclii.getCommandByPath(c.binPath).argstyle === 'json' ) {
-      $tmp "${jsonb64}" || result=$?
+      "$tmp" "${jsonb64}" || result=$?
 ##//     } else {
-      $tmp "${argv[@]}" || result=$?
+      "$tmp" "${argv[@]}" || result=$?
 ##//     }
-      rm $tmp
+      rm "$tmp"
       if [ ! "$result" == "0" ]; then
         echo "(aclii:: script exited with $result)"
       else
