@@ -51,6 +51,46 @@ $ mytool<TAB>
 ## For quick tool writing
 
 If you're about to start writing some cli tool (in JavaScript? ruby? whatever) but if you're not familiar with that language and/or command option parser, aclii can help you. aclii launcher can parse options instead and launch your tool with options translated into JSON. You just have to `JSON.parse()` and then write the essential tasks.
+aclii can invoke your executable, or execute inline script.
+
+This is an example of how aclii handle command line arguments.
+For command `hello --language English hey paul thank you very much`...
+
+
+```yaml
+name: hello
+description: Say hello
+env: node
+argstyle: json
+commands:
+  - name: hey
+    wants:
+      - name: name
+        type: string
+      - name: words
+        type: string
+        many: true
+options:
+  - name: language
+    description: Select language
+    type: string
+script: |
+  const args = JSON.parse(
+    Buffer.from(process.argv[2], 'base64').toString() )
+  console.dir(args)
+  // this prints below...
+  // {
+  //   command: 'hello.hey',
+  //   bin: 'hello',
+  //   binpath: '',
+  //   options: {
+  //     language: 'English',
+  //     name: 'paul',
+  //     words: [ 'thank', 'you', 'very', 'much' ]
+  //   }
+  // }
+```
+
 Also, aclii launcher can show help pages which automatically generated from YAML file.
 
 ## For team collaboration
