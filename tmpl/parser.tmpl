@@ -39,11 +39,14 @@ local currentOptionSet="<%= aclii.root.optionSetId %>"
 local error=""
 local wantType=""
 local wantingInputId=""
+local wantOptType=""
+local wantingOptInputId=""
 local cmd="<%= aclii.commandName %>"
 local -a trailingArgs
 local nth=0
 local arg
-local optionAcceptable=""
+local optionStop=""
+local help=""
 
 if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
   for arg in "${argv[@]}"
@@ -54,8 +57,57 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
     _aclii_debug "   cmd: $cmd  wantType |$wantType|"
 
 
+    if [ -n "$wantOptType" ]; then
+      argvTypes[$nth]="input:$wantOptType"
+      #TODO: Do we need to varldate here?
+
+      _aclii_debug "Save value $arg for id $wantingOptInputId"
+      argvMap[$nth]="$wantingOptInputId"
+      foundValues+=("$arg")
+      foundValuesFor+=("$wantingOptInputId")
+      wantingOptInputId=""
+      wantOptType=""
+
+    # Traditional options terminator
+    elif [ "$arg" == "--" ] && [ -z "$optionStop" ]; then
+      optionStop="true"
+      argvTypes[$nth]="argterminator"
+
+    elif [ "${arg:0:2}" == '--' ] && [ -z "$optionStop" ]; then
+      # It starts with double dash. So this might be an option
+      if [ "${arg:2}" == "help" ]; then
+        help="help"
+        break
+      fi
+
+      argvTypes[$nth]="option"
+      case "$currentOptionSet" in
+##// aclii.optionSets.forEach( (set, index) => {
+        '<%= index %>' )
+          case "${arg:2}" in
+##//   set.flatMap( o => o ).forEach( o => {
+            '<%= o.input.name %>')
+##//     if ( o.input.type === 'switch' ) {
+              argvMap[$nth]="<%= o.input.inputId %>"
+              foundValues+=("1")
+              foundValuesFor+=("<%= o.input.inputId %>")
+##//     } else {
+              wantOptType="<%= o.input.type %>"
+              wantingOptInputId="<%= o.input.inputId %>"
+##//     }
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+##//   })
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
+##// })
+      esac
+
     ## If reading (in)finite args
-    if [ -n "$wantType" ]; then
+    elif [ -n "$wantType" ]; then
       argvTypes[$nth]="input:$wantType"
       #TODO: Do we need to varldate here?
 
@@ -74,40 +126,6 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
         wantType=""
       fi
 
-    # Traditional options terminator
-    elif [ "$arg" == "--" ]; then
-      optionAcceptable="true"
-      argvTypes[$nth]="argterminator"
-    elif [ "${arg:0:2}" == '--' ] && [ -z "$optionAcceptable" ]; then
-      # It starts with double dash. So this might be an option
-
-      argvTypes[$nth]="option"
-      case "$currentOptionSet" in
-##// aclii.optionSets.flatMap( a => a ).forEach( (set, index) => {
-        '<%= index %>' )
-          case "${arg:2}" in
-##//   set.forEach( o => {
-            '<%= o.input.name %>')
-##//     if ( o.input.type === 'switch' ) {
-              argvMap[$nth]="<%= o.input.inputId %>"
-              foundValues+=("1")
-              foundValuesFor+=("<%= o.input.inputId %>")
-##//     } else {
-              wantType="<%= o.input.type %>"
-              wantingInputId="<%= o.input.inputId %>"
-##//     }
-              _aclii_debug "want $wantType for id $wantingInputId"
-              ;;
-##//   })
-            * )
-              error="Unknown Option $arg"
-              break
-          esac
-        ;;
-##// })
-      esac
-  # elif
-  #   TODO: Short option handling here
     else
       argvTypes[$nth]="subcommand"
       case "$cmd.$arg" in
@@ -116,6 +134,7 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
         "<%= c.path %>" )
           cmd="<%= c.path %>"
           commandPath+=("<%= c.name %>")
+          currentOptionSet="<%= c.optionSetId %>"
 ##//    if ( c.want ) {
           wantType="<%= c.want.type %>"
           wantingInputId="<%= c.want.inputId %>"

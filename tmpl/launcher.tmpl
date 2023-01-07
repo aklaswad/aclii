@@ -81,26 +81,37 @@ __parse_args () {
 
 ##//INCLUDE parser.tmpl
 
-  _aclii_debug  "got cmd: $cmd"
+  _aclii_debug "got cmd: $cmd"
+  _aclii_debug "error: $error"
+
+  if [ -n "$help" ]; then
+    _help "$cmd"
+  fi
+  if [ -n "$error" ]; then
+    echo "Got command line parse error: $error"
+    _help
+  fi
 
   # Now we got the command which to be executed.
   # Handle it as it wants
 
 
 # At first, check if this command wants JSON compiled args.
+# Also, handle helpstops here.
   local wantJSON=""
   local bin=""
   local binPath=""
   case "$cmd" in
 ##// aclii.allCommands.forEach( c => {
-# <%= c.path %> <%= c.binPath %> <%= aclii.getCommandByPath(c.binPath).path %>
-##//   if (!c.helpstop && aclii.getCommandByPath(c.binPath).argstyle == 'json' ) {
     "<%= c.path %>" )
+##//   if (c.helpstop) {
+      _help "$cmd"
+##//   } else if ( aclii.getCommandByPath(c.binPath).argstyle == 'json' ) {
       wantJSON="1"
       bin="""<%= c.bin %>"
       binPath="""<%= c.binPath %>"
-      ;;
 ##//   }
+      ;;
 ##// })
   esac
 
@@ -148,14 +159,12 @@ __parse_args () {
     _aclii_debug "got json $( echo $json | jq .)"
   fi
 
-  case "$cmd" in
+  case "$binPath" in
 ##// aclii.allCommands.forEach( c => {
     "<%= c.path %>" )
-##//   if (c.helpstop) {
-      _help "$cmd"
 
 ##// // TODO: Prepare input for each env. Maybe it could be plaggable?
-##//   } else if ( c.script ) {
+##//   if ( c.script ) {
       tmp=$(mktemp)
       echo '#!/usr/bin/env <%= c.env || "bash" %>' > $tmp
       cat << '__END_OF_ACLII_SCRIPT__' >> $tmp

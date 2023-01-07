@@ -239,11 +239,14 @@ local currentOptionSet="0"
 local error=""
 local wantType=""
 local wantingInputId=""
+local wantOptType=""
+local wantingOptInputId=""
 local cmd="aclii"
 local -a trailingArgs
 local nth=0
 local arg
-local optionAcceptable=""
+local optionStop=""
+local help=""
 
 if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
   for arg in "${argv[@]}"
@@ -254,8 +257,71 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
     _aclii_debug "   cmd: $cmd  wantType |$wantType|"
 
 
+    if [ -n "$wantOptType" ]; then
+      argvTypes[$nth]="input:$wantOptType"
+      #TODO: Do we need to varldate here?
+
+      _aclii_debug "Save value $arg for id $wantingOptInputId"
+      argvMap[$nth]="$wantingOptInputId"
+      foundValues+=("$arg")
+      foundValuesFor+=("$wantingOptInputId")
+      wantingOptInputId=""
+      wantOptType=""
+
+    # Traditional options terminator
+    elif [ "$arg" == "--" ] && [ -z "$optionStop" ]; then
+      optionStop="true"
+      argvTypes[$nth]="argterminator"
+
+    elif [ "${arg:0:2}" == '--' ] && [ -z "$optionStop" ]; then
+      # It starts with double dash. So this might be an option
+      if [ "${arg:2}" == "help" ]; then
+        help="help"
+        break
+      fi
+
+      argvTypes[$nth]="option"
+      case "$currentOptionSet" in
+        '0' )
+          case "${arg:2}" in
+            'file')
+              wantOptType="file"
+              wantingOptInputId="0"
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            'verbose')
+              argvMap[$nth]="1"
+              foundValues+=("1")
+              foundValuesFor+=("1")
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
+        '1' )
+          case "${arg:2}" in
+            'file')
+              wantOptType="file"
+              wantingOptInputId="0"
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            'verbose')
+              argvMap[$nth]="1"
+              foundValues+=("1")
+              foundValuesFor+=("1")
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
+      esac
+
     ## If reading (in)finite args
-    if [ -n "$wantType" ]; then
+    elif [ -n "$wantType" ]; then
       argvTypes[$nth]="input:$wantType"
       #TODO: Do we need to varldate here?
 
@@ -274,112 +340,60 @@ if [ -n "${argv[@]+NOARGS}" ] && [ -n "${argv+ARG}" ]; then
         wantType=""
       fi
 
-    # Traditional options terminator
-    elif [ "$arg" == "--" ]; then
-      optionAcceptable="true"
-      argvTypes[$nth]="argterminator"
-    elif [ "${arg:0:2}" == '--' ] && [ -z "$optionAcceptable" ]; then
-      # It starts with double dash. So this might be an option
-
-      argvTypes[$nth]="option"
-      case "$currentOptionSet" in
-        '0' )
-          case "${arg:2}" in
-            'file')
-              wantType="file"
-              wantingInputId="0"
-              _aclii_debug "want $wantType for id $wantingInputId"
-              ;;
-            'verbose')
-              argvMap[$nth]="1"
-              foundValues+=("1")
-              foundValuesFor+=("1")
-              _aclii_debug "want $wantType for id $wantingInputId"
-              ;;
-            * )
-              error="Unknown Option $arg"
-              break
-          esac
-        ;;
-        '1' )
-          case "${arg:2}" in
-            * )
-              error="Unknown Option $arg"
-              break
-          esac
-        ;;
-        '2' )
-          case "${arg:2}" in
-            * )
-              error="Unknown Option $arg"
-              break
-          esac
-        ;;
-        '3' )
-          case "${arg:2}" in
-            'file')
-              wantType="file"
-              wantingInputId="0"
-              _aclii_debug "want $wantType for id $wantingInputId"
-              ;;
-            'verbose')
-              argvMap[$nth]="1"
-              foundValues+=("1")
-              foundValuesFor+=("1")
-              _aclii_debug "want $wantType for id $wantingInputId"
-              ;;
-            * )
-              error="Unknown Option $arg"
-              break
-          esac
-        ;;
-      esac
-  # elif
-  #   TODO: Short option handling here
     else
       argvTypes[$nth]="subcommand"
       case "$cmd.$arg" in
         "aclii" )
           cmd="aclii"
           commandPath+=("aclii")
+          currentOptionSet="0"
           ;;
         "aclii.playground.hungry" )
           cmd="aclii.playground.hungry"
           commandPath+=("hungry")
+          currentOptionSet="1"
           wantType="foodgenre"
           wantingInputId="2"
           ;;
         "aclii.playground.stuffed" )
           cmd="aclii.playground.stuffed"
           commandPath+=("stuffed")
+          currentOptionSet="1"
           ;;
         "aclii.playground.run-ls-script" )
           cmd="aclii.playground.run-ls-script"
           commandPath+=("run-ls-script")
+          currentOptionSet="1"
           ;;
         "aclii.render.completion" )
           cmd="aclii.render.completion"
           commandPath+=("completion")
+          currentOptionSet="1"
           ;;
         "aclii.render.launcher" )
           cmd="aclii.render.launcher"
           commandPath+=("launcher")
+          currentOptionSet="1"
           ;;
         "aclii.render.parser" )
           cmd="aclii.render.parser"
           commandPath+=("parser")
+          currentOptionSet="1"
           ;;
         "aclii.playground" )
           cmd="aclii.playground"
           commandPath+=("playground")
+          currentOptionSet="1"
           ;;
         "aclii.render" )
           cmd="aclii.render"
           commandPath+=("render")
+          currentOptionSet="1"
           ;;
         "aclii.aclii-completion" )
           cmd="aclii.aclii-completion"
           commandPath+=("aclii-completion")
+          currentOptionSet="1"
           ;;
         * )
           error="Unknown Command $arg"
@@ -399,52 +413,63 @@ else
 fi
 
 
-  _aclii_debug  "got cmd: $cmd"
+  _aclii_debug "got cmd: $cmd"
+  _aclii_debug "error: $error"
+
+  if [ -n "$help" ]; then
+    _help "$cmd"
+  fi
+  if [ -n "$error" ]; then
+    echo "Got command line parse error: $error"
+    _help
+  fi
 
   # Now we got the command which to be executed.
   # Handle it as it wants
 
 
 # At first, check if this command wants JSON compiled args.
+# Also, handle helpstops here.
   local wantJSON=""
   local bin=""
   local binPath=""
   case "$cmd" in
-# aclii aclii aclii
-# aclii.playground.hungry aclii.playground aclii.playground
+    "aclii" )
+      _help "$cmd"
+      ;;
     "aclii.playground.hungry" )
       wantJSON="1"
       bin="""_aclii_main"
       binPath="""aclii.playground"
       ;;
-# aclii.playground.stuffed aclii.playground aclii.playground
     "aclii.playground.stuffed" )
       wantJSON="1"
       bin="""_aclii_main"
       binPath="""aclii.playground"
       ;;
-# aclii.playground.run-ls-script aclii.playground.run-ls-script aclii.playground.run-ls-script
-# aclii.render.completion aclii aclii
+    "aclii.playground.run-ls-script" )
+      ;;
     "aclii.render.completion" )
       wantJSON="1"
       bin="""_aclii_main"
       binPath="""aclii"
       ;;
-# aclii.render.launcher aclii aclii
     "aclii.render.launcher" )
       wantJSON="1"
       bin="""_aclii_main"
       binPath="""aclii"
       ;;
-# aclii.render.parser aclii aclii
     "aclii.render.parser" )
       wantJSON="1"
       bin="""_aclii_main"
       binPath="""aclii"
       ;;
-# aclii.playground aclii.playground aclii.playground
-# aclii.render aclii aclii
-# aclii.aclii-completion aclii aclii
+    "aclii.playground" )
+      _help "$cmd"
+      ;;
+    "aclii.render" )
+      _help "$cmd"
+      ;;
     "aclii.aclii-completion" )
       wantJSON="1"
       bin="""_aclii_main"
@@ -537,9 +562,9 @@ fi
     _aclii_debug "got json $( echo $json | jq .)"
   fi
 
-  case "$cmd" in
+  case "$binPath" in
     "aclii" )
-      _help "$cmd"
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.playground.hungry" )
       _aclii_exec_json "$bin" "$jsonb64"
@@ -578,10 +603,10 @@ __END_OF_ACLII_SCRIPT__
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.playground" )
-      _help "$cmd"
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.render" )
-      _help "$cmd"
+      _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.aclii-completion" )
       _aclii_exec_json "$bin" "$jsonb64"
