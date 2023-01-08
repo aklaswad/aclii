@@ -1,4 +1,6 @@
-<%= "# This is auto generated script by aclii " + aclii.version %>
+#
+#<%= " This is auto generated script by aclii " + aclii.version %>
+#
 
 _aclii_debug () {
   if [ -n "$ACLII_DEBUG" ]; then
@@ -6,21 +8,29 @@ _aclii_debug () {
   fi
 }
 
-_<%= aclii.commandName %> () {
+__<%= aclii.commandName %>_compgen () {
+  local list=("aaa" "bbb")
+  echo "${list[@]}"
+  return 0
+}
+
+___<%= aclii.commandName %>_compgen () {
+  local words="$@"
+
+
 
   # parser needs @argv.
   # Parse from [1] to [len-1] for detect current subcommand
   # ( [0] always aclii so skip it )
-  argv=(${COMP_WORDS[@]:1:$((${#COMP_WORDS[@]}-1))})
+  local argv=(${COMP_WORDS[@]:1:$((${#COMP_WORDS[@]}-1))})
 
 ##//INCLUDE parser.tmpl
 
   local oldifs="$IFS"
-  cur="${COMP_WORDS[COMP_CWORD]}"
+  local cur="${COMP_WORDS[COMP_CWORD]}"
   _aclii_debug "enter compwords |${COMP_WORDS[@]}| cur |$cur|"
 
   COMPREPLY=()
-
 
   if [ -n "$wantType" ]; then
       # OK, we already know what we want;
@@ -52,4 +62,64 @@ _<%= aclii.commandName %> () {
 
   IFS="$oldifs"
 }
-complete -o default -F _<%= aclii.commandName %> <%= aclii.commandName %>
+
+if type complete &>/dev/null; then
+  _<%= aclii.commandName %>_completion () {
+    local words cword
+    if type _get_comp_words_by_ref &>/dev/null; then
+      _get_comp_words_by_ref -n = -n @ -n : -w words -i cword
+    else
+      cword="$COMP_CWORD"
+      words=("${COMP_WORDS[@]}")
+    fi
+
+    local si="$IFS"
+    if ! IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
+                           COMP_LINE="$COMP_LINE" \
+                           COMP_POINT="$COMP_POINT" \
+                           __<%= aclii.commandName %>_compgen -- "${words[@]}" \
+                           2>/dev/null)); then
+      local ret=$?
+      IFS="$si"
+      return $ret
+    fi
+    IFS="$si"
+    if type __ltrim_colon_completions &>/dev/null; then
+      __ltrim_colon_completions "${words[cword]}"
+    fi
+  }
+  complete -o default -F _<%= aclii.commandName %>_completion <%= aclii.commandName %>
+elif type compdef &>/dev/null; then
+  _<%= aclii.commandName %>_completion () {
+    local si=$IFS
+    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
+                 COMP_LINE=$BUFFER \
+                 COMP_POINT=0 \
+                 __<%= aclii.commandName %>_compgen -- "${words[@]}" \
+                 2>/dev/null)
+    IFS=$si
+  }
+  compdef _<%= aclii.commandName %>_completion <%= aclii.commandName %>
+elif type compctl &>/dev/null; then
+  _<%= aclii.commandName %>_completion () {
+    local cword line point words si
+    read -Ac words
+    read -cn cword
+    let cword-=1
+    read -l line
+    read -ln point
+    si="$IFS"
+    if ! IFS=$'\n' reply=($(COMP_CWORD="$cword" \
+                       COMP_LINE="$line" \
+                       COMP_POINT="$point" \
+                       __<%= aclii.commandName %>_compgen -- "${words[@]}" \
+                       2>/dev/null)); then
+
+      local ret=$?
+      IFS="$si"
+      return $ret
+    fi
+    IFS="$si"
+  }
+  compctl -K _<%= aclii.commandName %>_completion <%= aclii.commandName %>
+fi
