@@ -64,13 +64,13 @@ __<%= aclii.commandName %>_compgen () {
     # It starts with dash. Maybe we should show option list
     case "$cmd" in
 ##//  aclii.allCommands.forEach( c => {
-      "<%= c.path %>" )
+      '<%= c.path %>' )
         _aclii_debug "path: <%= c.path %> cur: $cur |"
 ##//    c.options.forEach( o => {
-          keyword="--<%= o.name %>"
+          keyword='--<%= o.name %>'
           if [ ${#cur} -eq 0 ] || [ "$keyword" != "${keyword#$cur}" ]; then
-            candidates+=("--<%= o.name %>")
-            candidatesLong+=("<%= o.description %>")
+            candidates+=('--<%= o.name %>')
+            candidatesLong+=('<%= o.description %>')
           fi
 ##//    })
           ;;
@@ -80,13 +80,13 @@ __<%= aclii.commandName %>_compgen () {
     # Or, searching next command
     case "$cmd" in
 ##//  aclii.allCommands.forEach( c => {
-      "<%= c.path %>" )
+      '<%= c.path %>' )
 ##//    c.commands.forEach( sc => {
-        keyword="<%= sc.name %>"
+        keyword='<%= sc.name %>'
         if [ ${#cur} -eq 0 ] || [ "$keyword" != "${keyword#$cur}" ]; then
-          candidates+=("<%= sc.name %>")
+          candidates+=('<%= sc.name %>')
           local tab=$'\t'
-          candidatesLong+=("<%= sc.description %>")
+          candidatesLong+=('<%= sc.description %>')
         fi
 ##//    })
         ;;

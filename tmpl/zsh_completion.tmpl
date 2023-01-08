@@ -1,3 +1,4 @@
+#compdef <%= aclii.commandName %>
 #
 #<%= " This is auto generated script by aclii " + aclii.version %>
 #
@@ -62,19 +63,19 @@ _<%= aclii.commandName %>_completion () {
     # It starts with dash. Maybe we should show option list
     case "$cmd" in
 ##//  aclii.allCommands.forEach( c => {
-      "<%= c.path %>" )
+      '<%= c.path %>' )
         _aclii_debug "path: <%= c.path %> cur: $cur |"
         local options=() #"Options")
         local subcommands=() #"Subcommands")
 
 ##//    c.commands.forEach( sc => {
-          subcommands+=("<%= sc.name %>[<%= sc.description %>]")
+          subcommands+=('<%= sc.name %>[<%= sc.description %>]')
 ##//    })
         #_describe -t subcommands "SubCommands" subcommands
         _values "subcommands" "${subcommands[@]}"
 
 ##//    c.options.forEach( o => {
-            options+=("--<%= o.name %>[<%= o.description %>]")
+            options+=('--<%= o.name %>[<%= o.description %>]')
 ##//    })
         #_describe -t options "Options" options
         _values "options" "${options[@]}"

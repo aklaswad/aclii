@@ -59,6 +59,8 @@ commands:
           Render and print rendered bare commandline parser, for testing.
   - name: aclii-completion
     description: render completion script for aclii
+  - name: aclii-completion-zsh
+    description: render completion script for aclii (zsh)
 options:
   - name: file
     description: filename of aclii config file (aclii.yml)

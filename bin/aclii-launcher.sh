@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# This is auto generated script by aclii 0.0.6
+# This is auto generated script by aclii 0.0.7
 
 set -euo pipefail
 
@@ -45,6 +45,8 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
       | Render bash scripts generated from yaml config file. See sub commands for details.
     aclii-completion
       | render completion script for aclii
+    aclii-completion-zsh
+      | render completion script for aclii (zsh)
   
   Options:
     --file | filename of aclii config file (aclii.yml)
@@ -173,6 +175,18 @@ _help_node1335413e45f7b6441d6db69628a7df80 () {
     --verbose | 
 EOH
 }
+_help_nodef1cceee9e60a2f03c776730687f21d1d () {
+  cat << 'EOH'
+  Name: aclii.aclii-completion-zsh
+    render completion script for aclii (zsh)
+  
+  Commands:
+  
+  Options:
+    --file | filename of aclii config file (aclii.yml)
+    --verbose | 
+EOH
+}
 
 _help () {
   local page
@@ -192,6 +206,7 @@ _help () {
     "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
     "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
     "aclii.aclii-completion") _help_node1335413e45f7b6441d6db69628a7df80 ;;
+    "aclii.aclii-completion-zsh") _help_nodef1cceee9e60a2f03c776730687f21d1d ;;
   esac
   exit 0
 }
@@ -371,6 +386,11 @@ if [ -n "${argv+ARG}" ]; then
           commandPath+=("aclii-completion")
           currentOptionSet="1"
           ;;
+        "aclii.aclii-completion-zsh" )
+          cmd="aclii.aclii-completion-zsh"
+          commandPath+=("aclii-completion-zsh")
+          currentOptionSet="1"
+          ;;
         * )
           error="Unknown Command $arg"
           break
@@ -455,6 +475,11 @@ fi
       bin="""_aclii_main"
       binPath="""aclii"
       ;;
+    "aclii.aclii-completion-zsh" )
+      wantJSON="1"
+      bin="""_aclii_main"
+      binPath="""aclii"
+      ;;
   esac
 
   local json
@@ -511,6 +536,11 @@ fi
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.aclii-completion")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.aclii-completion-zsh")
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -589,6 +619,9 @@ __END_OF_ACLII_SCRIPT__
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.aclii-completion" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.aclii-completion-zsh" )
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     * )
