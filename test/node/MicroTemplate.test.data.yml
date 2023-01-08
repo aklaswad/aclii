@@ -22,6 +22,33 @@
   expect: |
     age 0
 
+- name: Render single quotes
+  data:
+    age: 0
+  tmpl: |
+    age '<%= data.age %>' ok
+  expect: |
+    age '0' ok
+
+- name: Render double quotes
+  data:
+    age: 0
+  tmpl: |
+    age "<%= data.age %>" ok
+  expect: |
+    age "0" ok
+
+- name: Render shell style EOL escape
+  data:
+    pkg: bar
+  tmpl: |
+    apt install foo \
+    <%= data.pkg %> \
+                buz
+  expect: |
+    apt install foo \
+                bar \
+                buz
 
 - name: Render word in the middle of sentence
   data:
