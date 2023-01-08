@@ -1,0 +1,89 @@
+#
+#<%= " This is auto generated script by aclii " + aclii.version %>
+#
+
+_aclii_debug () {
+  if [ -n "$ACLII_DEBUG" ]; then
+    echo "$@" >> /tmp/aclii-debug.log
+  fi
+}
+
+_<%= aclii.commandName %>_completion () {
+  zstyle ':completion:*' sort no
+  _aclii_debug "--- compdef mode"
+  ## Fix array index for ZSH
+  local cword=$((CURRENT))
+
+  local w
+  local cnt="1"
+  local argv=()
+  for w in "${words[@]}"; do
+    _aclii_debug "words: $w"
+    if [ $cnt -eq $cword ]; then
+      break
+    fi
+    if [ $cnt -ne 1 ]; then
+      argv+=("$w")
+    fi
+    : $((cnt++))
+  done
+
+  _aclii_debug "C $COMP_CWORD L $COMP_LINE P $COMP_POINT"
+  # parser needs @argv.
+  # Parse from [1] to [len-1] for detect current subcommand
+  # ( [0] always aclii so skip it )
+  local cur="${words[COMP_CWORD]}"
+
+  for w in "${argv[@]}"; do
+    _aclii_debug "argv: $w"
+  done
+  _aclii_debug "cur: $cur"
+
+  local iszsh="zsh"
+##//INCLUDE parser.tmpl
+  local keyword
+  local candidates=()
+  local wtype
+  if [ -n "$wantOptType" ]; then
+    wtype=$wantOptType
+  elif [ -n "$wantType" ]; then
+    wtype=$wantType
+  fi
+  if [ -n "$wtype" ]; then
+      # OK, we already know what we want;
+      _aclii_debug "want $want |"
+    case "$wtype" in
+      "file" ) _files . ; return 0 ;;
+      "dir" ) _files . ; return 0 ;;
+      * ) _files . ; return 0 ;;
+    esac
+    return 0
+  fi
+    # It starts with dash. Maybe we should show option list
+    case "$cmd" in
+##//  aclii.allCommands.forEach( c => {
+      "<%= c.path %>" )
+        _aclii_debug "path: <%= c.path %> cur: $cur |"
+        local options=() #"Options")
+        local subcommands=() #"Subcommands")
+
+##//    c.commands.forEach( sc => {
+          subcommands+=("<%= sc.name %>[<%= sc.description %>]")
+##//    })
+        #_describe -t subcommands "SubCommands" subcommands
+        _values "subcommands" "${subcommands[@]}"
+
+##//    c.options.forEach( o => {
+            options+=("--<%= o.name %>[<%= o.description %>]")
+##//    })
+        #_describe -t options "Options" options
+        _values "options" "${options[@]}"
+        ;;
+##//  })
+    esac
+  _aclii_debug "---------"
+}
+
+if type compdef &>/dev/null; then
+  compdef _<%= aclii.commandName %>_completion <%= aclii.commandName %>
+fi

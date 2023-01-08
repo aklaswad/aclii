@@ -10,6 +10,11 @@ const Commands = {
     const aclii = Aclii.fromFile(Aclii.ConfigPath())
     console.log( aclii.render('bash_completion.tmpl') )
   },
+  "aclii.aclii-completion-zsh": (opt) => {
+    // Find
+    const aclii = Aclii.fromFile(Aclii.ConfigPath())
+    console.log( aclii.render('zsh_completion.tmpl') )
+  },
   "aclii.render.parser-debugger": (opt) => {
     const aclii = Aclii.fromFile(opts.options.file)
     console.log( aclii.render('test/parser-debugger.tmpl'))

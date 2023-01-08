@@ -39,12 +39,15 @@ local nth=0
 local arg
 local optionStop=""
 local help=""
+if [ -n "${iszsh+ZSH}" ]; then
+  nth=1
+fi
 
 if [ -n "${argv+ARG}" ]; then
   for arg in "${argv[@]}"
   do
     _aclii_debug "Processing $nth arg |$arg|"
-    _aclii_debug "   cmd: $cmd  wantType |$wantType|"
+    _aclii_debug "   cmd: $cmd  wantType |$wantType| wantOpt |$wantOptType|"
 
 
     if [ -n "$wantOptType" ]; then
@@ -139,6 +142,8 @@ if [ -n "${argv+ARG}" ]; then
   _aclii_debug "Parse done---------"
   _aclii_debug "    cmd: $cmd"
   _aclii_debug "  error: $error"
+  _aclii_debug "   want: $wantType"
+  _aclii_debug "optwant: $wantOptType"
 
   _aclii_debug "argvTypes"
   _aclii_debug "${argvTypes[@]}"
