@@ -11,7 +11,7 @@ _aclii_debug () {
 }
 
 _aclii_exec_json () {
-  if [ "${1:0:1}" == "/" ] || [ "${1:0:1}" == "~" ]; then
+  if [ "${1:0:1}" = "/" ] || [ "${1:0:1}" = "~" ]; then
     binname=$1
   else
     binname="$(dirname "$0")"/"$1"
@@ -20,7 +20,7 @@ _aclii_exec_json () {
 }
 
 _aclii_exec () {
-  if [ "${1:0:1}" == "/" ] || [ "${1:0:1}" == "~" ]; then
+  if [ "${1:0:1}" = "/" ] || [ "${1:0:1}" = "~" ]; then
     binname=$1
   else
     binname="$(dirname "$0")/$1"
@@ -175,7 +175,7 @@ __END_OF_ACLII_SCRIPT__
       "$tmp" "${argv[@]}" || result=$?
 ##//     }
       rm "$tmp"
-      if [ ! "$result" == "0" ]; then
+      if [ ! "$result" = "0" ]; then
         echo "(aclii:: script exited with $result)"
       else
         echo "(aclii:: script done.)"

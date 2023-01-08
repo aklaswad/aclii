@@ -58,13 +58,13 @@ if [ -n "${argv+ARG}" ]; then
       wantOptType=""
 
     # Traditional options terminator
-    elif [ "$arg" == "--" ] && [ -z "$optionStop" ]; then
+    elif [ "$arg" = "--" ] && [ -z "$optionStop" ]; then
       optionStop="true"
       argvTypes[nth]="argterminator"
 
-    elif [ "${arg:0:2}" == '--' ] && [ -z "$optionStop" ]; then
+    elif [ "${arg:0:2}" = '--' ] && [ -z "$optionStop" ]; then
       # It starts with double dash. So this might be an option
-      if [ "${arg:2}" == "help" ]; then
+      if [ "${arg:2}" = "help" ]; then
         help="help"
         break
       fi

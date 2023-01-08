@@ -9,44 +9,71 @@ _aclii_debug () {
 }
 
 __<%= aclii.commandName %>_compgen () {
-  local list=("aaa" "bbb")
-  echo "${list[@]}"
-  return 0
-}
+  ## Fix array index for ZSH
+  if [ "$ZSH_NAME" = "zsh" ];then
+    setopt localoptions ksharrays
+  fi
 
-___<%= aclii.commandName %>_compgen () {
-  local words="$@"
+  local words=("$@")
 
-
-
+  local w
+  local cnt="0"
+  local argv=()
+  for w in "${words[@]}"; do
+    _aclii_debug "words: $w"
+    if [ $cnt -eq $COMP_CWORD ]; then
+      break
+    fi
+    if [ $cnt -ne 0 ]; then
+      argv+=("$w")
+    fi
+    : $((cnt++))
+  done
+  _aclii_debug "C $COMP_CWORD L $COMP_LINE P $COMP_POINT"
   # parser needs @argv.
   # Parse from [1] to [len-1] for detect current subcommand
   # ( [0] always aclii so skip it )
-  local argv=(${COMP_WORDS[@]:1:$((${#COMP_WORDS[@]}-1))})
+  local cur="${words[COMP_CWORD]}"
 
+  for w in "${argv[@]}"; do
+    _aclii_debug "argv: $w"
+  done
+
+  _aclii_debug "cur: $cur"
 ##//INCLUDE parser.tmpl
 
-  local oldifs="$IFS"
-  local cur="${COMP_WORDS[COMP_CWORD]}"
-  _aclii_debug "enter compwords |${COMP_WORDS[@]}| cur |$cur|"
-
-  COMPREPLY=()
-
-  if [ -n "$wantType" ]; then
+  local keyword
+  local candidates=()
+  local candidatesLong=()
+  local wtype
+  if [ -n "$wantOptType" ]; then
+    wtype=$wantOptType
+  elif [ -n "$wantType" ]; then
+    wtype=$wantType
+  fi
+  if [ -n "$wtype" ]; then
       # OK, we already know what we want;
       _aclii_debug "want $want |"
-    case "$wantType" in
-      "file" ) _filedir ;;
-      "dir" ) _filedir -d ;;
+    case "$wtype" in
+      "file" ) _filedir; return 0 ;;
+      "dir" ) _filedir -d; return 0 ;;
       * ) COMPREPLY=() ;;
     esac
-  elif [ "${cur:0:1}" == '-' ]; then
+    return
+  elif [ "${cur:0:1}" = '-' ]; then
     # It starts with dash. Maybe we should show option list
     case "$cmd" in
 ##//  aclii.allCommands.forEach( c => {
       "<%= c.path %>" )
         _aclii_debug "path: <%= c.path %> cur: $cur |"
-        COMPREPLY=( $(compgen -W "<%= c.options.map( o => '--' + o.name ).join(" ") %>" -- "${cur}" )) ;;
+##//    c.options.forEach( o => {
+          keyword="--<%= o.name %>"
+          if [ ${#cur} -eq 0 ] || [ "$keyword" != "${keyword#$cur}" ]; then
+            candidates+=("--<%= o.name %>")
+            candidatesLong+=("<%= o.description %>")
+          fi
+##//    })
+          ;;
 ##//  })
     esac
   else
@@ -54,17 +81,45 @@ ___<%= aclii.commandName %>_compgen () {
     case "$cmd" in
 ##//  aclii.allCommands.forEach( c => {
       "<%= c.path %>" )
-      COMPREPLY=( $(compgen -W "<%= c.commands.map( c => c.name ).join(" ") %>" -- "${cur}" )) ;;
+##//    c.commands.forEach( sc => {
+        keyword="<%= sc.name %>"
+        if [ ${#cur} -eq 0 ] || [ "$keyword" != "${keyword#$cur}" ]; then
+          candidates+=("<%= sc.name %>")
+          local tab=$'\t'
+          candidatesLong+=("<%= sc.description %>")
+        fi
+##//    })
+        ;;
 ##//  })
     esac
   fi
   _aclii_debug "---------"
 
-  IFS="$oldifs"
+  if [ ${#candidates[*]} -eq 1 ]; then
+    echo "${candidates[0]}"
+  elif [ ${#candidates[*]} -eq 0 ]; then
+    echo ''
+  else
+    local maxlen=0
+    for w in "${candidates[@]}"; do
+      if [ $maxlen -lt ${#w} ]; then
+        maxlen=${#w}
+      fi
+    done
+    local idx=0
+    for w in "${candidates[@]}"; do
+      local fill=$( seq -s " " 0 $(( maxlen - ${#w} )) | sed 's/[0-9]*//g' )
+      _aclii_debug "!$w |$fill|"
+      echo "$w $fill(${candidatesLong[idx]})"
+      : $(( idx++ ))
+    done
+  fi
 }
+
 
 if type complete &>/dev/null; then
   _<%= aclii.commandName %>_completion () {
+    _aclii_debug "--- complete mode"
     local words cword
     if type _get_comp_words_by_ref &>/dev/null; then
       _get_comp_words_by_ref -n = -n @ -n : -w words -i cword
@@ -77,7 +132,7 @@ if type complete &>/dev/null; then
     if ! IFS=$'\n' COMPREPLY=($(COMP_CWORD="$cword" \
                            COMP_LINE="$COMP_LINE" \
                            COMP_POINT="$COMP_POINT" \
-                           __<%= aclii.commandName %>_compgen -- "${words[@]}" \
+                           __<%= aclii.commandName %>_compgen "${words[@]}" \
                            2>/dev/null)); then
       local ret=$?
       IFS="$si"
@@ -89,37 +144,4 @@ if type complete &>/dev/null; then
     fi
   }
   complete -o default -F _<%= aclii.commandName %>_completion <%= aclii.commandName %>
-elif type compdef &>/dev/null; then
-  _<%= aclii.commandName %>_completion () {
-    local si=$IFS
-    compadd -- $(COMP_CWORD=$((CURRENT-1)) \
-                 COMP_LINE=$BUFFER \
-                 COMP_POINT=0 \
-                 __<%= aclii.commandName %>_compgen -- "${words[@]}" \
-                 2>/dev/null)
-    IFS=$si
-  }
-  compdef _<%= aclii.commandName %>_completion <%= aclii.commandName %>
-elif type compctl &>/dev/null; then
-  _<%= aclii.commandName %>_completion () {
-    local cword line point words si
-    read -Ac words
-    read -cn cword
-    let cword-=1
-    read -l line
-    read -ln point
-    si="$IFS"
-    if ! IFS=$'\n' reply=($(COMP_CWORD="$cword" \
-                       COMP_LINE="$line" \
-                       COMP_POINT="$point" \
-                       __<%= aclii.commandName %>_compgen -- "${words[@]}" \
-                       2>/dev/null)); then
-
-      local ret=$?
-      IFS="$si"
-      return $ret
-    fi
-    IFS="$si"
-  }
-  compctl -K _<%= aclii.commandName %>_completion <%= aclii.commandName %>
 fi
