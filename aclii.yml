@@ -15,6 +15,31 @@ description: |
   A toolkit for aclii (Abstract Command Line Interface Interface)
 helpstop: true
 commands:
+  - name: render
+    helpstop: true
+    description: |
+      Render bash scripts generated from yaml config file. See sub commands for details.
+    commands:
+      - name: completion
+        description: |
+          Render and print bash auto-completion script to STDOUT.
+        options:
+          - name: target
+            type: completionTarget
+            default: bash
+      - name: launcher
+        description: |
+          Render and print bash script to launch other program to STDOUT.
+      - name: parser
+        description: |
+          Render and print rendered bare commandline parser, for testing.
+      - name: manual
+        description: |
+          Render command tree manual in markdown format.
+
+  - name: aclii-completion
+    description: render completion script for aclii
+
   - name: playground
     helpstop: true
     bin: _aclii_main
@@ -46,28 +71,6 @@ commands:
           ls
           echo "That's all. Thanks!"
 
-  - name: render
-    helpstop: true
-    description: |
-      Render bash scripts generated from yaml config file. See sub commands for details.
-    commands:
-      - name: completion
-        description: |
-          Render and print bash auto-completion script to STDOUT.
-        options:
-          - name: target
-            type: completionTarget
-            default: bash
-      - name: launcher
-        description: |
-          Render and print bash script to launch other program to STDOUT.
-      - name: parser
-        description: |
-          Render and print rendered bare commandline parser, for testing.
-  - name: aclii-completion
-    description: render completion script for aclii
-  - name: aclii-completion-zsh
-    description: render completion script for aclii (zsh)
 options:
   - name: file
     description: filename of aclii config file (aclii.yml)

@@ -1,0 +1,75 @@
+##// aclii.traversal({
+##//   visit: (c, parentNode, depth) => {
+<%= '#'.repeat(depth) %> <%= c.name %>
+##//   },
+##//   preChild: (c, child, depth) => {
+##//   },
+##//   postChild: (c, child, depth) => {
+##//   },
+##//   leave: (c, parentNode, depth) => {
+##//   }})
+
+##// aclii.allCommands.forEach( c => {
+## <%= c.path.replaceAll('.',' ')  %>
+
+##// if ( c.helpstop ) {
+  _This command itself has no actual function, instead just show help._
+
+##// }
+
+  <%= c.description %>
+
+##// if (aclii.manualForCommand(c.path) ) {
+
+<%= aclii.manualForCommand(c.path) %>
+
+
+##// }
+##// if ( c.wants.length ) {
+
+#### Usage:
+
+```
+<%= c.path.replaceAll('.', ' ') %> <%= c.wants.map( w => '<' + (w.type || 'any') + '>' + (w.many ? '...' : '') ).join(' ') %>
+```
+
+#### Arguments
+
+##//   c.wants.forEach( w => {
+  - <%= w.name %><%= (w.type && aclii.typeDef(w.type)) ? ' (' + aclii.typeDef(w.type).description + ')' : '' %><%= w.description %>
+
+##//   })
+
+##// }
+##// if ( c.commands.length ) {
+
+#### Sub Commands:
+
+##//  c.commands.forEach( sc => {
+
+  - <%= sc.name %> <%= sc.wants.map( w => '<' + (w.type || 'any') + '>' + (w.many ? '...' : '') ).join(' ') %>
+    - <%= sc.description %>
+
+##//  })
+
+##// }
+
+#### Options:
+
+##//  c.ownOptions.forEach( o => {
+  - <%= o.name %>
+    <%=
+  (() => {
+    if (!o.input.type || o.input.type === 'switch' ) return ''
+    let td = aclii.typeDef(o.input.type);
+    return '- <' + (
+      td ? td.name + (
+            td.description ? '(' + td.description + ')' : ''
+           )
+         : o.input.type
+      ) + '>'
+  })() %><%= o.input.defaultValue ? ' (default: "' + o.input.defaultValue + '")' : '' %>
+      <%= o.description %>
+
+##//  })
+##// })

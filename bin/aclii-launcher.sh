@@ -128,6 +128,17 @@ _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
     --verbose 
 EOH
 }
+_help_nodefed06a3565294df3bed8922eb3d9505d () {
+  cat << 'EOH'
+  Name: aclii.render.manual
+  
+    Render command tree manual in markdown format.
+  Options:
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
 _help_node620dd4ac0e81767466a282a8b830d9a7 () {
   cat << 'EOH'
   Name: aclii.playground
@@ -160,6 +171,8 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
         Render and print bash script to launch other program to STDOUT.
     parser 
         Render and print rendered bare commandline parser, for testing.
+    manual 
+        Render command tree manual in markdown format.
   Options:
     --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
@@ -204,6 +217,7 @@ _help () {
     "aclii.render.completion") _help_node2e76e740f0ac071ad964481e5d054491 ;;
     "aclii.render.launcher") _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c ;;
     "aclii.render.parser") _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 ;;
+    "aclii.render.manual") _help_nodefed06a3565294df3bed8922eb3d9505d ;;
     "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
     "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
     "aclii.aclii-completion") _help_node1335413e45f7b6441d6db69628a7df80 ;;
@@ -395,6 +409,11 @@ if [ -n "${argv+ARG}" ]; then
           commandPath+=("parser")
           currentOptionSet="1"
           ;;
+        "aclii.render.manual" )
+          cmd="aclii.render.manual"
+          commandPath+=("manual")
+          currentOptionSet="1"
+          ;;
         "aclii.playground" )
           cmd="aclii.playground"
           commandPath+=("playground")
@@ -490,6 +509,11 @@ fi
       bin="_aclii_main"
       binPath="aclii"
       ;;
+    "aclii.render.manual" )
+      wantJSON="1"
+      bin="_aclii_main"
+      binPath="aclii"
+      ;;
     "aclii.playground" )
       _help "$cmd"
       ;;
@@ -550,6 +574,11 @@ fi
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.render.parser")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.render.manual")
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -639,6 +668,9 @@ __END_OF_ACLII_SCRIPT__
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.render.parser" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.render.manual" )
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.playground" )

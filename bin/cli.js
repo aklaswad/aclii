@@ -32,6 +32,11 @@ const Commands = {
     console.log( aclii.render('bash_completion.tmpl'))
   },
 
+  "aclii.render.manual": (opts) => {
+    const aclii =  Aclii.fromFile(opts.options.file)
+    console.log( aclii.render('manual-markdown.tmpl'))
+  },
+
   "aclii.render.launcher": (opts) => {
     const aclii =  Aclii.fromFile(opts.options.file)
     console.log( aclii.render('launcher.tmpl'))
