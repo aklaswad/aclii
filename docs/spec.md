@@ -13,6 +13,9 @@ Aclii object can contain these items
 
 You can write detailed document here. The key must be an ID syntax (path from root to the command, joind by dot `.` ) of each commands e.g. `root.sub1.sub2`.
 
+### types
+
+You can specify a simple type definition for arguments and options. Currently array of selectable strings are supported.
 
 # Command object
 
@@ -92,7 +95,7 @@ Traditional option terminator. When this option was appeared in the line, aclii 
 Name of the option, as user inputs.
 
 ### type
- What type of word this option will take. ( Not yet implemented though but `switch`. )
+ What type of word this option will take.
 
  `switch`: if the option type was set to `switch`, this option do not take next word as it's argument, but just switch this option truthy.
  .
@@ -112,9 +115,8 @@ the name of the arguments. User don't need to input this, but this will be dipla
 
 Description for this argument, which will be appeared in the help text.
 
-### type (not implemented)
+### type
 
-Currently aclii do nothing about type, but you can sepcify the type of argument.
 
 ### many
 

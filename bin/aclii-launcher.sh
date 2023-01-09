@@ -48,7 +48,7 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
     aclii-completion-zsh 
         render completion script for aclii (zsh)
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -67,7 +67,7 @@ _help_nodec9e9547ec88bba1cbfa64a3699a294ed () {
         Select genre you want to...
     food
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -78,7 +78,7 @@ _help_node1f25010818a63d2f7bcb15a33d6fd818 () {
   
     Raise error if non optional values ( started by dash(es) ) are related.
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -89,7 +89,7 @@ _help_nodee80eb6db780cc1bef550699e63d9e4e7 () {
   
     Inline script demo. You can implement any script in aclii file and execute it instead of main program.
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -100,7 +100,8 @@ _help_node2e76e740f0ac071ad964481e5d054491 () {
   
     Render and print bash auto-completion script to STDOUT.
   Options:
-    --file  (default: "./aclii.yml")
+    --target <completionTarget(bash|zsh)> (default: "bash")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -111,7 +112,7 @@ _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
   
     Render and print bash script to launch other program to STDOUT.
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -122,7 +123,7 @@ _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
   
     Render and print rendered bare commandline parser, for testing.
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -140,7 +141,7 @@ _help_node620dd4ac0e81767466a282a8b830d9a7 () {
     run-ls-script 
         Inline script demo. You can implement any script in aclii file and execute it instead of main program.
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -160,7 +161,7 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
     parser 
         Render and print rendered bare commandline parser, for testing.
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -171,7 +172,7 @@ _help_node1335413e45f7b6441d6db69628a7df80 () {
   
     render completion script for aclii
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -182,7 +183,7 @@ _help_nodef1cceee9e60a2f03c776730687f21d1d () {
   
     render completion script for aclii (zsh)
   Options:
-    --file  (default: "./aclii.yml")
+    --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
     --verbose 
 EOH
@@ -222,13 +223,12 @@ local -a argvTypes # for debug. maybe removed soon.
 
 local -a commandPath=("aclii")
 
-local inputChain=("" "" "3" "")
-local inputTypes=("file" "switch" "foodgenre" "string")
-local inputKeys=("file" "verbose" "genre" "food")
-local inputDefaults=("./aclii.yml" "" "" "")
-local inputIsMany=("" "" "" "1")
-local inputIsMulti=("" "" "" "")
-
+local inputChain=("" "" "3" "" "")
+local inputTypes=("file" "switch" "foodgenre" "string" "completionTarget")
+local inputKeys=("file" "verbose" "genre" "food" "target")
+local inputDefaults=("./aclii.yml" "" "" "" "bash")
+local inputIsMany=("" "" "" "1" "")
+local inputIsMulti=("" "" "" "" "")
 
 local -a foundValues
 local -a foundValuesFor
@@ -312,6 +312,28 @@ if [ -n "${argv+ARG}" ]; then
               break
           esac
         ;;
+        '2' )
+          case "${arg:2}" in
+            'target')
+              wantOptType="completionTarget"
+              wantingOptInputId="4"
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            'file')
+              wantOptType="file"
+              wantingOptInputId="0"
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            'verbose')
+              foundValues+=("1")
+              foundValuesFor+=("1")
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
       esac
 
     ## If reading (in)finite args
@@ -361,7 +383,7 @@ if [ -n "${argv+ARG}" ]; then
         "aclii.render.completion" )
           cmd="aclii.render.completion"
           commandPath+=("completion")
-          currentOptionSet="1"
+          currentOptionSet="2"
           ;;
         "aclii.render.launcher" )
           cmd="aclii.render.launcher"
@@ -515,6 +537,9 @@ fi
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.render.completion")
+      key="target"
+      def="bash"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')

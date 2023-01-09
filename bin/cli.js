@@ -8,12 +8,9 @@ const Commands = {
   "aclii.aclii-completion": (opt) => {
     // Find
     const aclii = Aclii.fromFile(Aclii.ConfigPath())
-    console.log( aclii.render('bash_completion.tmpl') )
-  },
-  "aclii.aclii-completion-zsh": (opt) => {
-    // Find
-    const aclii = Aclii.fromFile(Aclii.ConfigPath())
-    console.log( aclii.render('zsh_completion.tmpl') )
+    console.log( aclii.render(
+      opt.options.target === 'zsh' ? 'zsh_completion.tmpl'
+                                   : 'bash_completion.tmpl' ) )
   },
   "aclii.render.parser-debugger": (opt) => {
     const aclii = Aclii.fromFile(opts.options.file)

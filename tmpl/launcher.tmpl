@@ -68,7 +68,17 @@ Commands:
 ##// }
 Options:
 ##//  c.options.forEach( o => {
-  --<%= o.name %> <%= o.type && o.type !== 'switch' ? '<' + o.type + '>' : '' %><%= o.input.defaultValue ? ' (default: "' + o.input.defaultValue + '")' : '' %>
+  --<%= o.name %> <%=
+  (() => {
+    if (!o.input.type || o.input.type === 'switch' ) return ''
+    let td = aclii.typeDef(o.input.type);
+    return '<' + (
+      td ? td.name + (
+            td.description ? '(' + td.description + ')' : ''
+           )
+         : o.input.type
+      ) + '>'
+  })() %><%= o.input.defaultValue ? ' (default: "' + o.input.defaultValue + '")' : '' %>
       <%= o.description %>
 ##//  })
 ##// setIndent(0)

@@ -54,6 +54,10 @@ commands:
       - name: completion
         description: |
           Render and print bash auto-completion script to STDOUT.
+        options:
+          - name: target
+            type: completionTarget
+            default: bash
       - name: launcher
         description: |
           Render and print bash script to launch other program to STDOUT.
