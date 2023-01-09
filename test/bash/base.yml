@@ -1,0 +1,9 @@
+name: test
+options:
+  - name: string1
+    type: string
+  - name: switch1
+    type: switch
+  - name: multi1
+    type: string
+    multi: true
