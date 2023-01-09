@@ -6,7 +6,6 @@ import url from 'url'
 
 const Commands = {
   "aclii.aclii-completion": (opt) => {
-    // Find
     const aclii = Aclii.fromFile(Aclii.ConfigPath())
     console.log( aclii.render(
       opt.options.target === 'zsh' ? 'zsh_completion.tmpl'
@@ -27,9 +26,11 @@ const Commands = {
     console.log( aclii.render('bash_runner.tmpl'))
   },
 
-  "aclii.render.completion": (opts) => {
+  "aclii.render.completion": (opt) => {
     const aclii =  Aclii.fromFile(opts.options.file)
-    console.log( aclii.render('bash_completion.tmpl'))
+    console.log( aclii.render(
+      opt.options.target === 'zsh' ? 'zsh_completion.tmpl'
+                                   : 'bash_completion.tmpl' ) )
   },
 
   "aclii.render.launcher": (opts) => {
