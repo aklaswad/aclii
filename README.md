@@ -2,19 +2,47 @@
 
 **Another Command Line Interface Interface**
 
-1. Write YAML file to design your command
-1. aclii will generate launcher shell script and completion script from it
-1. You can get your own powerful command, for your product, and/or every tools you use.
+# Description
+
+## aclii is a command line parser generator
+
+The core function of aclii is a _command line parser generator_ for bash scripts.
+It can build a pure bash based command line options parser from descriptive YAML file, supports modern sub-command tree based command line definition.
+
+Also aclii can build stand alone completion script for bash (and zsh). You can use aclii just for completion generator ( This is what originally I want to build ;-) )
+
+## aclii is not only a parser, but also argument handling launcher
+
+aclii also can render a command line launcher script for any command line tools. This launcher can parse and validate args and show helps behalf of your proglam. You can get rid of those chores from your program, and just get a correct args as is, or as JSON compiled version of args.
+
+## aclii is not only a launcher, but powerful cli tool kit
+
+You can use aclii launcher not only for programs you written, but also for any cli tools you use. You can write personal chores, or team-wide chores into YAML file and find them from command tree with auto completion support.
+
+# Please note that aclii is still very alpha version
 
 # Install
+
+## Install aclii
+
+Some functions of aclii needs `jq`
 
 ```shell
 $ apt update && apt install -y jq
 $ npm i -g aclii
 ```
 
-_(sorry install script is not yet, so...)_
+## Install completion file
 
+```shell
+aclii aclii-completion > {{ your completion dir }}/aclii_completion
+```
+
+Or for ephemeral testing
+```shell
+source <(aclii aclii-completion)
+```
+Or (above line works on ubuntu but not doen't on macos...)
 ```shell
 $ tmp=$(mktemp) && aclii aclii-completion > $tmp && source $tmp && rm $tmp 
 ```
@@ -47,6 +75,31 @@ $ mytool<TAB>
 
 
 # Use cases
+
+## For option parser of bash script
+
+Write a command line definition into yaml file
+```yaml
+# myscript.aclii.yml
+name: myscript
+options:
+  - name: name
+    type: string
+```
+
+Then compile the parser
+```
+aclii --file myscript.aclii.yml render parser > parser.sh
+```
+
+So in your script
+```
+#!/bin/bash
+# $0 = myscript.sh
+source $(dirname $0)/parser.sh "$@" # parse imports a function called `_q`
+echo "name: $(_q 'name')"
+```
+This script prints "name: aclii" for the input `./myscript.sh --name aclii`
 
 ## For quick tool writing
 
