@@ -53,10 +53,17 @@ __<%= aclii.commandName %>_compgen () {
   fi
   if [ -n "$wtype" ]; then
       # OK, we already know what we want;
-      _aclii_debug "want $want |"
+      _aclii_debug "want $want type |$wtype|"
     case "$wtype" in
       "file" ) _filedir; return 0 ;;
       "dir" ) _filedir -d; return 0 ;;
+##// aclii.typeDefs.forEach( t => {
+      '<%= t.name %>')
+        local candidates=( <%= t.prepared.map(n=>`"${n}"`).join(' ') %>)
+        compgen -W "${candidates[*]}" -- "$cur"
+        return 0
+        ;;
+##// })
       * ) COMPREPLY=() ;;
     esac
     return
@@ -143,5 +150,5 @@ if type complete &>/dev/null; then
       __ltrim_colon_completions "${words[cword]}"
     fi
   }
-  complete -o default -F _<%= aclii.commandName %>_completion <%= aclii.commandName %>
+  complete -F _<%= aclii.commandName %>_completion <%= aclii.commandName %>
 fi

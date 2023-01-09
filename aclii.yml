@@ -2,11 +2,14 @@ name: aclii
 bin: _aclii_main
 argstyle: json
 types:
+  completionTarget:
+    - bash
+    - zsh
   foodgenre:
-    Chinese: Yummy!
-    French: Yummi!
-    Japanese: Yummmmy!
-    Ethnic: Yummy!
+    - chinese
+    - french
+    - japanese
+    - ethnic
 
 description: |
   A toolkit for aclii (Abstract Command Line Interface Interface)

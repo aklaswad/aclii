@@ -38,17 +38,38 @@ _help_<%= c.hashedPath %> () {
   cat << 'EOH'
 ##// setIndent(2)
 Name: <%= c.path  %>
+
   <%= c.description %>
+
+##// if (aclii.manualForCommand(c.path) ) {
 <%= aclii.manualForCommand(c.path) %>
+
+
+##// }
+##// if ( c.wants.length ) {
+
+Usage:
+  <%= c.path.replaceAll('.', ' ') %> <%= c.wants.map( w => '<' + (w.type || 'any') + '>' + (w.many ? '...' : '') ).join(' ') %>
+
+Arguments:
+##//   c.wants.forEach( w => {
+  <%= w.name %><%= (w.type && aclii.typeDef(w.type)) ? ' (' + aclii.typeDef(w.type).description + ')' : '' %>
+      <%= w.description %>
+##//   })
+
+##// }
+##// if ( c.commands.length ) {
 Commands:
 ##//  c.commands.forEach( sc => {
-  <%= sc.name %><% if (sc.argv ) { %> <<%= sc.argv %>>...<% } %>
-    | <%= sc.description %>
+  <%= sc.name %> <%= sc.wants.map( w => '<' + (w.type || 'any') + '>' + (w.many ? '...' : '') ).join(' ') %>
+      <%= sc.description %>
 ##//  })
 
+##// }
 Options:
 ##//  c.options.forEach( o => {
-  --<%= o.name %> | <%= o.description %>
+  --<%= o.name %> <%= o.type && o.type !== 'switch' ? '<' + o.type + '>' : '' %><%= o.input.defaultValue ? ' (default: "' + o.input.defaultValue + '")' : '' %>
+      <%= o.description %>
 ##//  })
 ##// setIndent(0)
 EOH
