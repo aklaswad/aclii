@@ -225,6 +225,7 @@ local -a commandPath=("aclii")
 local inputChain=("" "" "3" "")
 local inputTypes=("file" "switch" "foodgenre" "string")
 local inputKeys=("file" "verbose" "genre" "food")
+local inputDefaults=("./aclii.yml" "" "" "")
 local inputIsMany=("" "" "" "1")
 local inputIsMulti=("" "" "" "")
 
@@ -439,30 +440,32 @@ fi
       ;;
     "aclii.playground.hungry" )
       wantJSON="1"
-      bin="""_aclii_main"
-      binPath="""aclii.playground"
+      bin="_aclii_main"
+      binPath="aclii.playground"
       ;;
     "aclii.playground.stuffed" )
       wantJSON="1"
-      bin="""_aclii_main"
-      binPath="""aclii.playground"
+      bin="_aclii_main"
+      binPath="aclii.playground"
       ;;
     "aclii.playground.run-ls-script" )
+      bin="_aclii_main"
+      binPath="aclii.playground.run-ls-script"
       ;;
     "aclii.render.completion" )
       wantJSON="1"
-      bin="""_aclii_main"
-      binPath="""aclii"
+      bin="_aclii_main"
+      binPath="aclii"
       ;;
     "aclii.render.launcher" )
       wantJSON="1"
-      bin="""_aclii_main"
-      binPath="""aclii"
+      bin="_aclii_main"
+      binPath="aclii"
       ;;
     "aclii.render.parser" )
       wantJSON="1"
-      bin="""_aclii_main"
-      binPath="""aclii"
+      bin="_aclii_main"
+      binPath="aclii"
       ;;
     "aclii.playground" )
       _help "$cmd"
@@ -472,13 +475,13 @@ fi
       ;;
     "aclii.aclii-completion" )
       wantJSON="1"
-      bin="""_aclii_main"
-      binPath="""aclii"
+      bin="_aclii_main"
+      binPath="aclii"
       ;;
     "aclii.aclii-completion-zsh" )
       wantJSON="1"
-      bin="""_aclii_main"
-      binPath="""aclii"
+      bin="_aclii_main"
+      binPath="aclii"
       ;;
   esac
 

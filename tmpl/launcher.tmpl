@@ -103,10 +103,12 @@ __parse_args () {
     "<%= c.path %>" )
 ##//   if (c.helpstop) {
       _help "$cmd"
-##//   } else if ( aclii.getCommandByPath(c.binPath).argstyle == 'json' ) {
+##//   } else {
+##//     if ( aclii.getCommandByPath(c.binPath).argstyle == 'json' ) {
       wantJSON="1"
-      bin="""<%= c.bin %>"
-      binPath="""<%= c.binPath %>"
+##//     }
+      bin="<%= c.bin %>"
+      binPath="<%= c.binPath %>"
 ##//   }
       ;;
 ##// })
