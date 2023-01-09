@@ -23,6 +23,7 @@ local -a commandPath=("<%= aclii.commandName %>")
 local inputChain=(<%= aclii.inputs.map(i => `"${i.next || ''}"`).join(' ')%>)
 local inputTypes=(<%= aclii.inputs.map(i => `"${i.type || ''}"`).join(' ')%>)
 local inputKeys=(<%= aclii.inputs.map(i => `"${i.name || ''}"`).join(' ')%>)
+local inputDefaults=(<%= aclii.inputs.map(i => `"${i.defaultValue || ''}"`).join(' ')%>)
 local inputIsMany=(<%= aclii.inputs.map(i => `"${i.many ? 1 : ''}"`).join(' ')%>)
 local inputIsMulti=(<%= aclii.inputs.map(i => `"${i.multi || ''}"`).join(' ')%>)
 
