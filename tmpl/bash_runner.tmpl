@@ -1,6 +1,23 @@
 #!/bin/bash
 
+_aclii_debug () {
+  if [ -n "${ACLII_DEBUG+HAS_VALUE}" ]; then
+    echo "$@" >> /tmp/aclii-debug.log
+  fi
+}
 
+declare -a __aclii_inputChain
+declare -a __aclii_inputTypes
+declare -a __aclii_inputKeys
+declare -a __aclii_inputDefaults
+declare -a __aclii_inputIsMany
+declare -a __aclii_inputIsMulti
+
+declare -a __aclii_foundValues
+declare -a __aclii_foundValuesFor
+declare __aclii_error
+declare __aclii_cmd
+declare __aclii_help
 
 _q () {
 
@@ -15,7 +32,7 @@ _q () {
   local inputId="-1"
   local idx=0
   local inputKey
-  for inputKey in "${__aclii_inputkeys[@]}"
+  for inputKey in "${__aclii_inputKeys[@]}"
   do
     if [ ${query} = ${inputKey} ]; then
       inputId=$idx
@@ -39,7 +56,7 @@ _q () {
     fi
     : $((idx++))
   done
-  if [ "0" == "$found" ]
+  if [ "0" == "$found" ]; then
       return 2
   fi
   if [ -z "${__aclii_inputIsMany[inputId]}" ] && [ -z "${__aclii_inputIsMulti[inputId]}" ]; then
@@ -53,40 +70,38 @@ _q () {
 __arg_parse () {
   local argv=("$@")
 
-  unset __aclii_inputChain
-  unset __aclii_inputTypes
-  unset __aclii_inputKeys
-  unset __aclii_inputDefaults
-  unset __aclii_inputIsMany
-  unset __aclii_inputIsMulti
-
-  unset __aclii_foundValues
-  unset __aclii_foundValuesFor
-  unset __aclii_error
-  unset __aclii_cmd
-  unset __aclii_help
-
-  unset __aclii_binPath
-  unset __aclii_isHelpStop
+  __aclii_inputChain=()
+  __aclii_inputTypes=()
+  __aclii_inputKeys=()
+  __aclii_inputDefaults=()
+  __aclii_inputIsMany=()
+  __aclii_inputIsMulti=()
+  __aclii_foundValues=()
+  __aclii_foundValuesFor=()
+  __aclii_error=""
+  __aclii_cmd=""
+  __aclii_help=""
+  __aclii_binPath=""
+  __aclii_isHelpStop=""
 
 ##// INCLUDE parser.tmpl
 
   # Export definition in parser out to global
-  declare -a __aclii_inputChain=("${inputChain[@]}")
-  declare -a __aclii_inputTypes=("${inputTypes[@]}")
-  declare -a __aclii_inputKeys=("${inputKeys[@]}")
-  declare -a __aclii_inputDefaults=("${inputDefaults[@]}")
-  declare -a __aclii_inputIsMany=("${inputIsMany[@]}")
-  declare -a __aclii_inputIsMulti=("${inputIsMulti[@]}")
+  __aclii_inputChain=("${inputChain[@]}")
+  __aclii_inputTypes=("${inputTypes[@]}")
+  __aclii_inputKeys=("${inputKeys[@]}")
+  __aclii_inputDefaults=("${inputDefaults[@]}")
+  __aclii_inputIsMany=("${inputIsMany[@]}")
+  __aclii_inputIsMulti=("${inputIsMulti[@]}")
 
-  declare -a __aclii_foundValues=("${foundValues[@]}")
-  declare -a __aclii_foundValuesFor=("${foundValuesFor[@]}")
-  declare __aclii_error="$error"
-  declare __aclii_cmd="$cmd"
-  declare __aclii_help="$help"
+  __aclii_foundValues=("${foundValues[@]}")
+  __aclii_foundValuesFor=("${foundValuesFor[@]}")
+  __aclii_error="$error"
+  __aclii_cmd="$cmd"
+  __aclii_help="$help"
 
-  declare __aclii_binPath=""
-  declare __aclii_isHelpStop=""
+  __aclii_binPath=""
+  __aclii_isHelpStop=""
 
   case "$cmd" in
 ##// aclii.allCommands.forEach( c => {
@@ -100,4 +115,4 @@ __arg_parse () {
   esac
 }
 
-#__arg_parser ("$@")
+__arg_parse "$@"

@@ -27,7 +27,7 @@ const Commands = {
 
   "aclii.render.parser": (opt) => {
     const aclii = Aclii.fromFile(opts.options.file)
-    console.log( aclii.render('parser.tmpl'))
+    console.log( aclii.render('bash_runner.tmpl'))
   },
 
   "aclii.render.completion": (opts) => {
