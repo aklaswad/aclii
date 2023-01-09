@@ -11,9 +11,8 @@
   "scripts": {
     "build": "script/build.sh",
     "build-force": "ACLII_FORCE_BUILD=1 node bin/cli.js > bin/aclii-launcher.sh",
-    "test": "npm run test:node && npm run test:bats && npm run test:bash && echo && echo 'All tests passed!'",
+    "test": "npm run test:node && npm run test:bash && echo && echo 'All tests passed!'",
     "test:node": "node --test",
-    "test:bats": "bats test/bats",
     "test:bash": "test/bash/run.sh"
   },
   "repository": {
@@ -21,14 +20,15 @@
     "url": "https://github.com/aklaswad/aclii"
   },
   "bugs": "https://github.com/aklaswad/aclii/issues",
-  "keywords": ["cli","tool","scatfolding"],
+  "keywords": [
+    "cli",
+    "tool",
+    "scatfolding"
+  ],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "yaml": "^2.2.1"
-  },
-  "devDependencies": {
-    "bats": "^1.8.2"
   },
   "engines": {
     "node": ">=14"

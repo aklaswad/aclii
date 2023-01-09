@@ -1,7 +1,0 @@
-name: test
-commands:
-  - name: foo
-options:
-  - name: fee
-    want: string
-
