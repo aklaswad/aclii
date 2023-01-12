@@ -1,6 +1,7 @@
 #!/bin/bash
 si=$IFS
 IFS=$'\n'
+shopt -s expand_aliases
 
 _tests=0
 _failed=0
@@ -45,18 +46,21 @@ _tap () {
 }
 
 # Usage: ok 'error name' $([ $test = $command ])
-ok () {
-  lastExit=$?
-  _tap $1 $test "expect truthy but got failed status $lastExit"
+should_success () {
+  lastExit="$?"
+  _tap "$1" "$lastExit" "expect truthy but got failed status $lastExit"
 }
 
+alias ok='should_success'
+alias run='$('
+
 fail () {
-  lastExit=$?
+  lastExit="$?"
   local isFailed="0"
   if [ "$lastExit" = "0" ]; then
     isFailed="1"
   fi
-  _tap $1 $isFailed "expect truthy but got failed status $lastExit"
+  _tap "$1" "$isFailed" "expect false but got success status $lastExit"
 }
 
 eq () {
