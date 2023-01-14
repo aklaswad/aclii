@@ -19,6 +19,14 @@ declare __aclii_error
 declare __aclii_cmd
 declare __aclii_help
 
+_cmd () {
+  echo "${__aclii_cmd}"
+}
+
+_error () {
+  echo "${__aclii_error}"
+}
+
 _q () {
 
   # retval:
@@ -116,6 +124,10 @@ __arg_parse () {
       ;;
 ##// })
   esac
+  if [ -n "${__aclii_error}" ]; then
+    return 1
+  fi
+  return 0
 }
 
 __arg_parse "$@"

@@ -7,3 +7,15 @@ options:
   - name: multi1
     type: string
     multi: true
+commands:
+  - name: cmdA
+    commands:
+      - name: cmdA-B
+  - name: cmdB
+    wants:
+      - name: cmdBarg1
+        type: string
+      - name: cmdBarg2
+        type: string
+        many: true
+

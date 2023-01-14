@@ -46,16 +46,18 @@ _tap () {
 }
 
 # Usage: ok 'error name' $([ $test = $command ])
+# or
+# $([ test = $command ])
+#   should_success "this must be ok"
 should_success () {
-  lastExit="$?"
+  local lastExit="$?"
   _tap "$1" "$lastExit" "expect truthy but got failed status $lastExit"
 }
 
 alias ok='should_success'
-alias run='$('
 
-fail () {
-  lastExit="$?"
+should_fail () {
+  local lastExit="$?"
   local isFailed="0"
   if [ "$lastExit" = "0" ]; then
     isFailed="1"
@@ -63,11 +65,32 @@ fail () {
   _tap "$1" "$isFailed" "expect false but got success status $lastExit"
 }
 
-eq () {
-  args=("$@")
+should_equal () {
+  local args=("$@")
   [ "${args[1]}" = "${args[2]}" ]
   local test=$?
+  _tap ${args[0]} $test $(printf "expect [%s] but got [%s]" "${args[2]}" "${args[1]}")
+}
+
+alias eq='should_equal'
+
+should_not_equal () {
+  args=("$@")
+  [ "${args[1]}" != "${args[2]}" ]
+  local test=$?
   _tap ${args[0]} $test "expect [$3] but got [$2]"
+}
+
+alias ne='should_not_equal'
+
+like () {
+  local args=("$@")
+  local name="${args[0]}"
+  local got="${args[1]}"
+  local expected="${args[2]}"
+  $( echo "$got" | grep "$expected" > /dev/null 2>&1 )
+  local test=$?
+  _tap $name $test $(printf "value [%s] doesn't match to expected regex [%s]" "$got" "$expected")
 }
 
 done_testing () {
