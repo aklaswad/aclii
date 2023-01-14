@@ -67,18 +67,18 @@ _<%= aclii.commandName %>_completion () {
         _aclii_debug "path: <%= c.path %> cur: $cur |"
         local options=() #"Options")
         local subcommands=() #"Subcommands")
-
-##//    c.commands.forEach( sc => {
+##//    if ( c.commands.length ) {
+##//      c.commands.forEach( sc => {
           subcommands+=('<%= sc.name %>[<%= sc.description %>]')
-##//    })
-        #_describe -t subcommands "SubCommands" subcommands
+##//      })
         _values "subcommands" "${subcommands[@]}"
-
-##//    c.options.forEach( o => {
+##//    }
+##//    if ( c.options.length ) {
+##//      c.options.forEach( o => {
             options+=('--<%= o.name %>[<%= o.description %>]')
-##//    })
-        #_describe -t options "Options" options
+##//      })
         _values "options" "${options[@]}"
+##//    }
         ;;
 ##//  })
     esac

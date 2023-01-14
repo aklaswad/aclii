@@ -15,6 +15,39 @@ description: |
   A toolkit for aclii (Abstract Command Line Interface Interface)
 helpstop: true
 commands:
+  - name: put
+    helpstop: true
+    description: |
+      Put aclii artifacts into specified place.
+    commands:
+      - name: launcher
+        description: |
+          Put an auto generated launcher
+          If specified file already exists, aclii will replace the content with new version.
+        wants:
+          - name: target-file
+            typs: string
+            description: File path to be put/replaced newly rendered aclii launcher
+      - name: completion
+        description: |
+          Put an auto generated completion script.
+          If specified file already exists, aclii will replace the content with new version.
+        wants:
+          - name: target-file
+            typs: string
+            description: File path to be put/replaced newly rendered aclii auto-completion script
+        options:
+          - name: target
+            type: completionTarget
+            default: bash
+      - name: parser
+        description: |
+          Put an auto generated arg parser for bash scripts,
+          If specified file already exists, aclii will replace the content with new version.
+        wants:
+          - name: target-file
+            typs: string
+            description: File path to be put/replaced newly rendered arg parser
   - name: render
     helpstop: true
     description: |
@@ -70,6 +103,13 @@ commands:
           echo "I'll show you the list of files!"
           ls
           echo "That's all. Thanks!"
+
+  - name: aclii-completion
+    description: render completion script for aclii
+    options:
+      - name: target
+        type: completionTarget
+        default: bash
 
 options:
   - name: file

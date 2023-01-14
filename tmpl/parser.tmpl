@@ -1,14 +1,10 @@
 ##// /*
-##//   `argv` array variable and `_aclii_debug` function must be
-##//  defined before loading this snipet.
+##//   `argv` array variable and `_aclii_debug` function
+##//  must be defined before loading this snipet.
 ##// */
 
 _aclii_debug "enter parseargs |$*|"
 _aclii_debug "num args $#"
-
-##// //subcommand = options? (finite-args)? subcommand?
-##// //           | options? (finite-args)? (ininite-args)
-
 
 ##// // store position of argv to input id. 0 for non-user-input.
 ##// // for example, we have --file option and it's id = 7,
@@ -24,7 +20,11 @@ local inputChain=(<%= aclii.inputs.map(i => `"${i.next || ''}"`).join(' ')%>)
 local inputTypes=(<%= aclii.inputs.map(i => `"${i.type || ''}"`).join(' ')%>)
 local inputKeys=(<%= aclii.inputs.map(i => `"${i.name || ''}"`).join(' ')%>)
 local inputDefaults=(<%= aclii.inputs.map(i => `"${i.defaultValue || ''}"`).join(' ')%>)
+
+# For tech reason, these are separated
+# Map which args for subcommands allows multiple inputs
 local inputIsMany=(<%= aclii.inputs.map(i => `"${i.many ? 1 : ''}"`).join(' ')%>)
+# Map which options allow repeated use
 local inputIsMulti=(<%= aclii.inputs.map(i => `"${i.multi || ''}"`).join(' ')%>)
 
 local -a foundValues

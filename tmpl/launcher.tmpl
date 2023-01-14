@@ -25,7 +25,7 @@ _aclii_exec () {
   else
     binname="$(dirname "$0")/$1"
   fi
-  exec "$binname" "${2[@]}"
+  exec "$binname" "${@:2}"
 
 }
 

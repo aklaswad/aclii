@@ -2,7 +2,12 @@
 IFS=$'\n'
 dir=$(dirname $0)
 failed=0
-tests=( $( find . -type f -name '*.test.sh' ) )
+
+if [ ${#@} -ne 0 ]; then
+  tests="$@"
+else
+  tests=( $( find "$dir" -type f -name '*.test.sh' ) )
+fi
 
 rnote () {
   echo "${1-''}" | sed 's/^/# (runner): /g' >&2

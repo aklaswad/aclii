@@ -1,4 +1,5 @@
 #!/bin/bash
+set -uo pipefail
 
 _aclii_debug () {
   if [ -n "${ACLII_DEBUG+HAS_VALUE}" ]; then
@@ -19,6 +20,14 @@ declare __aclii_error
 declare __aclii_cmd
 declare __aclii_help
 
+_cmd () {
+  echo "${__aclii_cmd}"
+}
+
+_error () {
+  echo "${__aclii_error}"
+}
+
 _q () {
 
   # retval:
@@ -27,11 +36,30 @@ _q () {
   # 2: queried input was not found in user input
   # 3: Too many inputs are found for non-multiple input
 
-  local query="${1-''}"
+  local noDef=""
+  local pos=""
+  local wantPos=""
+  local query=""
+  while [ $# -gt 0 ] ; do
+    if [ -n "$wantPos" ]; then
+      pos="$1"
+      wantPos=""
+    elif [ "$1" = "--pos" ]; then
+      wantPos="1"
+    elif [ "$1" = "--no-default" ]; then
+      wantPos=""
+      noDef="yes"
+    else
+      wantPos=""
+      query="${1-''}"
+    fi
+    shift
+  done
+
   if [ -z ${query} ]; then
     return 1
   fi
-  local noDefault="${2-''}"
+
   local inputId="-1"
   local idx=0
   local inputKey
@@ -51,10 +79,22 @@ _q () {
   idx=0
   local valueFor
   local found=0
+
+  local isMulti=""
+  if [ -n "${__aclii_inputIsMany[inputId]}" ] || [ -n "${__aclii_inputIsMulti[inputId]}" ]; then
+    isMulti="true"
+  fi
+
   for valueFor in "${__aclii_foundValuesFor[@]}"
   do
     if [ "$valueFor" = "$inputId" ]; then
-      echo "${__aclii_foundValues[$idx]}"
+      if [ -n "$isMulti" ] && [ -n "$pos" ]; then
+        if [ "$found" = "$pos" ]; then
+          echo "${__aclii_foundValues[$idx]}"
+        fi
+      else
+        echo "${__aclii_foundValues[$idx]}"
+      fi
       : $((found++))
     fi
     : $((idx++))
@@ -62,7 +102,9 @@ _q () {
   if [ "0" == "$found" ]; then
       return 2
   fi
-  if [ -z "${__aclii_inputIsMany[inputId]}" ] && [ -z "${__aclii_inputIsMulti[inputId]}" ]; then
+
+  #XXX: this validation should be here?
+  if [ -z "$isMulti" ]; then
     if [ "1" != "$found" ]; then
       return 3
     fi
@@ -116,6 +158,10 @@ __arg_parse () {
       ;;
 ##// })
   esac
+  if [ -n "${__aclii_error}" ]; then
+    return 1
+  fi
+  return 0
 }
 
 __arg_parse "$@"
