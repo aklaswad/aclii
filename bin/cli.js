@@ -4,38 +4,47 @@ import fs from 'fs'
 import path from 'path'
 import url from 'url'
 
+// Fail safe print.
+// Throw exception if content is empty
+function print (content) {
+  if ( content.trim().length === 0 ) {
+    throw "Aclii error: rendered content is empty."
+  }
+  console.log(content)
+}
+
 const Commands = {
   "aclii.aclii-completion": (opt) => {
     const aclii = Aclii.fromFile(Aclii.ConfigPath())
-    console.log( aclii.render(
+    print( aclii.render(
       opt.options.target === 'zsh' ? 'zsh_completion.tmpl'
                                    : 'bash_completion.tmpl' ) )
   },
   "aclii.render.parser-debugger": (opt) => {
     const aclii = Aclii.fromFile(opts.options.file)
-    console.log( aclii.render('test/parser-debugger.tmpl'))
+    print( aclii.render('test/parser-debugger.tmpl'))
   },
 
   "aclii.render.parser-tester": (opt) => {
     const aclii = Aclii.fromFile(opts.options.file)
-    console.log( aclii.render('test/parser-test.tmpl'))
+    print( aclii.render('test/parser-test.tmpl'))
   },
 
   "aclii.render.parser": (opt) => {
     const aclii = Aclii.fromFile(opts.options.file)
-    console.log( aclii.render('bash_runner.tmpl'))
+    print( aclii.render('bash_runner.tmpl'))
   },
 
   "aclii.render.completion": (opt) => {
     const aclii =  Aclii.fromFile(opts.options.file)
-    console.log( aclii.render(
+    print( aclii.render(
       opt.options.target === 'zsh' ? 'zsh_completion.tmpl'
                                    : 'bash_completion.tmpl' ) )
   },
 
   "aclii.render.launcher": (opts) => {
     const aclii =  Aclii.fromFile(opts.options.file)
-    console.log( aclii.render('launcher.tmpl'))
+    print( aclii.render('launcher.tmpl'))
   },
 
   "aclii.playground": (opts) => {
