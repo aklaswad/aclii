@@ -20,7 +20,7 @@ load_parser () {
   #echo "b64 $BASE64"
   IFS=''
   local PARSER=$(npm exec "$SCRIPTPATH/../../bin/cli.js" "$BASE64")
-  echo "$PARSER" > "rendered-parser.sh"
+  #echo "$PARSER" > "rendered-parser.sh"
   source <(echo $PARSER)
   IFS=$'\n'
 }
