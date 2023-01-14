@@ -16,6 +16,7 @@ function print (content) {
 
 function put (opt, tmpl, to) {
   const aclii =  Aclii.fromFile(opts.options.file)
+  opt._verbose( "putting '" + tmpl + "' to " + to )
   const content = aclii.render('launcher.tmpl')
   if ( content.trim().length === '0' ) {
     throw "(aclii)Error: Failed to render content"
@@ -106,6 +107,14 @@ try {
 catch (e) {
   console.error("Given digested JSON was invalid.")
   process.exit(1)
+}
+
+// Inject verbose into opts itself
+if ( opts.options.verbose ) {
+  opts._verbose = (msg) => console.error(msg)
+}
+else {
+  opts._verbose = () => {}
 }
 
 if ( process.env.ACLII_DEBUG ) {
