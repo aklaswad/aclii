@@ -6,11 +6,21 @@ import url from 'url'
 
 // Fail safe print.
 // Throw exception if content is empty
+
 function print (content) {
   if ( content.trim().length === 0 ) {
     throw "Aclii error: rendered content is empty."
   }
   console.log(content)
+}
+
+function put (opt, tmpl, to) {
+  const aclii =  Aclii.fromFile(opts.options.file)
+  const content = aclii.render('launcher.tmpl')
+  if ( content.trim().length === '0' ) {
+    throw "(aclii)Error: Failed to render content"
+  }
+  fs.writeFileSync(to, content)
 }
 
 const Commands = {
@@ -28,6 +38,21 @@ const Commands = {
   "aclii.render.parser-tester": (opt) => {
     const aclii = Aclii.fromFile(opts.options.file)
     print( aclii.render('test/parser-test.tmpl'))
+  },
+
+  "aclii.put.parser": (opt) => {
+    put( opt, 'bash_runner.tmpl', opt.options['target-file'] )
+  },
+
+  "aclii.put.completion": (opt) => {
+    const tmpl =
+      opt.options.target === 'zsh' ? 'zsh_completion.tmpl'
+                                   : 'bash_completion.tmpl'
+    put( opt, tmpl, opt.options['target-file'] )
+  },
+
+  "aclii.put.launcher": (opt) => {
+    put( opt, 'launcher.tmpl', opt.options['target-file'] )
   },
 
   "aclii.render.parser": (opt) => {

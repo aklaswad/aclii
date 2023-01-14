@@ -39,12 +39,106 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
     A toolkit for aclii (Abstract Command Line Interface Interface)
   aclii, The toolkit for abstract command line interface interface
   Commands:
-    playground 
-        Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+    put 
+        Put aclii artifacts into specified place.
     render 
         Render bash scripts generated from yaml config file. See sub commands for details.
+    playground 
+        Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
     aclii-completion 
         render completion script for aclii
+  Options:
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
+_help_nodef2498ff8dad2392bdba29afc440844ca () {
+  cat << 'EOH'
+  Name: aclii.put.launcher
+  
+    Put an auto generated launcher
+  If specified file already exists, aclii will replace the content with new version.
+  
+  Usage:
+    aclii put launcher <any>
+  
+  Arguments:
+    target-file
+        File path to be put/replaced newly rendered aclii launcher
+  Options:
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
+_help_node33410cdea442484d126d63060d0a13d0 () {
+  cat << 'EOH'
+  Name: aclii.put.completion
+  
+    Put an auto generated completion script.
+  If specified file already exists, aclii will replace the content with new version.
+  
+  Usage:
+    aclii put completion <any>
+  
+  Arguments:
+    target-file
+        File path to be put/replaced newly rendered aclii auto-completion script
+  Options:
+    --target <completionTarget(bash|zsh)> (default: "bash")
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
+_help_noded455db2d5523778e56432d8047da3f51 () {
+  cat << 'EOH'
+  Name: aclii.put.parser
+  
+    Put an auto generated arg parser for bash scripts,
+  If specified file already exists, aclii will replace the content with new version.
+  
+  Usage:
+    aclii put parser <any>
+  
+  Arguments:
+    target-file
+        File path to be put/replaced newly rendered arg parser
+  Options:
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
+_help_node2e76e740f0ac071ad964481e5d054491 () {
+  cat << 'EOH'
+  Name: aclii.render.completion
+  
+    Render and print bash auto-completion script to STDOUT.
+  Options:
+    --target <completionTarget(bash|zsh)> (default: "bash")
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
+_help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
+  cat << 'EOH'
+  Name: aclii.render.launcher
+  
+    Render and print bash script to launch other program to STDOUT.
+  Options:
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
+_help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
+  cat << 'EOH'
+  Name: aclii.render.parser
+  
+    Render and print rendered bare commandline parser, for testing.
   Options:
     --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
@@ -92,52 +186,21 @@ _help_nodee80eb6db780cc1bef550699e63d9e4e7 () {
     --verbose 
 EOH
 }
-_help_node2e76e740f0ac071ad964481e5d054491 () {
+_help_node9a63b322e3c6be1672ca59b12e537a8d () {
   cat << 'EOH'
-  Name: aclii.render.completion
+  Name: aclii.put
   
-    Render and print bash auto-completion script to STDOUT.
-  Options:
-    --target <completionTarget(bash|zsh)> (default: "bash")
-    --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
-    --verbose 
-EOH
-}
-_help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
-  cat << 'EOH'
-  Name: aclii.render.launcher
-  
-    Render and print bash script to launch other program to STDOUT.
-  Options:
-    --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
-    --verbose 
-EOH
-}
-_help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
-  cat << 'EOH'
-  Name: aclii.render.parser
-  
-    Render and print rendered bare commandline parser, for testing.
-  Options:
-    --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
-    --verbose 
-EOH
-}
-_help_node620dd4ac0e81767466a282a8b830d9a7 () {
-  cat << 'EOH'
-  Name: aclii.playground
-  
-    Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+    Put aclii artifacts into specified place.
   Commands:
-    hungry <foodgenre> <string>...
-        Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
-    stuffed 
-        Raise error if non optional values ( started by dash(es) ) are related.
-    run-ls-script 
-        Inline script demo. You can implement any script in aclii file and execute it instead of main program.
+    launcher <any>
+        Put an auto generated launcher
+  If specified file already exists, aclii will replace the content with new version.
+    completion <any>
+        Put an auto generated completion script.
+  If specified file already exists, aclii will replace the content with new version.
+    parser <any>
+        Put an auto generated arg parser for bash scripts,
+  If specified file already exists, aclii will replace the content with new version.
   Options:
     --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
@@ -158,6 +221,24 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
         Render and print bash script to launch other program to STDOUT.
     parser 
         Render and print rendered bare commandline parser, for testing.
+  Options:
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
+_help_node620dd4ac0e81767466a282a8b830d9a7 () {
+  cat << 'EOH'
+  Name: aclii.playground
+  
+    Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+  Commands:
+    hungry <foodgenre> <string>...
+        Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
+    stuffed 
+        Raise error if non optional values ( started by dash(es) ) are related.
+    run-ls-script 
+        Inline script demo. You can implement any script in aclii file and execute it instead of main program.
   Options:
     --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
@@ -186,14 +267,18 @@ _help () {
   fi
   case "$page" in
     "aclii") _help_nodea57b9426b2e192dba7ba8c15edd1cc79 ;;
-    "aclii.playground.hungry") _help_nodec9e9547ec88bba1cbfa64a3699a294ed ;;
-    "aclii.playground.stuffed") _help_node1f25010818a63d2f7bcb15a33d6fd818 ;;
-    "aclii.playground.run-ls-script") _help_nodee80eb6db780cc1bef550699e63d9e4e7 ;;
+    "aclii.put.launcher") _help_nodef2498ff8dad2392bdba29afc440844ca ;;
+    "aclii.put.completion") _help_node33410cdea442484d126d63060d0a13d0 ;;
+    "aclii.put.parser") _help_noded455db2d5523778e56432d8047da3f51 ;;
     "aclii.render.completion") _help_node2e76e740f0ac071ad964481e5d054491 ;;
     "aclii.render.launcher") _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c ;;
     "aclii.render.parser") _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 ;;
-    "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
+    "aclii.playground.hungry") _help_nodec9e9547ec88bba1cbfa64a3699a294ed ;;
+    "aclii.playground.stuffed") _help_node1f25010818a63d2f7bcb15a33d6fd818 ;;
+    "aclii.playground.run-ls-script") _help_nodee80eb6db780cc1bef550699e63d9e4e7 ;;
+    "aclii.put") _help_node9a63b322e3c6be1672ca59b12e537a8d ;;
     "aclii.render") _help_node8648f3fded9fa128e5eb8e0814dfbf76 ;;
+    "aclii.playground") _help_node620dd4ac0e81767466a282a8b830d9a7 ;;
     "aclii.aclii-completion") _help_node1335413e45f7b6441d6db69628a7df80 ;;
   esac
   exit 0
@@ -210,16 +295,16 @@ local -a argvTypes # for debug. maybe removed soon.
 
 local -a commandPath=("aclii")
 
-local inputChain=("" "" "3" "" "" "")
-local inputTypes=("file" "switch" "foodgenre" "string" "completionTarget" "completionTarget")
-local inputKeys=("file" "verbose" "genre" "food" "target" "target")
-local inputDefaults=("./aclii.yml" "" "" "" "bash" "bash")
+local inputChain=("" "" "" "" "" "" "" "8" "" "")
+local inputTypes=("file" "switch" "" "completionTarget" "" "" "completionTarget" "foodgenre" "string" "completionTarget")
+local inputKeys=("file" "verbose" "target-file" "target" "target-file" "target-file" "target" "genre" "food" "target")
+local inputDefaults=("./aclii.yml" "" "" "bash" "" "" "bash" "" "" "bash")
 
 # For tech reason, these are separated
 # Map which args for subcommands allows multiple inputs
-local inputIsMany=("" "" "" "1" "" "")
+local inputIsMany=("" "" "" "" "" "" "" "" "1" "")
 # Map which options allow repeated use
-local inputIsMulti=("" "" "" "" "" "")
+local inputIsMulti=("" "" "" "" "" "" "" "" "" "")
 
 local -a foundValues
 local -a foundValuesFor
@@ -307,7 +392,7 @@ if [ -n "${argv+ARG}" ]; then
           case "${arg:2}" in
             'target')
               wantOptType="completionTarget"
-              wantingOptInputId="4"
+              wantingOptInputId="3"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
               ;;
             'file')
@@ -329,7 +414,29 @@ if [ -n "${argv+ARG}" ]; then
           case "${arg:2}" in
             'target')
               wantOptType="completionTarget"
-              wantingOptInputId="5"
+              wantingOptInputId="6"
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            'file')
+              wantOptType="file"
+              wantingOptInputId="0"
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            'verbose')
+              foundValues+=("1")
+              foundValuesFor+=("1")
+              _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              ;;
+            * )
+              error="Unknown Option $arg"
+              break
+          esac
+        ;;
+        '4' )
+          case "${arg:2}" in
+            'target')
+              wantOptType="completionTarget"
+              wantingOptInputId="9"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
               ;;
             'file')
@@ -376,27 +483,31 @@ if [ -n "${argv+ARG}" ]; then
           commandPath+=("aclii")
           currentOptionSet="0"
           ;;
-        "aclii.playground.hungry" )
-          cmd="aclii.playground.hungry"
-          commandPath+=("hungry")
+        "aclii.put.launcher" )
+          cmd="aclii.put.launcher"
+          commandPath+=("launcher")
           currentOptionSet="1"
-          wantType="foodgenre"
+          wantType="undefined"
           wantingInputId="2"
           ;;
-        "aclii.playground.stuffed" )
-          cmd="aclii.playground.stuffed"
-          commandPath+=("stuffed")
-          currentOptionSet="1"
+        "aclii.put.completion" )
+          cmd="aclii.put.completion"
+          commandPath+=("completion")
+          currentOptionSet="2"
+          wantType="undefined"
+          wantingInputId="4"
           ;;
-        "aclii.playground.run-ls-script" )
-          cmd="aclii.playground.run-ls-script"
-          commandPath+=("run-ls-script")
+        "aclii.put.parser" )
+          cmd="aclii.put.parser"
+          commandPath+=("parser")
           currentOptionSet="1"
+          wantType="undefined"
+          wantingInputId="5"
           ;;
         "aclii.render.completion" )
           cmd="aclii.render.completion"
           commandPath+=("completion")
-          currentOptionSet="2"
+          currentOptionSet="3"
           ;;
         "aclii.render.launcher" )
           cmd="aclii.render.launcher"
@@ -408,9 +519,26 @@ if [ -n "${argv+ARG}" ]; then
           commandPath+=("parser")
           currentOptionSet="1"
           ;;
-        "aclii.playground" )
-          cmd="aclii.playground"
-          commandPath+=("playground")
+        "aclii.playground.hungry" )
+          cmd="aclii.playground.hungry"
+          commandPath+=("hungry")
+          currentOptionSet="1"
+          wantType="foodgenre"
+          wantingInputId="7"
+          ;;
+        "aclii.playground.stuffed" )
+          cmd="aclii.playground.stuffed"
+          commandPath+=("stuffed")
+          currentOptionSet="1"
+          ;;
+        "aclii.playground.run-ls-script" )
+          cmd="aclii.playground.run-ls-script"
+          commandPath+=("run-ls-script")
+          currentOptionSet="1"
+          ;;
+        "aclii.put" )
+          cmd="aclii.put"
+          commandPath+=("put")
           currentOptionSet="1"
           ;;
         "aclii.render" )
@@ -418,10 +546,15 @@ if [ -n "${argv+ARG}" ]; then
           commandPath+=("render")
           currentOptionSet="1"
           ;;
+        "aclii.playground" )
+          cmd="aclii.playground"
+          commandPath+=("playground")
+          currentOptionSet="1"
+          ;;
         "aclii.aclii-completion" )
           cmd="aclii.aclii-completion"
           commandPath+=("aclii-completion")
-          currentOptionSet="3"
+          currentOptionSet="4"
           ;;
         * )
           error="Unknown Command $arg"
@@ -469,19 +602,20 @@ fi
     "aclii" )
       _help "$cmd"
       ;;
-    "aclii.playground.hungry" )
+    "aclii.put.launcher" )
       wantJSON="1"
       bin="_aclii_main"
-      binPath="aclii.playground"
+      binPath="aclii"
       ;;
-    "aclii.playground.stuffed" )
+    "aclii.put.completion" )
       wantJSON="1"
       bin="_aclii_main"
-      binPath="aclii.playground"
+      binPath="aclii"
       ;;
-    "aclii.playground.run-ls-script" )
+    "aclii.put.parser" )
+      wantJSON="1"
       bin="_aclii_main"
-      binPath="aclii.playground.run-ls-script"
+      binPath="aclii"
       ;;
     "aclii.render.completion" )
       wantJSON="1"
@@ -498,10 +632,27 @@ fi
       bin="_aclii_main"
       binPath="aclii"
       ;;
-    "aclii.playground" )
+    "aclii.playground.hungry" )
+      wantJSON="1"
+      bin="_aclii_main"
+      binPath="aclii.playground"
+      ;;
+    "aclii.playground.stuffed" )
+      wantJSON="1"
+      bin="_aclii_main"
+      binPath="aclii.playground"
+      ;;
+    "aclii.playground.run-ls-script" )
+      bin="_aclii_main"
+      binPath="aclii.playground.run-ls-script"
+      ;;
+    "aclii.put" )
       _help "$cmd"
       ;;
     "aclii.render" )
+      _help "$cmd"
+      ;;
+    "aclii.playground" )
       _help "$cmd"
       ;;
     "aclii.aclii-completion" )
@@ -524,17 +675,20 @@ fi
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
-    "aclii.playground.hungry")
+    "aclii.put.launcher")
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
-    "aclii.playground.stuffed")
+    "aclii.put.completion")
+      key="target"
+      def="bash"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
-    "aclii.playground.run-ls-script")
+    "aclii.put.parser")
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -557,12 +711,32 @@ fi
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
-    "aclii.playground")
+    "aclii.playground.hungry")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.playground.stuffed")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.playground.run-ls-script")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.put")
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.render")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.playground")
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -606,6 +780,24 @@ fi
     "aclii" )
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
+    "aclii.put.launcher" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.put.completion" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.put.parser" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.render.completion" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.render.launcher" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.render.parser" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
     "aclii.playground.hungry" )
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
@@ -633,19 +825,13 @@ __END_OF_ACLII_SCRIPT__
       fi
       exit $result
       ;;
-    "aclii.render.completion" )
-      _aclii_exec_json "$bin" "$jsonb64"
-      ;;
-    "aclii.render.launcher" )
-      _aclii_exec_json "$bin" "$jsonb64"
-      ;;
-    "aclii.render.parser" )
-      _aclii_exec_json "$bin" "$jsonb64"
-      ;;
-    "aclii.playground" )
+    "aclii.put" )
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.render" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.playground" )
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.aclii-completion" )
