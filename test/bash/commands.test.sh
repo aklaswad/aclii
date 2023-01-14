@@ -13,6 +13,9 @@ arg2=($(_q 'cmdBarg2'))
 eq "can take as array 1" "${arg2[0]}" "bar"
 eq "can take as array 2" "${arg2[1]}" "buz"
 
+eq "can take 1st arg by pos option" "$(_q --pos 0 cmdBarg2)" "bar"
+eq "can take 2nd arg by pos option" "$(_q --pos 1 cmdBarg2)" "buz"
+
 __arg_parse cmdA cmdB
   should_fail "cmdB is not children of cmdA"
 like "not expected command error" "$( _error )" 'Unknown Command'
