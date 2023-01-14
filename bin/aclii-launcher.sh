@@ -214,7 +214,11 @@ local inputChain=("" "" "3" "" "" "")
 local inputTypes=("file" "switch" "foodgenre" "string" "completionTarget" "completionTarget")
 local inputKeys=("file" "verbose" "genre" "food" "target" "target")
 local inputDefaults=("./aclii.yml" "" "" "" "bash" "bash")
+
+# For tech reason, these are separated
+# Map which args for subcommands allows multiple inputs
 local inputIsMany=("" "" "" "1" "" "")
+# Map which options allow repeated use
 local inputIsMulti=("" "" "" "" "" "")
 
 local -a foundValues
