@@ -27,6 +27,7 @@ function put (opt, tmpl, to) {
   opt._verbose( "Checking bash compile errors" )
   const tmpObj = tmp.fileSync()
   const tmpname = tmpObj.name
+  opt._verbose( "Created tmpfile at " + tmpname )
   fs.writeFileSync(tmpObj.name, content)
   child_process.exec(
     'bash -n ' + tmpObj.name,
@@ -46,6 +47,14 @@ function put (opt, tmpl, to) {
           .replace(/^/m, '# ')
           .replaceAll(tmpname, '(tmp)'))
       }
+      fs.rm(tmpname, (err) => {
+        if (err) {
+          console.error("(aclii error) Sorry failed to remove tmpfile " + tmpname)
+        }
+        else {
+          opt._verbose("Successfully removed tmpfile")
+        }
+      })
       if ( error ) {
         throw "(aclii) Error: Failed to render content"
       }
