@@ -3,6 +3,8 @@ import Aclii from '../lib/aclii.js'
 import fs from 'fs'
 import path from 'path'
 import url from 'url'
+import child_process from 'child_process'
+import tmp from 'tmp'
 
 // Fail safe print.
 // Throw exception if content is empty
@@ -16,12 +18,42 @@ function print (content) {
 
 function put (opt, tmpl, to) {
   const aclii =  Aclii.fromFile(opts.options.file)
-  opt._verbose( "putting '" + tmpl + "' to " + to )
+  opt._verbose( "Putting '" + tmpl + "' to " + to )
   const content = aclii.render('launcher.tmpl')
+  opt._verbose( "Checking renderd content size" )
   if ( content.trim().length === '0' ) {
-    throw "(aclii)Error: Failed to render content"
+    throw "(aclii) Error: Failed to render content"
   }
-  fs.writeFileSync(to, content)
+  opt._verbose( "Checking bash compile errors" )
+  const tmpObj = tmp.fileSync()
+  const tmpname = tmpObj.name
+  fs.writeFileSync(tmpObj.name, content)
+  child_process.exec(
+    'bash -n ' + tmpObj.name,
+    {
+      shell: 'bash',
+      encoding: 'utf-8'
+    },
+    ( error, stdout, stderr ) => {
+      if ( error ) {
+        opt._verbose("result:" + error)
+      }
+      if ( stdout ) {
+        opt._verbose("got:" + stdout)
+      }
+      if ( stderr ) {
+        opt._verbose(stderr
+          .replace(/^/m, '# ')
+          .replaceAll(tmpname, '(tmp)'))
+      }
+      if ( error ) {
+        throw "(aclii) Error: Failed to render content"
+      }
+      opt._verbose("Looks good. Writing content into file " + to)
+      fs.writeFileSync(to, content)
+      opt._verbose("Done")
+    }
+  )
 }
 
 const Commands = {
@@ -42,18 +74,18 @@ const Commands = {
   },
 
   "aclii.put.parser": (opt) => {
-    put( opt, 'bash_runner.tmpl', opt.options['target-file'] )
+    return put( opt, 'bash_runner.tmpl', opt.options['target-file'] )
   },
 
   "aclii.put.completion": (opt) => {
     const tmpl =
       opt.options.target === 'zsh' ? 'zsh_completion.tmpl'
                                    : 'bash_completion.tmpl'
-    put( opt, tmpl, opt.options['target-file'] )
+    return put( opt, tmpl, opt.options['target-file'] )
   },
 
   "aclii.put.launcher": (opt) => {
-    put( opt, 'launcher.tmpl', opt.options['target-file'] )
+    return put( opt, 'launcher.tmpl', opt.options['target-file'] )
   },
 
   "aclii.render.parser": (opt) => {
@@ -111,7 +143,7 @@ catch (e) {
 
 // Inject verbose into opts itself
 if ( opts.options.verbose ) {
-  opts._verbose = (msg) => console.error(msg)
+  opts._verbose = (msg) => console.error('aclii verbose: ' + msg)
 }
 else {
   opts._verbose = () => {}
@@ -123,7 +155,8 @@ if ( process.env.ACLII_DEBUG ) {
 }
 const command = Commands[opts.command] || Commands[opts.binpath]
 if (command) {
-  command(opts)
+  const retObj = command(opts)
+  const ret = retObj instanceof Promise ? await retObj : retObj
 }
 else {
   console.error("Unknown command: " + command)

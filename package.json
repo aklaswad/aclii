@@ -28,6 +28,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "tmp": "^0.2.1",
     "yaml": "^2.2.1"
   },
   "engines": {
