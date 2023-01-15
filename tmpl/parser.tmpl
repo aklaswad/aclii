@@ -20,12 +20,13 @@ local inputChain=(<%= aclii.inputs.map(i => `"${i.next || ''}"`).join(' ')%>)
 local inputTypes=(<%= aclii.inputs.map(i => `"${i.type || ''}"`).join(' ')%>)
 local inputKeys=(<%= aclii.inputs.map(i => `"${i.name || ''}"`).join(' ')%>)
 local inputDefaults=(<%= aclii.inputs.map(i => `"${i.defaultValue || ''}"`).join(' ')%>)
+local inputAppeared=(<%= aclii.inputs.map(i => `""`).join(' ')%>)
 
 # For tech reason, these are separated
 # Map which args for subcommands allows multiple inputs
 local inputIsMany=(<%= aclii.inputs.map(i => `"${i.many ? 1 : ''}"`).join(' ')%>)
 # Map which options allow repeated use
-local inputIsMulti=(<%= aclii.inputs.map(i => `"${i.multi || ''}"`).join(' ')%>)
+local inputIsMulti=(<%= aclii.inputs.map(i => `"${i.multi ? 1 : ''}"`).join(' ')%>)
 
 local -a foundValues
 local -a foundValuesFor
@@ -49,7 +50,6 @@ if [ -n "${argv+ARG}" ]; then
   do
     _aclii_debug "Processing $nth arg |$arg|"
     _aclii_debug "   cmd: $cmd  wantType |$wantType| wantOpt |$wantOptType|"
-
 
     if [ -n "$wantOptType" ]; then
       argvTypes[nth]="input:$wantOptType"
@@ -88,6 +88,13 @@ if [ -n "${argv+ARG}" ]; then
               wantingOptInputId="<%= o.input.inputId %>"
 ##//     }
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+##//       if ( !o.input.multi ) {
+              if [ -n "${inputAppeared[<%= o.input.inputId %>]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+##//       }
+              inputAppeared[<%= o.input.inputId %>]="1"
               ;;
 ##//   })
             * )
