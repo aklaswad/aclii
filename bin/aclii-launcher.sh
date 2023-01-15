@@ -38,6 +38,7 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
   
     A toolkit for aclii (Abstract Command Line Interface Interface)
   aclii, The toolkit for abstract command line interface interface
+  This command line tool takes a simple descriptive configuration file and generates a command line option parser for bash, a completion script, and other useful tools.
   Commands:
     put 
         Put aclii artifacts into specified place.
@@ -49,7 +50,7 @@ _help_nodea57b9426b2e192dba7ba8c15edd1cc79 () {
         render completion script for aclii
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -61,14 +62,14 @@ _help_nodef2498ff8dad2392bdba29afc440844ca () {
   If specified file already exists, aclii will replace the content with new version.
   
   Usage:
-    aclii put launcher <any>
+    aclii put launcher <file>
   
   Arguments:
     target-file
         File path to be put/replaced newly rendered aclii launcher
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -80,7 +81,7 @@ _help_node33410cdea442484d126d63060d0a13d0 () {
   If specified file already exists, aclii will replace the content with new version.
   
   Usage:
-    aclii put completion <any>
+    aclii put completion <file>
   
   Arguments:
     target-file
@@ -88,7 +89,7 @@ _help_node33410cdea442484d126d63060d0a13d0 () {
   Options:
     --target <completionTarget(bash|zsh)> (default: "bash")
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -100,14 +101,14 @@ _help_noded455db2d5523778e56432d8047da3f51 () {
   If specified file already exists, aclii will replace the content with new version.
   
   Usage:
-    aclii put parser <any>
+    aclii put parser <file>
   
   Arguments:
     target-file
         File path to be put/replaced newly rendered arg parser
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -119,7 +120,7 @@ _help_node2e76e740f0ac071ad964481e5d054491 () {
   Options:
     --target <completionTarget(bash|zsh)> (default: "bash")
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -130,7 +131,7 @@ _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c () {
     Render and print bash script to launch other program to STDOUT.
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -141,16 +142,18 @@ _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
     Render and print rendered bare commandline parser, for testing.
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
 _help_nodefed06a3565294df3bed8922eb3d9505d () {
   cat << 'EOH'
   Name: aclii.render.manual
+  
+    Render and print manual of entire commands, in markdown format.
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -169,7 +172,7 @@ _help_nodec9e9547ec88bba1cbfa64a3699a294ed () {
     food
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -180,7 +183,7 @@ _help_node1f25010818a63d2f7bcb15a33d6fd818 () {
     Raise error if non optional values ( started by dash(es) ) are related.
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -191,7 +194,7 @@ _help_nodee80eb6db780cc1bef550699e63d9e4e7 () {
     Inline script demo. You can implement any script in aclii file and execute it instead of main program.
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -200,19 +203,20 @@ _help_node9a63b322e3c6be1672ca59b12e537a8d () {
   Name: aclii.put
   
     Put aclii artifacts into specified place.
+  Writes artifacts based on the config file to the specified file. Writing to the file is automatically aborted if an error occurs or if a problem is found in the deliverable. For general use, this put command should be used.
   Commands:
-    launcher <any>
+    launcher <file>
         Put an auto generated launcher
   If specified file already exists, aclii will replace the content with new version.
-    completion <any>
+    completion <file>
         Put an auto generated completion script.
   If specified file already exists, aclii will replace the content with new version.
-    parser <any>
+    parser <file>
         Put an auto generated arg parser for bash scripts,
   If specified file already exists, aclii will replace the content with new version.
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -221,7 +225,7 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
   Name: aclii.render
   
     Render bash scripts generated from yaml config file. See sub commands for details.
-  Render generated contents to STDOUT.
+  Render generated contents to STDOUT, for testing.
   You can choose one of sub command from the list.
   Commands:
     completion 
@@ -231,9 +235,10 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
     parser 
         Render and print rendered bare commandline parser, for testing.
     manual 
+        Render and print manual of entire commands, in markdown format.
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -242,6 +247,7 @@ _help_node620dd4ac0e81767466a282a8b830d9a7 () {
   Name: aclii.playground
   
     Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+  The subcommands under playground contain command line parsing and inline scripting demos for the launcher.
   Commands:
     hungry <foodgenre> <string>...
         Eat all args into `.argv`. This is default behavior for commands which have no sub commands.
@@ -251,7 +257,7 @@ _help_node620dd4ac0e81767466a282a8b830d9a7 () {
         Inline script demo. You can implement any script in aclii file and execute it instead of main program.
   Options:
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -260,10 +266,11 @@ _help_node1335413e45f7b6441d6db69628a7df80 () {
   Name: aclii.aclii-completion
   
     render completion script for aclii
+  Prints completion scripts of aclii itself.
   Options:
     --target <completionTarget(bash|zsh)> (default: "bash")
     --file <file> (default: "./aclii.yml")
-        filename of aclii config file (aclii.yml)
+        Specify the file path to your aclii config file (aclii.yml)
     --verbose 
 EOH
 }
@@ -307,9 +314,10 @@ local -a argvTypes # for debug. maybe removed soon.
 local -a commandPath=("aclii")
 
 local inputChain=("" "" "" "" "" "" "" "8" "" "")
-local inputTypes=("file" "switch" "" "completionTarget" "" "" "completionTarget" "foodgenre" "string" "completionTarget")
+local inputTypes=("file" "switch" "file" "completionTarget" "file" "file" "completionTarget" "foodgenre" "string" "completionTarget")
 local inputKeys=("file" "verbose" "target-file" "target" "target-file" "target-file" "target" "genre" "food" "target")
 local inputDefaults=("./aclii.yml" "" "" "bash" "" "" "bash" "" "" "bash")
+local inputAppeared=("" "" "" "" "" "" "" "" "" "")
 
 # For tech reason, these are separated
 # Map which args for subcommands allows multiple inputs
@@ -339,7 +347,6 @@ if [ -n "${argv+ARG}" ]; then
   do
     _aclii_debug "Processing $nth arg |$arg|"
     _aclii_debug "   cmd: $cmd  wantType |$wantType| wantOpt |$wantOptType|"
-
 
     if [ -n "$wantOptType" ]; then
       argvTypes[nth]="input:$wantOptType"
@@ -371,11 +378,21 @@ if [ -n "${argv+ARG}" ]; then
               wantOptType="file"
               wantingOptInputId="0"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[0]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[0]="1"
               ;;
             'verbose')
               foundValues+=("1")
               foundValuesFor+=("1")
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[1]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[1]="1"
               ;;
             * )
               error="Unknown Option $arg"
@@ -388,11 +405,21 @@ if [ -n "${argv+ARG}" ]; then
               wantOptType="file"
               wantingOptInputId="0"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[0]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[0]="1"
               ;;
             'verbose')
               foundValues+=("1")
               foundValuesFor+=("1")
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[1]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[1]="1"
               ;;
             * )
               error="Unknown Option $arg"
@@ -405,16 +432,31 @@ if [ -n "${argv+ARG}" ]; then
               wantOptType="completionTarget"
               wantingOptInputId="3"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[3]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[3]="1"
               ;;
             'file')
               wantOptType="file"
               wantingOptInputId="0"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[0]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[0]="1"
               ;;
             'verbose')
               foundValues+=("1")
               foundValuesFor+=("1")
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[1]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[1]="1"
               ;;
             * )
               error="Unknown Option $arg"
@@ -427,16 +469,31 @@ if [ -n "${argv+ARG}" ]; then
               wantOptType="completionTarget"
               wantingOptInputId="6"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[6]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[6]="1"
               ;;
             'file')
               wantOptType="file"
               wantingOptInputId="0"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[0]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[0]="1"
               ;;
             'verbose')
               foundValues+=("1")
               foundValuesFor+=("1")
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[1]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[1]="1"
               ;;
             * )
               error="Unknown Option $arg"
@@ -449,16 +506,31 @@ if [ -n "${argv+ARG}" ]; then
               wantOptType="completionTarget"
               wantingOptInputId="9"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[9]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[9]="1"
               ;;
             'file')
               wantOptType="file"
               wantingOptInputId="0"
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[0]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[0]="1"
               ;;
             'verbose')
               foundValues+=("1")
               foundValuesFor+=("1")
               _aclii_debug "option want $wantOptType for id $wantingOptInputId"
+              if [ -n "${inputAppeared[1]}" ]; then
+                error="Cannot put option ${arg} multiple times"
+                break
+              fi
+              inputAppeared[1]="1"
               ;;
             * )
               error="Unknown Option $arg"
@@ -498,21 +570,21 @@ if [ -n "${argv+ARG}" ]; then
           cmd="aclii.put.launcher"
           commandPath+=("launcher")
           currentOptionSet="1"
-          wantType="undefined"
+          wantType="file"
           wantingInputId="2"
           ;;
         "aclii.put.completion" )
           cmd="aclii.put.completion"
           commandPath+=("completion")
           currentOptionSet="2"
-          wantType="undefined"
+          wantType="file"
           wantingInputId="4"
           ;;
         "aclii.put.parser" )
           cmd="aclii.put.parser"
           commandPath+=("parser")
           currentOptionSet="1"
-          wantType="undefined"
+          wantType="file"
           wantingInputId="5"
           ;;
         "aclii.render.completion" )
