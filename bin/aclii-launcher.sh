@@ -145,6 +145,15 @@ _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 () {
     --verbose 
 EOH
 }
+_help_nodefed06a3565294df3bed8922eb3d9505d () {
+  cat << 'EOH'
+  Name: aclii.render.manual
+  Options:
+    --file <file> (default: "./aclii.yml")
+        filename of aclii config file (aclii.yml)
+    --verbose 
+EOH
+}
 _help_nodec9e9547ec88bba1cbfa64a3699a294ed () {
   cat << 'EOH'
   Name: aclii.playground.hungry
@@ -221,6 +230,7 @@ _help_node8648f3fded9fa128e5eb8e0814dfbf76 () {
         Render and print bash script to launch other program to STDOUT.
     parser 
         Render and print rendered bare commandline parser, for testing.
+    manual 
   Options:
     --file <file> (default: "./aclii.yml")
         filename of aclii config file (aclii.yml)
@@ -273,6 +283,7 @@ _help () {
     "aclii.render.completion") _help_node2e76e740f0ac071ad964481e5d054491 ;;
     "aclii.render.launcher") _help_nodeba4f9c7cf5e0bfa623ddda7827d13c2c ;;
     "aclii.render.parser") _help_nodeae1e4650e2b5e9fafb8ecbd20b398009 ;;
+    "aclii.render.manual") _help_nodefed06a3565294df3bed8922eb3d9505d ;;
     "aclii.playground.hungry") _help_nodec9e9547ec88bba1cbfa64a3699a294ed ;;
     "aclii.playground.stuffed") _help_node1f25010818a63d2f7bcb15a33d6fd818 ;;
     "aclii.playground.run-ls-script") _help_nodee80eb6db780cc1bef550699e63d9e4e7 ;;
@@ -519,6 +530,11 @@ if [ -n "${argv+ARG}" ]; then
           commandPath+=("parser")
           currentOptionSet="1"
           ;;
+        "aclii.render.manual" )
+          cmd="aclii.render.manual"
+          commandPath+=("manual")
+          currentOptionSet="1"
+          ;;
         "aclii.playground.hungry" )
           cmd="aclii.playground.hungry"
           commandPath+=("hungry")
@@ -632,6 +648,11 @@ fi
       bin="_aclii_main"
       binPath="aclii"
       ;;
+    "aclii.render.manual" )
+      wantJSON="1"
+      bin="_aclii_main"
+      binPath="aclii"
+      ;;
     "aclii.playground.hungry" )
       wantJSON="1"
       bin="_aclii_main"
@@ -707,6 +728,11 @@ fi
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
       ;;
     "aclii.render.parser")
+      key="file"
+      def="./aclii.yml"
+      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+      ;;
+    "aclii.render.manual")
       key="file"
       def="./aclii.yml"
       json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
@@ -796,6 +822,9 @@ fi
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.render.parser" )
+      _aclii_exec_json "$bin" "$jsonb64"
+      ;;
+    "aclii.render.manual" )
       _aclii_exec_json "$bin" "$jsonb64"
       ;;
     "aclii.playground.hungry" )

@@ -1,0 +1,95 @@
+<%= aclii.commandName %> command line manual
+
+//## aclii.traversal({
+//##   visit: (c, ctx) => {
+
+<h1 id="<%= c.path.replaceAll('.', '-') %>">
+  <%= c.path.replaceAll('.', ' ') %>
+</h1>
+
+<%= c.description %>
+
+
+
+//## if (aclii.manualForCommand( c.path )) {
+
+--------
+
+<%= aclii.manualForCommand( c.path ) %>
+
+//## }
+
+//## if ( c.helpstop ) {
+
+(_This command itself will show help and quit. Use subcommands for actions._)
+//## }
+
+## Usage
+
+  <%= c.path.replaceAll('.', ' ') %> <%
+   c.ownOptions.forEach( o => {
+     %>[--<%= o.name %><%
+       if (o.input.type !== 'switch' ) {
+       %> (<%= o.argname %>)<% } %>] <%
+   }) %><% if (c.wants.length) { %><%=
+      c.wants.map( w => '[' + w.name + '(' + (w.type || 'any') + ')]' + (w.many ? '...' : '') ).join(' ') %><% } %><% if ( c.commands.length ){%> <command><% } %>
+
+
+//##     if ( c.wants.length ) {
+
+## Arguments
+
+//##       c.wants.forEach( w => {
+### <%= w.name %><%= (w.type && aclii.typeDef(w.type)) ? ' (' + aclii.typeDef(w.type).description + ')' : '' %>
+<%= w.description %>
+//##       })
+//##     }
+
+
+//##     if ( c.ownOptions.length ) {
+## Options
+//##  c.ownOptions.forEach( o => {
+<h3 id=<%= o.path.replaceAll('.', '_').replaceAll('@', '__') %>><%= o.name %></h3>
+
+  --<%= o.name %> <%=
+  (() => {
+    if (!o.input.type || o.input.type === 'switch' ) return ''
+    let td = aclii.typeDef(o.input.type);
+    return '<' + (
+      td ? td.name + (
+            td.description ? '(' + td.description + ')' : ''
+           )
+         : o.input.type
+      ) + '>'
+  })() %><%= o.input.defaultValue ? ' (default: "' + o.input.defaultValue + '")' : '' %>
+      <%= o.description %>
+//##  })
+//##     }
+
+//##     if ( c.inheritedOptions.length ) {
+## Inherited Options
+//##       c.inheritedOptions.forEach( o => {
+ - [<%= o.name %>](#<%= o.path.replaceAll('.', '_').replaceAll('@', '__') %>)
+//##       })}
+
+//##     if ( c.commands.length ) {
+
+## Sub Commands
+//##       c.commands.forEach( sc => {
+ - [<%= sc.name %>](#<%= sc.path.replaceAll('.', '-') %>)
+//##       })
+//##     }
+
+
+//##   },
+//##   preChild: (c, child, ctx) => {
+
+
+//##   },
+//##   postChild: (c, child, ctx) => {
+
+
+//##   },
+//##   leave: (c, ctx) => {
+//##   }})
+
