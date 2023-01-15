@@ -184,6 +184,7 @@ commands:
 # Documentations
 
  - [yaml spec](docs/spec.md)
+ - [command line client](docs/cli.md)
 
 # Limitations / Missing features / ToDos
 
