@@ -46,7 +46,7 @@ commands:
           If specified file already exists, aclii will replace the content with new version.
         wants:
           - name: target-file
-            typs: string
+            type: file
             description: File path to be put/replaced newly rendered arg parser
   - name: render
     helpstop: true
@@ -67,6 +67,8 @@ commands:
         description: |
           Render and print rendered bare commandline parser, for testing.
       - name: manual
+        description: |
+          Render and print manual of entire commands, in markdown format.
   - name: playground
     helpstop: true
     bin: _aclii_main
@@ -117,6 +119,17 @@ options:
 manual:
   aclii: |
     aclii, The toolkit for abstract command line interface interface
+    This command line tool takes a simple descriptive configuration file and generates a command line option parser for bash, a completion script, and other useful tools.
+
+  aclii.put: |
+    Writes artifacts based on the config file to the specified file. Writing to the file is automatically aborted if an error occurs or if a problem is found in the deliverable. For general use, this put command should be used.
+
   aclii.render: |
-    Render generated contents to STDOUT.
+    Render generated contents to STDOUT, for testing.
     You can choose one of sub command from the list.
+
+  aclii.playground: |
+    The subcommands under playground contain command line parsing and inline scripting demos for the launcher.
+
+  aclii.aclii-completion:
+    Prints completion scripts of aclii itself.
