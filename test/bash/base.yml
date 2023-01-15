@@ -22,3 +22,10 @@ commands:
     wants:
       - name: cmdCarg
         type: string
+  - name: cmdD
+    wants:
+      - name: cmdDarg
+        type: string
+    options:
+      - name: cmdDopt
+        type: string
