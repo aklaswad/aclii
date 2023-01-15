@@ -26,7 +26,7 @@ commands:
           If specified file already exists, aclii will replace the content with new version.
         wants:
           - name: target-file
-            typs: string
+            type: file
             description: File path to be put/replaced newly rendered aclii launcher
       - name: completion
         description: |
@@ -34,7 +34,7 @@ commands:
           If specified file already exists, aclii will replace the content with new version.
         wants:
           - name: target-file
-            typs: string
+            type: file
             description: File path to be put/replaced newly rendered aclii auto-completion script
         options:
           - name: target
@@ -66,6 +66,7 @@ commands:
       - name: parser
         description: |
           Render and print rendered bare commandline parser, for testing.
+      - name: manual
   - name: playground
     helpstop: true
     bin: _aclii_main
@@ -105,7 +106,8 @@ commands:
         default: bash
 options:
   - name: file
-    description: filename of aclii config file (aclii.yml)
+    argname: path to config file
+    description: Specify the file path to your aclii config file (aclii.yml)
     type: file
     default: ./aclii.yml
     inherit: true

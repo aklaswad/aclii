@@ -82,6 +82,11 @@ const Commands = {
     print( aclii.render('test/parser-test.tmpl'))
   },
 
+  "aclii.render.manual": (opt) => {
+    const aclii = Aclii.fromFile(opts.options.file)
+    print( aclii.render('manual.md.tmpl'))
+  },
+
   "aclii.put.parser": (opt) => {
     return put( opt, 'bash_runner.tmpl', opt.options['target-file'] )
   },
