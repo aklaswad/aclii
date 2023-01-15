@@ -18,5 +18,12 @@ eq "can take 2nd arg by pos option" "$(_q --pos 1 cmdBarg2)" "buz"
 
 __arg_parse cmdA cmdB
   should_fail "cmdB is not children of cmdA"
+__arg_parse cmdZ
+  should_fail "cmdZ is not exists"
 like "not expected command error" "$( _error )" 'Unknown Command'
+
+__arg_parse cmdC foo bar
+  should_fail "cmdC takes only one args"
+
+
 done_testing
