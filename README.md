@@ -2,6 +2,26 @@
 
 **Another Command Line Interface Interface**
 
+# Synopsis
+
+Write your CLI design in aclii.yml
+
+```yaml
+name: my-command
+commands:
+  - name: list
+    script: |
+      ls -la
+```
+
+Build and use it
+
+```shell
+$ aclii put launcher /usr/local/bin/my-command
+$ aclii put completion ~/.bashrc.d/my-command-completion
+$ my-command list
+```
+
 # Description
 
 ## aclii is a command line parser generator
