@@ -11,7 +11,7 @@
   "scripts": {
     "build": "script/build.sh",
     "build-force": "ACLII_FORCE_BUILD=1 node bin/cli.js > bin/aclii-launcher.sh",
-    "test": "npm run test:node && npm run test:bash && echo && echo 'All tests passed!'",
+    "test": "./test/run.sh",
     "test:node": "node --test",
     "test:bash": "test/bash/run.sh",
     "postinstall": "npm run build-force && chmod +x bin/aclii-launcher.sh"
