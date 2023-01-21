@@ -2,7 +2,7 @@
 si=$IFS
 IFS=$'\n'
 shopt -s expand_aliases
-
+__TAP_IGNORE=""
 _tests=0
 _failed=0
 
@@ -26,22 +26,83 @@ load_parser () {
 }
 
 _tap () {
+  local testnumber
   args=("$@")
-  : $((_tests++))
+  if [ -n "${__TAP_IGNORE}" ]; then
+    testnumber="${__TAP_IGNORE}"
+  else
+    : $((_tests++))
+    testnumber="$_tests"
+  fi
   if [ "${args[1]}" = "0" ]; then
-    echo "ok $_tests - ${args[0]}"
+    echo "ok $testnumber - ${args[0]}"
   else
     IFS=$si
     origin=($(caller "1"))
     IFS=$'\n'
-    echo "not ok $_tests - ${args[0]}"
+    echo "not ok $testnumber - ${args[0]}"
     echo "#   Failed test '${args[0]}'"
     echo "#   at ${origin[2]} line ${origin[0]}."
     for line in "${args[@]:2}"
     do
       echo $line | sed 's/^/# /g'
     done
-    : $((_failed++))
+    if [ -z "$__TAP_IGNORE" ]; then
+      : $((_failed++))
+    fi
+  fi
+}
+
+bailout () {
+  echo "Bail out!"
+  exit 1
+}
+
+truthy () {
+  msg="$1"
+  shift
+  si="$IFS"
+  IFS=' '
+  cmd="$*"
+  if [ $cmd ] ; then
+    IFS="$si"
+    _tap $msg 0
+  else
+    IFS="$si"
+    note "got $?"
+    _tap $msg 1 "\"${cmd}\" is not truthy"
+  fi
+}
+
+must_truthy () {
+  msg="$1"
+  shift
+  si="$IFS"
+  IFS=' '
+  cmd="$*"
+  if [ $cmd ] ; then
+    IFS="$si"
+    _tap $msg 0
+  else
+    IFS="$si"
+    note "got $?"
+    _tap $msg 1 "\"${cmd}\" is not truthy"
+    bailout $msg
+  fi
+}
+
+falsy () {
+  msg="$1"
+  shift
+  si="$IFS"
+  IFS=' '
+  cmd="$*"
+  if [ $cmd ] ; then
+    IFS="$si"
+    _tap $msg 1 "\"${cmd}\" it not falsy"
+  else
+    IFS="$si"
+    _tap $msg 0
   fi
 }
 
@@ -55,6 +116,15 @@ should_success () {
 }
 
 alias ok='should_success'
+
+must_success () {
+  local lastExit="$?"
+  if [ "$lastExit" != "0" ]; then
+    echo "Bail out! Failed at test $1"
+    exit 1
+  fi
+  _tap "$1" "$lastExit" "expect truthy but got failed status $lastExit"
+}
 
 should_fail () {
   local lastExit="$?"
@@ -91,6 +161,13 @@ like () {
   $( echo "$got" | grep "$expected" > /dev/null 2>&1 )
   local test=$?
   _tap $name $test $(printf "value [%s] doesn't match to expected regex [%s]" "$got" "$expected")
+}
+
+note () {
+  while [ $# -gt 0 ] ; do
+    echo "$1" | sed 's/^/# /g'
+    shift
+  done
 }
 
 done_testing () {
