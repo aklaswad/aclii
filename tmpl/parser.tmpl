@@ -69,6 +69,7 @@ if [ -n "${argv+ARG}" ]; then
     elif [ "${arg:0:2}" = '--' ] && [ -z "$optionStop" ]; then
       # It starts with double dash. So this might be an option
       if [ "${arg:2}" = "help" ]; then
+        argvTypes[nth]="help"
         help="help"
         break
       fi

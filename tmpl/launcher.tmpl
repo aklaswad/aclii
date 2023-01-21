@@ -34,7 +34,7 @@ _aclii_debug "ARGV $*"
 _aclii_debug "$ 0 $0"
 
 ##// aclii.allCommands.forEach( c => {
-_help_<%= c.hashedPath %> () {
+_help_<%= c.id %> () {
   cat << 'EOH'
 ##// setIndent(2)
 Name: <%= c.path  %>
@@ -87,17 +87,40 @@ EOH
 ##//})
 
 _help () {
-  local page
   if [ -n "${1+HAS_VALUE}" ]; then
-    page="$1"
+    local -r path=("$@")
   else
-    page="<%= aclii.commandName %>"
+    local -r path=("<%= aclii.commandName %>")
   fi
-  case "$page" in
-##// aclii.allCommands.forEach( c => {
-    "<%= c.path %>") _help_<%= c.hashedPath %> ;;
+  local pathLength=${#path[@]}
+  local place
+  case "${path[0]}" in
+##// aclii.traversal({
+##//   visit: (c, ctx) => {
+##//     setIndent( ctx.depth * 4 )
+##//     if ( c.commands.length ) {
+    "<%= c.name %>")
+      if [ $pathLength -eq <%= ctx.depth + 1 %> ]; then
+        _help_<%= c.id %>; exit 0
+      fi
+##//     } else {
+    "<%= c.name %>") _help_<%= c.id %>; exit 0 ;;
+##//     }
+##//     if ( c.commands.length ) {
+      case "${path[<%= ctx.depth + 1 %>]}" in
+##//     }
+##//   },
+##//   leave: (c, ctx) => {
+##//     setIndent( ctx.depth * 4 )
+##//     if ( c.commands.length ) {
+        *) _help_<%= aclii.root.id %>;  exit 0
+      esac
+      ;;
+##//     }
+##//   }
 ##// })
   esac
+  _help_<%= aclii.root.id %>
   exit 0
 }
 
@@ -113,7 +136,7 @@ __parse_args () {
   _aclii_debug "error: $error"
 
   if [ -n "$help" ]; then
-    _help "$cmd"
+    _help "${commandPath[@]}"
   fi
   if [ -n "$error" ]; then
     echo "Got command line parse error: $error"
