@@ -9,12 +9,11 @@
     "_aclii_main": "bin/cli.js"
   },
   "scripts": {
-    "build": "script/build.sh",
-    "build-force": "ACLII_FORCE_BUILD=1 node bin/cli.js > bin/aclii-launcher.sh",
+    "build": "ACLII_FORCE_BUILD=1 node bin/cli.js > bin/aclii-launcher.sh",
     "test": "./test/run.sh",
     "test:node": "node --test",
     "test:bash": "test/bash/run.sh",
-    "postinstall": "npm run build-force && chmod +x bin/aclii-launcher.sh"
+    "postinstall": "npm run build && chmod +x bin/aclii-launcher.sh"
   },
   "repository": {
     "type": "git",
