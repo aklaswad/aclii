@@ -45,10 +45,8 @@ You can use aclii launcher not only for programs you written, but also for any c
 
 ## Install aclii
 
-Some functions of aclii needs `jq`
 
 ```shell
-$ apt update && apt install -y jq
 $ npm i -g aclii
 ```
 
@@ -209,14 +207,14 @@ commands:
 # Limitations / Missing features / ToDos
 
 - **Documentation**
-  - How to use aclii cli
-  - how to write yaml file
-- Runtime Dependency to `jq`, it should be removed if possible
+  - :white_check_mark: How to use aclii cli
+  - :white_check_mark: how to write yaml file
+- :white_check_mark: Runtime Dependency to `jq`, it should be removed if possible
 - Completion file auto installer
-- Only bash is suppported / Need to support other environment
+- :white_check_mark: Only bash is suppported / Need to support other environment
 - Bootstrap / Scatfold to create new aclii project
 - Help format
-- Auto completion format
+- :white_check_mark: Auto completion format
 - short option support
 
 ## Future Features
