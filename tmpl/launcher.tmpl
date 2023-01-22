@@ -124,6 +124,8 @@ _help () {
   exit 0
 }
 
+##//INCLUDE json_builder.tmpl
+
 # parser needs @argv
 argv=("$@")
 
@@ -172,46 +174,72 @@ __parse_args () {
   local jsonb64
 # Let's cook JSON
   if [ -n "$wantJSON" ]; then
-    json=$(printf '{"command":"%s","bin":"%s","binpath":"%s","options":{}}' $cmd $bin $binPath);
+    local IFS_BEFORE_JSON="$IFS"
+    IFS=
+    printf -v json '{"command":"%s","bin":"%s","binpath":"%s"}' $cmd $bin $binPath;
 
+    local jsonValues=(<%= aclii.inputs.map(i => '""').join(' ')%>)
   # Insert Default Values
-  case "$cmd" in
+    case "$cmd" in
 ##// aclii.allCommands.forEach( c => {
-    "<%= c.path %>")
+      "<%= c.path %>")
 ##//   c.inputsWithDefaults.forEach( o => {
-      key="<%= o.name %>"
-      def="<%= o.defaultValue %>"
-      json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${def}" '.options[$key] = $val')
+         JSONString "<%= o.defaultValue %>"
+         jsonValues[<%= o.inputId %>]=$JSON_STRING_BUFFER
 ##//     })
       ;;
 ##//   })
-  esac
+    esac
 
-  # Then, Insert values fetched from argv
+    # Prepare JSON rep of values fetched from argv
+    local option_keys=()
     local i=0
     if [ -n "${foundValues+HAS}" ]; then
       for value in "${foundValues[@]}"
       do
         local inputId="${foundValuesFor[i]}"
         local key="${inputKeys[inputId]}"
+        _aclii_debug "inputid $inputId key $key"
 
         if [ -n "${inputIsMulti[inputId]}" ] || [ -n "${inputIsMany[inputId]}" ]; then
-          json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${value}" 'if .options[$key] then .options[$key] += [$val] else .options[$key] =[$val] end')
+
+          JSON_loadArray ${jsonValues[inputId]}
+          JSON_pushString $value
+          jsonValues[inputId]=$JSON_BUFFER
         else
-          json=$(echo "$json" | jq -c --arg key "${key}" --arg val "${value}" '.options[$key] = $val')
+          JSONString $value
+          jsonValues[inputId]=$JSON_STRING_BUFFER
         fi
-        : $((i++))
+        ((i++))
       done
     fi
 
-    if  [ "$(base64 -w >/dev/null 2>&1)" ]; then
-      jsonb64=$(echo "$json" | base64 -w0)
-    else
-      jsonb64=$(echo "$json" | base64)
+    # Then, Insert them to "options" object
+    JSON_newObject
+    local i=0
+    if [ -n "${foundValues+HAS}" ]; then
+      for value in "${foundValues[@]}"
+      do
+        local inputId="${foundValuesFor[i]}"
+        local key="${inputKeys[inputId]}"
+        JSON_add $key ${jsonValues[inputId]}
+        ((i++))
+      done
     fi
-    _aclii_debug "got json $( echo "$json" | jq .)"
+    local jsonOptions=$JSON_BUFFER
+    JSON_BUFFER=$json
+    JSON_add "options" $jsonOptions
+
+    if  [ "$(base64 -w >/dev/null 2>&1)" ]; then
+      jsonb64=$(printf '%s' $JSON_BUFFER | base64 -w0)
+    else
+      jsonb64=$(printf '%s' $JSON_BUFFER | base64)
+    fi
+    _aclii_debug "got json $( printf '%s' $JSON_BUFFER | jq .)"
+    IFS="$IFS_BEFORE_JSON"
   fi
 
+  # Finally execute selected command
   case "$binPath" in
 ##// aclii.allCommands.forEach( c => {
     "<%= c.path %>" )

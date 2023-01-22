@@ -1,0 +1,126 @@
+# Funcitons from this block must be called under IFS= condition
+
+declare JSON_BUFFER
+declare JSON_STRING_BUFFER
+
+JSON_throw () {
+  echo "Error at building JSON: $1"
+  exit 1
+}
+
+JSON_newObject () {
+  JSON_BUFFER='{}'
+}
+
+JSON_newArray () {
+  JSON_BUFFER='[]'
+}
+
+JSON_loadArray () {
+  if [ -n "${1+DEFINED}" ]; then
+    JSON_BUFFER=$1
+  else
+    JSON_newArray
+  fi
+}
+
+JSON_pushString () {
+  JSONString $1
+  JSON_push $JSON_STRING_BUFFER
+}
+
+JSON_push () {
+  local item=$1
+  local itemString
+  if [ ${#JSON_BUFFER} -eq 0 ]; then
+    JSON_newArray
+  fi
+
+  if [ "${JSON_BUFFER:0:1}" != '[' ]; then
+    throw "Current buffer is not array"
+  fi
+
+  local len=${#JSON_BUFFER}
+
+  if [ $len -eq 2 ]; then
+    JSON_BUFFER='['$item']'
+  else
+    JSON_BUFFER=${JSON_BUFFER:0:len-1}','${item}']'
+  fi
+}
+
+JSON_addString () {
+  JSONString $2
+  JSON_add $1 $JSON_STRING_BUFFER
+}
+
+# Key: Must be bash string.
+# Value: Must be JSON item.
+JSON_add () {
+  local key=$1
+  local keyString
+  local item=$2
+  local itemString
+
+  if [ ${#JSON_BUFFER} -eq 0 ]; then
+    JSON_newObject
+  fi
+
+  if [ "${JSON_BUFFER:0:1}" != '{' ]; then
+    JSON_throw "Current buffer is not object"
+  fi
+
+  if [ ${#key} -eq 0 ]; then
+    keyString='""'
+  else
+    JSONString $key
+    keyString=$JSON_STRING_BUFFER
+  fi
+
+  if [ ${#item} -eq 0 ]; then
+    itemString='""'
+  else
+    itemString=$item
+  fi
+
+  local len=${#JSON_BUFFER}
+
+  if [ $len -eq 2 ]; then
+    JSON_BUFFER='{'${keyString}':'${itemString}'}'
+  else
+    JSON_BUFFER=${JSON_BUFFER:0:len-1}','${keyString}':'${itemString}'}'
+  fi
+}
+
+JSONString () {
+  local len=${#1}
+  local pos=0
+  JSON_STRING_BUFFER='"'
+
+  while [ $pos -lt $len ]; do
+    local c=${1:$pos:1}
+    local ord
+    printf -v ord "%d" "'$c"
+    local res
+    case $ord in
+       8) res='\b' ;;
+       9) res='\t' ;;
+      10) res='\n' ;;
+      12) res='\f' ;;
+      13) res='\r' ;;
+      34) res='\"' ;;
+      92) res='\\' ;;
+       *)
+        if [ $ord -lt 32 ]; then
+          printf -v res '\\u%04x' $ord
+        else
+          res=$c
+        fi
+    esac
+    JSON_STRING_BUFFER+=$res
+    (( pos++ ))
+  done
+
+  JSON_STRING_BUFFER+='"'
+}
+
