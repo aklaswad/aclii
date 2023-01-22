@@ -35,40 +35,55 @@ _aclii_debug "$ 0 $0"
 
 ##// aclii.allCommands.forEach( c => {
 _help_<%= c.id %> () {
-  cat << 'EOH'
-##// setIndent(2)
-Name: <%= c.path  %>
-
+  cols=$(tput cols)
+  title="<%= c.path %>"
+  titleLength=${#title}
+  titleIndent=$(( ( $cols - $titleLength ) / 2 ))
+  indent=''
+  for ((i=0;i<$titleIndent; i++)); do
+    indent+=' '
+  done
+  echo
+  echo "$indent[1;4m$title[m"
+  echo
+  IFS=
+  cat <<- '__END_OF_ACLII_HELP_DOCUMENT__'
+##// setIndent(1,1)
   <%= c.description %>
 
 ##// if (aclii.manualForCommand(c.path) ) {
+
 <%= aclii.manualForCommand(c.path) %>
 
 
 ##// }
-##// if ( c.wants.length ) {
 
-Usage:
+[1;4mUSAGE[m
   <%= c.path.replaceAll('.', ' ') %> <%= c.wants.map( w => '<' + (w.type || 'any') + '>' + (w.many ? '...' : '') ).join(' ') %>
 
-Arguments:
+##// if ( c.wants.length ) {
+
+
+[1;4mARGUMENTS[m
 ##//   c.wants.forEach( w => {
-  <%= w.name %><%= (w.type && aclii.typeDef(w.type)) ? ' (' + aclii.typeDef(w.type).description + ')' : '' %>
+  [1m<%= w.name %>[m<%= (w.type && aclii.typeDef(w.type)) ? ' (' + aclii.typeDef(w.type).description + ')' : '' %>
       <%= w.description %>
 ##//   })
 
 ##// }
 ##// if ( c.commands.length ) {
-Commands:
+
+[1;4mCOMMANDS[m
 ##//  c.commands.forEach( sc => {
-  <%= sc.name %> <%= sc.wants.map( w => '<' + (w.type || 'any') + '>' + (w.many ? '...' : '') ).join(' ') %>
+  [1m<%= sc.name %>[m <%= sc.wants.map( w => '<' + (w.type || 'any') + '>' + (w.many ? '...' : '') ).join(' ') %>
       <%= sc.description %>
 ##//  })
 
 ##// }
-Options:
+
+[1;4mOPTIONS[m
 ##//  c.options.forEach( o => {
-  --<%= o.name %> <%=
+  [1m--<%= o.name %>[m <%=
   (() => {
     if (!o.input.type || o.input.type === 'switch' ) return ''
     let td = aclii.typeDef(o.input.type);
@@ -82,7 +97,8 @@ Options:
       <%= o.description %>
 ##//  })
 ##// setIndent(0)
-EOH
+
+__END_OF_ACLII_HELP_DOCUMENT__
 }
 ##//})
 
@@ -92,6 +108,7 @@ _help () {
   else
     local -r path=("<%= aclii.commandName %>")
   fi
+
   local pathLength=${#path[@]}
   local place
   case "${path[0]}" in
@@ -158,7 +175,7 @@ __parse_args () {
 ##// aclii.allCommands.forEach( c => {
     "<%= c.path %>" )
 ##//   if (c.helpstop) {
-      _help "$cmd"
+      _help "${commandPath[@]}"
 ##//   } else {
 ##//     if ( aclii.getCommandByPath(c.binPath).argstyle == 'json' ) {
       wantJSON="1"
