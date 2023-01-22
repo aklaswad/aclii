@@ -19,7 +19,7 @@ jobs:
       run: npm ci && npm i -g .
     - name: Prints Manual File
       run: |
-        ls -laR
+        cat ./bin/aclii-launcher.sh
         ./bin/aclii-launcher.sh --verbose put manual docs/cli.md
     - name: Check in
       run: |
