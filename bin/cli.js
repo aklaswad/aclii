@@ -19,7 +19,7 @@ function print (content) {
 function put (opt, tmpl, to) {
   const aclii =  Aclii.fromFile(opts.options.file)
   opt._verbose( "Putting '" + tmpl + "' to " + to )
-  const content = aclii.render('launcher.tmpl')
+  const content = aclii.render(tmpl)
   opt._verbose( "Checking renderd content size" )
   if ( content.trim().length === '0' ) {
     throw "(aclii) Error: Failed to render content"
