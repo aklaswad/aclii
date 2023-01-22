@@ -10,7 +10,7 @@ jobs:
     steps:
     - run: |
         which bash
-        bash -v
+        bash --version
     - uses: actions/checkout@master
     - uses: actions/setup-node@main
       with:
