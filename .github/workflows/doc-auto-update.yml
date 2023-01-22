@@ -25,8 +25,8 @@ jobs:
         ./bin/aclii-launcher.sh --verbose put manual docs/cli.md
     - name: Check in
       run: |
-        git config user.name aklaswad( automated )
-        git config user.email aklaswad+acliiactions@gmail.com
+        git config user.name "aklaswad"
+        git config user.email "aklaswad+aclii.action@gmail.com"
         git add docs/cli.md
         git commit -m "doc: Auto update manual page"
         git push origin main
