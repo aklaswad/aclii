@@ -16,7 +16,7 @@ jobs:
       with:
         node-version: 18
     - name: Install Aclii
-      run: npm i -g .
+      run: npm ci && npm i -g .
     - name: Prints Manual File
       run: aclii put manual docs/cli.md
     - name: Check in
