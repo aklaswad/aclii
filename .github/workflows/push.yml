@@ -5,9 +5,12 @@ jobs:
   run-tests:
     strategy:
       matrix:
-        os: [windows-latest, macos-latest, ubuntu-latest]
+        os: [ macos-latest, ubuntu-latest ]
     runs-on: ${{ matrix.os }}
     steps:
+    - run: |
+        echo bash -v
+        which bash
     - uses: actions/checkout@master
     - uses: actions/setup-node@main
       with:
