@@ -139,8 +139,8 @@ __arg_parse () {
   __aclii_inputIsMany=("${inputIsMany[@]}")
   __aclii_inputIsMulti=("${inputIsMulti[@]}")
 
-  __aclii_foundValues=("${foundValues[@]}")
-  __aclii_foundValuesFor=("${foundValuesFor[@]}")
+  __aclii_foundValues=("${foundValues[@]+"${foundValues[@]}"}")
+  __aclii_foundValuesFor=("${foundValuesFor[@]+"${foundValuesFor[@]}"}")
   __aclii_error="$error"
   __aclii_cmd="$cmd"
   __aclii_help="$help"
