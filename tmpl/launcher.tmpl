@@ -229,7 +229,7 @@ __parse_args () {
           jsonValues[inputId]=$JSON_STRING_BUFFER
         fi
         inputAppeared[inputId]="1"
-        ((i++))
+        : $((i++))
       done
     fi
 
@@ -243,7 +243,7 @@ __parse_args () {
           local key="${inputKeys[inputId]}"
           JSON_add $key ${jsonValues[inputId]}
         fi
-        ((inputId++))
+        : $((inputId++))
       done
     fi
     local jsonOptions=$JSON_BUFFER
