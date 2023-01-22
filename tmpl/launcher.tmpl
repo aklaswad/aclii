@@ -184,8 +184,9 @@ __parse_args () {
 ##// aclii.allCommands.forEach( c => {
       "<%= c.path %>")
 ##//   c.inputsWithDefaults.forEach( o => {
-         JSONString "<%= o.defaultValue %>"
-         jsonValues[<%= o.inputId %>]=$JSON_STRING_BUFFER
+        JSONString "<%= o.defaultValue %>"
+        jsonValues[<%= o.inputId %>]=$JSON_STRING_BUFFER
+        inputAppeared[<%= o.inputId %>]="1"
 ##//     })
       ;;
 ##//   })
@@ -210,20 +211,22 @@ __parse_args () {
           JSONString $value
           jsonValues[inputId]=$JSON_STRING_BUFFER
         fi
+        inputAppeared[inputId]="1"
         ((i++))
       done
     fi
 
     # Then, Insert them to "options" object
     JSON_newObject
-    local i=0
-    if [ -n "${foundValues+HAS}" ]; then
-      for value in "${foundValues[@]}"
+    local inputId=0
+    if [ -n "${inputAppeared+HAS}" ]; then
+      for appear in "${inputAppeared[@]}"
       do
-        local inputId="${foundValuesFor[i]}"
-        local key="${inputKeys[inputId]}"
-        JSON_add $key ${jsonValues[inputId]}
-        ((i++))
+        if [ -n "$appear" ]; then
+          local key="${inputKeys[inputId]}"
+          JSON_add $key ${jsonValues[inputId]}
+        fi
+        ((inputId++))
       done
     fi
     local jsonOptions=$JSON_BUFFER
