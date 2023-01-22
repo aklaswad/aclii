@@ -18,7 +18,9 @@ jobs:
     - name: Install Aclii
       run: npm ci && npm i -g .
     - name: Prints Manual File
-      run: aclii --verbose put manual docs/cli.md
+      run: |
+        ls -laR
+        bin/aclii-completion.sh --verbose put manual docs/cli.md
     - name: Check in
       run: |
         git add dock/cli.md
