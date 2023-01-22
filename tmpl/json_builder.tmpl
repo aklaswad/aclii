@@ -118,7 +118,7 @@ JSONString () {
         fi
     esac
     JSON_STRING_BUFFER+=$res
-    (( pos++ ))
+    : $(( pos++ ))
   done
 
   JSON_STRING_BUFFER+='"'

@@ -11,6 +11,9 @@ jobs:
   update-document:
     runs-on: ubuntu-latest
     steps:
+    - run: |
+        which bash
+        bash --version
     - uses: actions/checkout@master
     - uses: actions/setup-node@main
       with:
