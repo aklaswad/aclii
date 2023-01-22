@@ -25,7 +25,7 @@ jobs:
         ./bin/aclii-launcher.sh --verbose put manual docs/cli.md
     - name: Check in
       run: |
-        git add dock/cli.md
+        git add docs/cli.md
         git commit -m "doc: Auto update manual page"
         git push origin main
 
