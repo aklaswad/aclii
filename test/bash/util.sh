@@ -20,8 +20,10 @@ load_parser () {
   #echo "b64 $BASE64"
   IFS=''
   local PARSER=$(npm exec "$SCRIPTPATH/../../bin/cli.js" "$BASE64")
+  tmp=$(mktemp)
   #echo "$PARSER" > "rendered-parser.sh"
-  source <(echo $PARSER)
+  echo "$PARSER" > $tmp
+  source $tmp
   IFS=$'\n'
 }
 
@@ -43,10 +45,12 @@ _tap () {
     echo "not ok $testnumber - ${args[0]}"
     echo "#   Failed test '${args[0]}'"
     echo "#   at ${origin[2]} line ${origin[0]}."
+    IFS=$si
     for line in "${args[@]:2}"
     do
-      echo $line | sed 's/^/# /g'
+      echo "$line" | sed 's/^/# /g'
     done
+    IFS=$'\n'
     if [ -z "$__TAP_IGNORE" ]; then
       : $((_failed++))
     fi
