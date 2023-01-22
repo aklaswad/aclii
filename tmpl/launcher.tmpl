@@ -11,22 +11,13 @@ _aclii_debug () {
 }
 
 _aclii_exec_json () {
-  if [ "${1:0:1}" = "/" ] || [ "${1:0:1}" = "~" ]; then
-    binname=$1
-  else
-    binname="$(dirname "$0")"/"$1"
-  fi
+  binname="$1"
   exec "$binname" "$2"
 }
 
 _aclii_exec () {
-  if [ "${1:0:1}" = "/" ] || [ "${1:0:1}" = "~" ]; then
-    binname=$1
-  else
-    binname="$(dirname "$0")/$1"
-  fi
+  binname="$1"
   exec "$binname" "${@:2}"
-
 }
 
 _aclii_debug "Launch aclii..."
@@ -263,7 +254,7 @@ __parse_args () {
   case "$binPath" in
 ##// aclii.allCommands.forEach( c => {
     "<%= c.path %>" )
-
+      cd $(dirname "<%= c.__source %>")
 ##// // TODO: Prepare input for each env. Maybe it could be plaggable?
 ##//   if ( c.script ) {
       tmp=$(mktemp)
