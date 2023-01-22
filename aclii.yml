@@ -12,7 +12,7 @@ types:
     - ethnic
 
 description: |
-  A toolkit for aclii (Aclii Command Line Interface Interface)
+  A toolkit for aclii (Alternative Command Line Interface Interface)
 helpstop: true
 commands:
   - name: put
