@@ -16,13 +16,18 @@ function print (content) {
   console.log(content)
 }
 
-function put (opt, tmpl, to) {
+function put (opt, tmpl, to, options={}) {
   const aclii =  Aclii.fromFile(opts.options.file)
   opt._verbose( "Putting '" + tmpl + "' to " + to )
   const content = aclii.render(tmpl)
   opt._verbose( "Checking renderd content size" )
   if ( content.trim().length === '0' ) {
     throw "(aclii) Error: Failed to render content"
+  }
+  if ( options.notest ) {
+    fs.writeFileSync(to, content)
+    opt._verbose("Done")
+    return
   }
   opt._verbose( "Checking bash compile errors" )
   const tmpObj = tmp.fileSync()
@@ -103,7 +108,7 @@ const Commands = {
   },
 
   "aclii.put.manual": (opt) => {
-    return put( opt, 'manual.md.tmpl', opt.options['target-file'] )
+    return put( opt, 'manual.md.tmpl', opt.options['target-file'], { notest: true } )
   },
 
   "aclii.render.parser": (opt) => {
