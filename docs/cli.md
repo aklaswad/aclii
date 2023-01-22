@@ -4,11 +4,12 @@ aclii command line manual
   aclii
 </h1>
 
-A toolkit for aclii (Abstract Command Line Interface Interface)
+A toolkit for aclii (Anti Command Line Interface Interface)
 
 --------
 
 aclii, The toolkit for abstract command line interface interface
+This command line tool takes a simple descriptive configuration file and generates a command line option parser for bash, a completion script, and other useful tools.
 
 (_This command itself will show help and quit. Use subcommands for actions._)
 
@@ -36,6 +37,10 @@ aclii, The toolkit for abstract command line interface interface
 
 Put aclii artifacts into specified place.
 
+--------
+
+Writes artifacts based on the config file to the specified file. Writing to the file is automatically aborted if an error occurs or if a problem is found in the deliverable. For general use, this put command should be used.
+
 (_This command itself will show help and quit. Use subcommands for actions._)
 
 ## Usage
@@ -49,6 +54,7 @@ Put aclii artifacts into specified place.
  - [launcher](#aclii-put-launcher)
  - [completion](#aclii-put-completion)
  - [parser](#aclii-put-parser)
+ - [manual](#aclii-put-manual)
 
 <h1 id="aclii-put-launcher">
   aclii put launcher
@@ -59,7 +65,7 @@ If specified file already exists, aclii will replace the content with new versio
 
 ## Usage
 
-  aclii put launcher [target-file(file)]
+  aclii put launcher target-file(file)
 
 ## Arguments
 ### target-file
@@ -77,7 +83,7 @@ If specified file already exists, aclii will replace the content with new versio
 
 ## Usage
 
-  aclii put completion [--target (target)] [target-file(file)]
+  aclii put completion [--target (target)] target-file(file)
 
 ## Arguments
 ### target-file
@@ -99,11 +105,28 @@ If specified file already exists, aclii will replace the content with new versio
 
 ## Usage
 
-  aclii put parser [target-file(any)]
+  aclii put parser target-file(file)
 
 ## Arguments
 ### target-file
 File path to be put/replaced newly rendered arg parser
+## Inherited Options
+ - [file](#aclii__file)
+ - [verbose](#aclii__verbose)
+
+<h1 id="aclii-put-manual">
+  aclii put manual
+</h1>
+
+Put a manual file in markdown format
+
+## Usage
+
+  aclii put manual target-file(file)
+
+## Arguments
+### target-file
+File path to be put/replaced newly rendered manual markdown file
 ## Inherited Options
  - [file](#aclii__file)
  - [verbose](#aclii__verbose)
@@ -116,7 +139,7 @@ Render bash scripts generated from yaml config file. See sub commands for detail
 
 --------
 
-Render generated contents to STDOUT.
+Render generated contents to STDOUT, for testing.
 You can choose one of sub command from the list.
 
 (_This command itself will show help and quit. Use subcommands for actions._)
@@ -181,6 +204,8 @@ Render and print rendered bare commandline parser, for testing.
   aclii render manual
 </h1>
 
+Render and print manual of entire commands, in markdown format.
+
 ## Usage
 
   aclii render manual 
@@ -193,6 +218,10 @@ Render and print rendered bare commandline parser, for testing.
 </h1>
 
 Sub commands of this playgrond do nothing but just echo the command line inputs as parsed JSON, as main program would receive.
+
+--------
+
+The subcommands under playground contain command line parsing and inline scripting demos for the launcher.
 
 (_This command itself will show help and quit. Use subcommands for actions._)
 
@@ -216,7 +245,7 @@ Eat all args into `.argv`. This is default behavior for commands which have no s
 
 ## Usage
 
-  aclii playground hungry [genre(foodgenre)] [food(string)]...
+  aclii playground hungry genre(foodgenre) food(string)...
 
 ## Arguments
 ### genre (chinese|french|japanese|ethnic)
@@ -258,6 +287,10 @@ Inline script demo. You can implement any script in aclii file and execute it in
 
 render completion script for aclii
 
+--------
+
+Prints completion scripts of aclii itself.
+
 ## Usage
 
   aclii aclii-completion [--target (target)] 
@@ -268,5 +301,4 @@ render completion script for aclii
 ## Inherited Options
  - [file](#aclii__file)
  - [verbose](#aclii__verbose)
-
 
