@@ -20,7 +20,7 @@ jobs:
     - name: Prints Manual File
       run: |
         ls -laR
-        ./bin/aclii-completion.sh --verbose put manual docs/cli.md
+        ./bin/aclii-launcher.sh --verbose put manual docs/cli.md
     - name: Check in
       run: |
         git add dock/cli.md
