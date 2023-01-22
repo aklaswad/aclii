@@ -1,0 +1,27 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - aclii.yml
+
+name: Update Document
+
+jobs:
+  update-document:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+    - uses: actions/setup-node@main
+      with:
+        node-version: 18
+    - name: Install Aclii
+      run: npm ci
+    - name: Prints Manual File
+      run: aclii put manual docs/cli.md
+    - name: Check in
+      run: |
+        git add dock/cli.md
+        git commit -m "doc: Auto update manual page"
+        git push origin main
+

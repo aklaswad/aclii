@@ -48,6 +48,13 @@ commands:
           - name: target-file
             type: file
             description: File path to be put/replaced newly rendered arg parser
+      - name: manual
+        description: |
+          Put a manual file in markdown format
+        wants:
+          - name: target-file
+            type: file
+            description: File path to be put/replaced newly rendered manual markdown file
   - name: render
     helpstop: true
     description: |
